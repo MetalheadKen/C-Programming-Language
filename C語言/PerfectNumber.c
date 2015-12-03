@@ -14,7 +14,7 @@
 int main(void) {
 	int number1, number2, sum;
 
-	printf("請輸出所有1000~9999之內的所有水仙花數：\n");
+	printf("1~10000的完美數為：\n");
 
 	for(number1 = 2; number1 < 10000; number1++)
 	{
