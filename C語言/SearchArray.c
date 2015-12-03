@@ -20,7 +20,7 @@ int main(void) {
 		scanf("%d", &data[i]);
 
 	fflush(stdin);
-	printf("½Ğ¿é¤J±ı·j´Mªº¼Æ¦r¡G");
+	printf("è«‹è¼¸å…¥æ¬²æœå°‹çš„æ•¸å­—ï¼š");
 	scanf("%d", &search);
 
 	for(i = 0; i < number; i++)
