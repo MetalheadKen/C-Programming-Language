@@ -14,7 +14,7 @@
 int main(void) {
 	int number1, number2, sum;
 
-	printf("1~10000ªº§¹¬ü¼Æ¬°¡G\n");
+	printf("è«‹è¼¸å‡ºæ‰€æœ‰1000~9999ä¹‹å…§çš„æ‰€æœ‰æ°´ä»™èŠ±æ•¸ï¼š\n");
 
 	for(number1 = 2; number1 < 10000; number1++)
 	{
