@@ -1,11 +1,11 @@
 /*
- ============================================================================
+ =============================================================================
  Name        : MoneyChange2.c
  Author      : 
  Version     :
  Copyright   : Your copyright notice
  Description : Hello World in C, Ansi-style
- ============================================================================
+ =============================================================================
  */
 
 #include <stdio.h>
@@ -14,31 +14,31 @@
 #define min(x, y) ((x) < (y) ? (x) : (y))
 
 int main(void) {
-	int i, value, amount; //value¬°¿é¤JªºÁ`ª÷ÃB¡Aamount¬°¦¹ª÷ÃB¥i§I´«ªº¼Æ¶q
-	int price[] = {50, 20, 10}; //price¬°¥i´«¦¨ªºª÷ÃB
-	int maxamount[] = {100, 100, 500}; //maxamount¬°¥i´«¦¨ªºª÷ÃBªº³Ì¤j¼Æ¶q
-	int length = sizeof(price) / sizeof(price[0]); //¦¹°µªk¬O¬°¤F¥iÄâ©Ê
+	int i, value, amount; //valueç‚ºè¼¸å…¥çš„ç¸½é‡‘é¡ï¼Œamountç‚ºæ­¤é‡‘é¡å¯å…Œæ›çš„æ•¸é‡
+	int price[] = {50, 20, 10}; //priceç‚ºå¯æ›æˆçš„é‡‘é¡
+	int maxamount[] = {100, 100, 500}; //maxamountç‚ºå¯æ›æˆçš„é‡‘é¡çš„æœ€å¤§æ•¸é‡
+	int length = sizeof(price) / sizeof(price[0]); //æ­¤åšæ³•æ˜¯ç‚ºäº†å¯æ”œæ€§
 
-	printf("½Ð¿é¤J¤@­Ó¥¿¾ã¼Æªí¥ÜÁ`ª÷ÃB¡G\n");
+	printf("è«‹è¼¸å…¥ä¸€å€‹æ­£æ•´æ•¸è¡¨ç¤ºç¸½é‡‘é¡ï¼š\n");
 	fflush(stdin);
 
-	while(~scanf("%d", &value)) //»P(scanf("%d", &value) != EOF)¬Û¦P
+	while(~scanf("%d", &value)) //èˆ‡(scanf("%d", &value) != EOF)ç›¸åŒ
 	{
-		printf("¥i§I´«¦¨¡G\n");
+		printf("å¯å…Œæ›æˆï¼š\n");
 
 		switch(value)
 		{
 			case 50:
-				printf("50¤¸0­Ó\n20¤¸2­Ó\n10¤¸1­Ó\n"); break;
+				printf("50å…ƒ0å€‹\n20å…ƒ2å€‹\n10å…ƒ1å€‹\n"); break;
 			case 20:
-				printf("50¤¸0­Ó\n20¤¸0­Ó\n10¤¸2­Ó\n"); break;
+				printf("50å…ƒ0å€‹\n20å…ƒ0å€‹\n10å…ƒ2å€‹\n"); break;
 			default:
 				for(i = 0; i < length; i++)
 				{
 					amount = min(value / price[i], maxamount[i]);
 					value -= amount * price[i];
 
-					printf("%d¤¸%d­Ó\n", price[i], amount);
+					printf("%då…ƒ%då€‹\n", price[i], amount);
 				}
 		}
 	}
