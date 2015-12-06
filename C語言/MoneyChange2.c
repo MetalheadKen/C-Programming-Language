@@ -11,7 +11,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define min(x, y) ((x) < (y) ? x : y)
+#define min(x, y) ((x) < (y) ? (x) : (y))
 
 int main(void) {
 	int i, value, amount; //value為輸入的總金額，amount為此金額可兌換的數量
