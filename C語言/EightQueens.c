@@ -39,7 +39,7 @@ void Queen(int x) {
 
 				Queen(x + 1); //尋找下一個，+ 1跳下一列
 
-				column[i] = right[j] = left[k] = 1; //無皇后
+				column[i] = right[j] = left[k] = 1; //無皇后，為空
 				board[x][i] = '.';
 			}
 		}
