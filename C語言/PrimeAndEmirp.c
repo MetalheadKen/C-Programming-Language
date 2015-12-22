@@ -13,44 +13,40 @@
 
 int isprime(int );
 
-//¤£¯à¥Îsqrt¡A¦]·|¤ñstart§ó¤p
+//ä¸èƒ½ç”¨sqrtï¼Œå› æœƒæ¯”startæ›´å°
 int isprime(int value) {
-	int i, count; //count¬°­pºâ¬O§_¬°½è¼Æ
-
-	count = 0;
+	int i;
+	
 	for(i = 2; i < value; i++)
 	{
-		if(value % i == 0) //¦¨¥ß«D½è¼Æ¡A¬°¦]¼Æ
-			count++;
+		if(value % i == 0) //æˆç«‹éè³ªæ•¸ï¼Œç‚ºå› æ•¸
+			return 0;
 	}
-
-	if(count) //count¬°«D¹s­Èªº¸Ü
-		return 0;
-	else
-		return value;
+	
+	return value;
 }
 
 int main(void) {
 	int i, value, reverse, start, end;
 
-	printf("½Ğ¿é¤J¤@­Ó½d³òA~B¡G");
+	printf("è«‹è¼¸å…¥ä¸€å€‹ç¯„åœA~Bï¼š");
 	fflush(stdin);
 	scanf("%d %d", &start, &end);
 
-	printf("¦P®É¬O½è¼Æ©M¤Ï½è¼ÆªÌ¬°¡G\n");
+	printf("åŒæ™‚æ˜¯è³ªæ•¸å’Œåè³ªæ•¸è€…ç‚ºï¼š\n");
 	for(i = start; i <= end; i++)
 	{
 		value = isprime(i);
-		if(value) //¦pªGprime¦³¦^¶Ç­Èªº¸Ü
+		if(value) //å¦‚æœprimeæœ‰å›å‚³å€¼çš„è©±
 		{
-			//¤ÏÂà¼Æ­È
+			//åè½‰æ•¸å€¼
 			reverse = ((value % 10) *10) + (value / 10);
-			//§PÂ_¤ÏÂà«áªº¼Æ¦r¬O§_¤£¦P
+			//åˆ¤æ–·åè½‰å¾Œçš„æ•¸å­—æ˜¯å¦ä¸åŒ
 			if(value == reverse)
-				continue; //¦pªG¬Û¦Pªº¸Ü¡A°µcontinue¥H§ä´M¤U¤@­Ó¼Æ
+				continue; //å¦‚æœç›¸åŒçš„è©±ï¼Œåšcontinueä»¥æ‰¾å°‹ä¸‹ä¸€å€‹æ•¸
 			else
 			{
-				//¦A¦¸§PÂ_¬O§_½è¼Æ
+				//å†æ¬¡åˆ¤æ–·æ˜¯å¦è³ªæ•¸
 				if(isprime(reverse))
 					printf("%d\n", value);
 			}
