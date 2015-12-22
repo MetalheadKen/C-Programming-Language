@@ -78,6 +78,9 @@ int main(void) {
 		for(j = 0; j < N; j++)
 			board[i][j] = '.';
 	}
+	
+	for(i = 0; i < 2 * N + 1; i++)
+		right[i] = left[i] = 1;
 
 	Queen(0); //從第0列第一個數開始放與尋找
 
