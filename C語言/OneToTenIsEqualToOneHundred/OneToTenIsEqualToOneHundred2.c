@@ -52,7 +52,7 @@ int main(int argc, char *argv[]) {
 										
 										if(result[8] == 100.0)
 										{	
-											printf("1 %c 2 %c 3 %c 4 %c 5 %c 6 %c 7 %c 8 %c 9 %c 10 = 100\n", OPER[a], OPER[b],	OPER[c], OPER[d], OPER[e], OPER[f], OPER[g], OPER[h], OPER[i]);
+											printf("1 %c 2 %c 3 %c 4 %c 5 %c 6 %c 7 %c 8 %c 9 %c 10 = 100\n", OPER[a], OPER[b], OPER[c], OPER[d], OPER[e], OPER[f], OPER[g], OPER[h], OPER[i]);
 											count++;
 										}
 									}	 
