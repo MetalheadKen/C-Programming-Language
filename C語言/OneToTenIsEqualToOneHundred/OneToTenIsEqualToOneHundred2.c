@@ -48,11 +48,11 @@ int main(int argc, char *argv[]) {
 									//result[7] = calculate(result[6], 9.0, h);
 									for(i = 0; i < 4; i++)
 									{
-										result[8] = cal(10.0, cal(9.0, cal(8.0, cal(7.0, cal(6.0, cal(5.0, cal(4.0, cal(3.0, cal(1.0, 2.0, i), h), g), f), e), d), c), b), a);
+										result[8] = cal(cal(cal(cal(cal(cal(cal(cal(cal(1.0, 2.0, a), 3.0, b), 4.0, c), 5.0, d), 6.0, e), 7.0, f), 8.0, g), 9.0, h), 10.0, i);
 										
 										if(result[8] == 100.0)
 										{	
-											printf("1 %c 2 %c 3 %c 4 %c 5 %c 6 %c 7 %c 8 %c 9 %c 10 = 100\n", OPER[i], OPER[h],	OPER[g], OPER[f], OPER[e], OPER[d], OPER[c], OPER[b], OPER[a]);
+											printf("1 %c 2 %c 3 %c 4 %c 5 %c 6 %c 7 %c 8 %c 9 %c 10 = 100\n", OPER[a], OPER[b],	OPER[c], OPER[d], OPER[e], OPER[f], OPER[g], OPER[h], OPER[i]);
 											count++;
 										}
 									}	 
