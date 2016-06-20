@@ -9,7 +9,7 @@ int main(int argc, char *argv[]) {
 	char number[SIZE] = {0};
 	
 	fflush(stdin);
-	while(gets(number) != NULL && number[0] != '0')
+	while(gets(number) != NULL	&& number[0] != '0')
 	{
 		//if(number[0] == '0' && number[1] == '\0')	break;
 		

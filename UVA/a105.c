@@ -20,7 +20,7 @@ int main(int argc, char *argv[]) {
 		if(build[i - 1] != build[i])
 			printf("%d %d ", i, build[i]);
 	}
-		
+			
 	/*if(build[rightest - 1] == build[rightest])
 		printf("%d %d ", build[rightest], rightest);
 	putchar('0');*/
