@@ -1,0 +1,324 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V7.20.2.7424/W32 for ARM        26/Aug/2015  14:25:57
+# Copyright 1999-2014 IAR Systems AB.
+#
+#    Cpu mode     =  thumb
+#    Endian       =  little
+#    Source file  =  
+#        D:\Sample Code\Manta\2015 ARM Design
+#        Contest\STM32_FatFS_Example_V1.0.0RC4\STM32_FatFS_Example_V1.0.0RC4\Project\FatFS_uSD\main.c
+#    Command line =  
+#        "D:\Sample Code\Manta\2015 ARM Design
+#        Contest\STM32_FatFS_Example_V1.0.0RC4\STM32_FatFS_Example_V1.0.0RC4\Project\FatFS_uSD\main.c"
+#        -D USE_STDPERIPH_DRIVER -D STM32F2XX -D USE_STM322xG_EVAL -lcN
+#        "D:\Sample Code\Manta\2015 ARM Design
+#        Contest\STM32_FatFS_Example_V1.0.0RC4\STM32_FatFS_Example_V1.0.0RC4\Project\FatFS_uSD\EWARM\STM322xG-EVAL\List\"
+#        -o "D:\Sample Code\Manta\2015 ARM Design
+#        Contest\STM32_FatFS_Example_V1.0.0RC4\STM32_FatFS_Example_V1.0.0RC4\Project\FatFS_uSD\EWARM\STM322xG-EVAL\Obj\"
+#        --debug --endian=little --cpu=Cortex-M3 -e --fpu=None --dlib_config
+#        "C:\Program Files (x86)\IAR Systems\Embedded Workbench
+#        7.20.2\arm\INC\c\DLib_Config_Full.h" -I "D:\Sample Code\Manta\2015 ARM
+#        Design
+#        Contest\STM32_FatFS_Example_V1.0.0RC4\STM32_FatFS_Example_V1.0.0RC4\Project\FatFS_uSD\EWARM\..\"
+#        -I "D:\Sample Code\Manta\2015 ARM Design
+#        Contest\STM32_FatFS_Example_V1.0.0RC4\STM32_FatFS_Example_V1.0.0RC4\Project\FatFS_uSD\EWARM\..\Devices\STM32F2xx\"
+#        -I "D:\Sample Code\Manta\2015 ARM Design
+#        Contest\STM32_FatFS_Example_V1.0.0RC4\STM32_FatFS_Example_V1.0.0RC4\Project\FatFS_uSD\EWARM\..\..\..\Libraries\STM32_USB_HOST_Library\Core\inc\"
+#        -I "D:\Sample Code\Manta\2015 ARM Design
+#        Contest\STM32_FatFS_Example_V1.0.0RC4\STM32_FatFS_Example_V1.0.0RC4\Project\FatFS_uSD\EWARM\..\..\..\Libraries\STM32_USB_HOST_Library\Class\MSC\inc\"
+#        -I "D:\Sample Code\Manta\2015 ARM Design
+#        Contest\STM32_FatFS_Example_V1.0.0RC4\STM32_FatFS_Example_V1.0.0RC4\Project\FatFS_uSD\EWARM\..\..\..\Libraries\STM32_USB_OTG_Driver\inc\"
+#        -I "D:\Sample Code\Manta\2015 ARM Design
+#        Contest\STM32_FatFS_Example_V1.0.0RC4\STM32_FatFS_Example_V1.0.0RC4\Project\FatFS_uSD\EWARM\..\..\..\Libraries\STM32F2xx_StdPeriph_Driver\inc\"
+#        -I "D:\Sample Code\Manta\2015 ARM Design
+#        Contest\STM32_FatFS_Example_V1.0.0RC4\STM32_FatFS_Example_V1.0.0RC4\Project\FatFS_uSD\EWARM\..\..\..\Libraries\CMSIS\Device\ST\STM32F2xx\Include\"
+#        -I "D:\Sample Code\Manta\2015 ARM Design
+#        Contest\STM32_FatFS_Example_V1.0.0RC4\STM32_FatFS_Example_V1.0.0RC4\Project\FatFS_uSD\EWARM\..\..\..\Utilities\STM32_EVAL\"
+#        -I "D:\Sample Code\Manta\2015 ARM Design
+#        Contest\STM32_FatFS_Example_V1.0.0RC4\STM32_FatFS_Example_V1.0.0RC4\Project\FatFS_uSD\EWARM\..\..\..\Utilities\STM32_EVAL\Common\"
+#        -I "D:\Sample Code\Manta\2015 ARM Design
+#        Contest\STM32_FatFS_Example_V1.0.0RC4\STM32_FatFS_Example_V1.0.0RC4\Project\FatFS_uSD\EWARM\..\..\..\Utilities\STM32_EVAL\STM322xG_EVAL\"
+#        -I "D:\Sample Code\Manta\2015 ARM Design
+#        Contest\STM32_FatFS_Example_V1.0.0RC4\STM32_FatFS_Example_V1.0.0RC4\Project\FatFS_uSD\EWARM\..\..\..\Utilities\Third_Party\fat_fs\inc\"
+#        -Oh --use_c++_inline -I "C:\Program Files (x86)\IAR Systems\Embedded
+#        Workbench 7.20.2\arm\CMSIS\Include\"
+#    List file    =  
+#        D:\Sample Code\Manta\2015 ARM Design
+#        Contest\STM32_FatFS_Example_V1.0.0RC4\STM32_FatFS_Example_V1.0.0RC4\Project\FatFS_uSD\EWARM\STM322xG-EVAL\List\main.lst
+#    Object file  =  
+#        D:\Sample Code\Manta\2015 ARM Design
+#        Contest\STM32_FatFS_Example_V1.0.0RC4\STM32_FatFS_Example_V1.0.0RC4\Project\FatFS_uSD\EWARM\STM322xG-EVAL\Obj\main.o
+#
+###############################################################################
+
+D:\Sample Code\Manta\2015 ARM Design Contest\STM32_FatFS_Example_V1.0.0RC4\STM32_FatFS_Example_V1.0.0RC4\Project\FatFS_uSD\main.c
+      1          /**
+      2            ******************************************************************************
+      3            * @file    main.c
+      4            * @author  MCD Application Team
+      5            * @version V1.0.0RC4
+      6            * @date    21-December-2012
+      7            * @brief   This file provides main program functions
+      8            ******************************************************************************
+      9            * @attention
+     10            *
+     11            * <h2><center>&copy; COPYRIGHT 2012 STMicroelectronics</center></h2>
+     12            *
+     13            * Licensed under MCD-ST Liberty SW License Agreement V2, (the "License");
+     14            * You may not use this file except in compliance with the License.
+     15            * You may obtain a copy of the License at:
+     16            *
+     17            *        http://www.st.com/software_license_agreement_liberty_v2
+     18            *
+     19            * Unless required by applicable law or agreed to in writing, software 
+     20            * distributed under the License is distributed on an "AS IS" BASIS, 
+     21            * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     22            * See the License for the specific language governing permissions and
+     23            * limitations under the License.
+     24            *
+     25            ******************************************************************************
+     26            */
+     27          
+     28          /* Includes ------------------------------------------------------------------*/
+     29          #include "global_includes.h"
+     30          #include <stdio.h>
+     31          #include <string.h>
+     32          
+     33          /* Private typedef -----------------------------------------------------------*/
+     34          /* Private define ------------------------------------------------------------*/
+     35          /* Private macro -------------------------------------------------------------*/
+     36          /* Private variables ---------------------------------------------------------*/
+     37          FATFS microSD_fatfs;
+     38          FIL  file;
+     39          
+     40          uint32_t ret_length = 0;
+     41          char MessageW[] = "This is a FAT FS example on STM32 using MSD interface."; 
+     42          char MessageR[256] ;
+     43          /* Private function prototypes -----------------------------------------------*/
+     44          void SDCardConfig (void);
+     45          
+     46          /* Private functions ---------------------------------------------------------*/
+     47          
+     48          /**
+     49            * @brief  Main program.
+     50            * @param  None
+     51            * @retval None
+     52            */
+     53          int main(void)
+     54          {
+     55            __IO uint32_t i = 0;
+     56            
+     57            /*!< At this stage the microcontroller clock setting is already configured, 
+     58            this is done through SystemInit() function which is called from startup
+     59            file (startup_stm32fxxx_xx.s) before to branch to application main.
+     60            To reconfigure the default setting of SystemInit() function, refer to
+     61            system_stm32fxxx.c file
+     62            */  
+     63            
+     64            memset (MessageR, 0 , sizeof(MessageR));
+     65            
+     66            /* Init the hardware */
+     67            BSP_Init();
+     68            
+     69            /* SD Card Configuration */
+     70            SDCardConfig();
+     71          
+     72            /* Initialises the File System*/
+     73            if ( f_mount( 0, &microSD_fatfs ) != FR_OK )
+     74            {
+     75              LCD_ErrLog("Cannot mount FATFS on Drive 0\n");
+     76            }
+     77            
+     78            /* Start I/O operations */
+     79            if (f_open(&file, "0:/STM32_File.txt", FA_CREATE_ALWAYS | FA_WRITE) != FR_OK)
+     80            {
+     81              LCD_ErrLog("Cannot open 'STM32 File.txt' file\n");
+     82            }
+     83            else
+     84            {
+     85              LCD_DbgLog("'STM32 File.txt' file opened for write\n");
+     86            }
+     87          
+     88            if (f_write(&file, MessageW, sizeof(MessageW), &ret_length) != FR_OK)
+     89            {
+     90              LCD_ErrLog("Cannot write on 'STM32 File.txt' file\n");
+     91            }
+     92            else
+     93            {
+     94              LCD_DbgLog("'Data written in file\n");
+     95            }  
+     96            
+     97            f_close(&file);
+     98            
+     99            if (f_open(&file, "0:/STM32_File.txt", FA_READ) != FR_OK)
+    100            {
+    101              LCD_ErrLog("Cannot open 'STM32 File.txt' file\n");
+    102            }
+    103            else
+    104            {
+    105              LCD_DbgLog("'STM32 File.txt' file opened for read\n");
+    106            }
+    107          
+    108            if (f_read(&file, MessageR, sizeof(MessageR), &ret_length) != FR_OK)
+    109            {
+    110              LCD_ErrLog("Cannot read from on 'STM32 File.txt' file\n");
+    111            }
+    112            else
+    113            {
+    114              LCD_UsrLog("Text : \n"); 
+    115              strcat(MessageR, "\n");
+    116              LCD_DbgLog(MessageR);
+    117            } 
+    118            
+    119            f_close(&file);
+    120            
+    121            while (1)
+    122            {
+    123              if (i++ == 0x100000)
+    124              {
+    125                STM_EVAL_LEDToggle(LED1);
+    126                STM_EVAL_LEDToggle(LED2);
+    127                STM_EVAL_LEDToggle(LED3);
+    128                STM_EVAL_LEDToggle(LED4);
+    129                i = 0;
+    130              } 
+    131            }
+    132          }
+    133          
+    134          /**
+    135            * @brief  SD Card Configuration.
+    136            * @param  None
+    137            * @retval None
+    138            */
+    139          void SDCardConfig (void)
+    140          {
+    141            SD_Error Status;
+    142          
+    143            /* SD Init */
+    144            Status = SD_Init();
+    145          
+    146            /* Verify the SDIO SD */
+    147            if(Status == SD_OK)
+    148            {
+    149              LCD_DbgLog("'SDIO SD intialized\n");
+    150          
+    151          #ifndef STM32F10X_HD
+    152            #ifndef USE_USB /* USE_USB should be defined in global_includes.h when using USB applications */
+    153              /* Check if the SD card supports high-speed mode */
+    154              Status = SD_HighSpeed();
+    155              if (Status == SD_OK)
+    156              {
+    157                /* For SDIO High Speed mode the SDIO clock (coming from the PLL through Q divider)
+    158                   is set to 48 MHz, but this is not functional (silicon bug). As workaround we have 
+    159                   to configure the SDIO clock to 67.2 MHz and disable the bypass mode to output 
+    160                   33.6 MHz for SD card. for this configuration, the PLL_Q value should be set 
+    161                   to 5.
+    162          
+    163                   For SDIO High Speed mode, the normal config opeartion consist to enable the
+    164                   bypass mode (call SDIO_Init() function w/ SDIO_ClockBypass member of SDIO_InitStruct
+    165                   set to SDIO_ClockBypass_Enable) to drive directly the SDIO_CK output signal (48 MHz).
+    166                   Due to this limitation, the bypass mode should be disabled and the clock is 
+    167                   divided according to the CLKDIV value before driving the SDIO_CK output signal
+    168                   (67.2 / 2 = 33.6 MHz).
+    169                */ 
+    170                /* Clear PLLQ bits */
+    171                RCC->PLLCFGR &= ~ RCC_PLLCFGR_PLLQ;
+    172          
+    173                /* Set PLLQ bits to 5 */
+    174                RCC->PLLCFGR |= 5 << 24;
+    175                LCD_DbgLog("'Switch to high-speed mode\n");
+    176              }
+    177            #endif /* USE_USB */
+    178          #endif /* STM32F10X_HD */
+    179            }
+    180            else
+    181            {
+    182              LCD_ErrLog("SDIO SD initialization failed \n");
+    183            }
+    184          }
+    185          
+    186          #ifdef  USE_FULL_ASSERT
+    187          /**
+    188            * @brief  Reports the name of the source file and the source line number
+    189            *   where the assert_param error has occurred.
+    190            * @param  file: pointer to the source file name
+    191            * @param  line: assert_param error line source number
+    192            * @retval None
+    193            */
+    194          void assert_failed(uint8_t* file, uint32_t line)
+    195          {
+    196            /* User can add his own implementation to report the file name and line number,
+    197               ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+    198          
+    199            /* Infinite loop */
+    200            while (1)
+    201            {}
+    202          }
+    203          #endif
+    204          
+    205          /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+      16   SDCardConfig
+        16   -> SD_HighSpeed
+        16   -> SD_Init
+        16   -> printf
+      48   main
+        48   -> BSP_Init
+        48   -> SDCardConfig
+        48   -> STM_EVAL_LEDToggle
+        48   -> __aeabi_memclr4
+        48   -> f_close
+        48   -> f_mount
+        48   -> f_open
+        48   -> f_read
+        48   -> f_write
+        48   -> printf
+        48   -> strcat
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable15
+       4  ??DataTable15_1
+       4  ??DataTable15_2
+       4  ??DataTable15_3
+       8  ?_0
+      32  ?_1
+       2  ?_10
+      24  ?_11
+      28  ?_12
+      32  ?_13
+      20  ?_2
+      36  ?_3
+      40  ?_4
+      40  ?_5
+      24  ?_6
+      40  ?_7
+      44  ?_8
+      12  ?_9
+      88  SDCardConfig
+     334  main
+    1424  microSD_fatfs
+          file
+          ret_length
+          MessageW
+          MessageR
+
+ 
+ 1 424 bytes in section .data
+     2 bytes in section .rodata
+   818 bytes in section .text
+ 
+   818 bytes of CODE  memory
+     2 bytes of CONST memory
+ 1 424 bytes of DATA  memory
+
+Errors: none
+Warnings: none
