@@ -1,4 +1,4 @@
-/* 因DE2沒有Flash控制器，故實現之 */ 
+/* 因DE2沒有Flash控制器，故實現之 */
 module wb_flash(wb_clk_i, wb_rst_i, wb_cyc_i, wb_adr_i, wb_dat_i, wb_we_i, wb_sel_i, wb_stb_i, wb_dat_o, wb_ack_o,
 				flash_adr_o, flash_dat_i, flash_rst, flash_oe, flash_ce, flash_we);
 
