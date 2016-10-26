@@ -122,7 +122,7 @@ module id(rst, pc_i, inst_i, reg1_data_i, reg2_data_i, ex_wreg_i, ex_wdata_i, ex
 			if(rst == `RstEnable)
 				begin
 					aluop_o 					<= `EXE_NOP_OP;
-					alusel_o 					<= `EXE_RES_NOP;
+					alusel_o 					<= `EXE_RES_NOP; 
 					wd_o 						<= `NOPRegAddr;
 					wreg_o 						<= `WriteDisable;
 					instvalid 					<= `InstValid;
