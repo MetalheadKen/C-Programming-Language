@@ -40,8 +40,8 @@ module ex(rst, alusel_i, aluop_i, reg1_i, reg2_i, wd_i, wreg_i, wd_o, wreg_o, wd
 	/* 依據alusel_i指示的運算類型，選擇一個運算結果作為最終結果，此處只有邏輯運算結果 */
 	always @( * )
 		begin
-			wd_o		<= wd_i;
-			wreg_o	<= wreg_i;
+			wd_o	<=	 wd_i;
+			wreg_o	<= 	wreg_i;
 			
 			case(alusel_i)
 				`EXE_RES_LOGIC:
