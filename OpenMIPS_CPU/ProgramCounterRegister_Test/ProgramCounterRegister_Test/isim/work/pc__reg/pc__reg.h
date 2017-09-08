@@ -1,10 +1,10 @@
 ////////////////////////////////////////////////////////////////////////////////
-//   ____  ____  
-//  /   /\/   /  
-// /___/  \  /   
-// \   \   \/    
+//   ____  ____
+//  /   /\/   /
+// /___/  \  /
+// \   \   \/
 //  \   \        Copyright (c) 2003-2004 Xilinx, Inc.
-//  /   /        All Right Reserved. 
+//  /   /        All Right Reserved.
 // /___/   /\   
 // \   \  /  \  
 //  \___\/\___\ 
@@ -23,8 +23,9 @@
 #include "xsim.h"
 #endif
 
-class workMpc__reg : public HSim__s5{
-public: 
+class workMpc__reg : public HSim__s5
+{
+public:
     workMpc__reg(const char *instname);
     ~workMpc__reg();
     void setDefparam();

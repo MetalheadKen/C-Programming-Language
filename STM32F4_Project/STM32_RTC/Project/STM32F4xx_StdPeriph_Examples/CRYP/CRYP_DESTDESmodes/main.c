@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    CRYP/CRYP_DESTDESmodes/main.c 
+  * @file    CRYP/CRYP_DESTDESmodes/main.c
   * @author  MCD Application Team
   * @version V1.1.0
   * @date    18-January-2013
@@ -16,8 +16,8 @@
   *
   *        http://www.st.com/software_license_agreement_liberty_v2
   *
-  * Unless required by applicable law or agreed to in writing, software 
-  * distributed under the License is distributed on an "AS IS" BASIS, 
+  * Unless required by applicable law or agreed to in writing, software
+  * distributed under the License is distributed on an "AS IS" BASIS,
   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   * See the License for the specific language governing permissions and
   * limitations under the License.
@@ -34,19 +34,20 @@
 
 /** @addtogroup CRYP_DESTDESmodes
   * @{
-  */ 
+  */
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* key size 64 bytes */
-uint8_t DESkey[8] = {0x2b,0x7e,0x15,0x16,0x28,0xae,0xd2,0xa6}; 
+uint8_t DESkey[8] = {0x2b,0x7e,0x15,0x16,0x28,0xae,0xd2,0xa6};
 
 /* key : 192 bits  */
 uint8_t TDESkey[24] = {0x01,0x23,0x45,0x67,0x89,0xAB,0xCD,0xEF,  /* key 1 */
                        0xFE,0xDC,0xBA,0x98,0x76,0x54,0x32,0x10,  /* key 2 */
-                       0x89,0xAB,0xCD,0xEF,0x01,0x23,0x45,0x67}; /* key 3 */
+                       0x89,0xAB,0xCD,0xEF,0x01,0x23,0x45,0x67
+                      }; /* key 3 */
 
-uint8_t Plaintext[PLAIN_TEXT_SIZE] = {0x31,0x32,0x33,0x34,0x35,0x36,0x37,0x38}; /* Plaintext */	  
+uint8_t Plaintext[PLAIN_TEXT_SIZE] = {0x31,0x32,0x33,0x34,0x35,0x36,0x37,0x38}; /* Plaintext */
 
 /* initialization vector */
 uint8_t IV_1[8] = {0x00,0x01,0x02,0x03,0x04,0x05,0x06,0x07};
@@ -59,11 +60,11 @@ uint8_t Decryptedtext[PLAIN_TEXT_SIZE]; /* Decrypted text */
 /* Private function prototypes -----------------------------------------------*/
 
 #ifdef __GNUC__
-  /* With GCC/RAISONANCE, small printf (option LD Linker->Libraries->Small printf
-     set to 'Yes') calls __io_putchar() */
-  #define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
+/* With GCC/RAISONANCE, small printf (option LD Linker->Libraries->Small printf
+   set to 'Yes') calls __io_putchar() */
+#define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
 #else
-  #define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
+#define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
 #endif /* __GNUC__ */
 
 static void USART_Config(void);
@@ -80,165 +81,155 @@ static void Display_DecryptedData(uint8_t Algo, uint8_t mode,uint32_t datalength
   */
 int main(void)
 {
-/*!< At this stage the microcontroller clock setting is already configured, 
-       this is done through SystemInit() function which is called from startup
-       file (startup_stm32f4xx.s) before to branch to application main.
-       To reconfigure the default setting of SystemInit() function, refer to
-       system_stm32f4xx.c file
-     */     
-       
-  /* USARTx configured as follow:
-        - BaudRate = 115200 baud  
-        - Word Length = 8 Bits
-        - One Stop Bit
-        - No parity
-        - Hardware flow control disabled (RTS and CTS signals)
-        - Receive and transmit enabled
-  */
-  USART_Config();
+    /*!< At this stage the microcontroller clock setting is already configured,
+           this is done through SystemInit() function which is called from startup
+           file (startup_stm32f4xx.s) before to branch to application main.
+           To reconfigure the default setting of SystemInit() function, refer to
+           system_stm32f4xx.c file
+         */
 
-  /* Display Plain Data*/
-  Display_PlainData(PLAIN_TEXT_SIZE);
+    /* USARTx configured as follow:
+          - BaudRate = 115200 baud
+          - Word Length = 8 Bits
+          - One Stop Bit
+          - No parity
+          - Hardware flow control disabled (RTS and CTS signals)
+          - Receive and transmit enabled
+    */
+    USART_Config();
 
-  /* Enable CRYP clock */
-  RCC_AHB2PeriphClockCmd(RCC_AHB2Periph_CRYP, ENABLE);
+    /* Display Plain Data*/
+    Display_PlainData(PLAIN_TEXT_SIZE);
 
-/******************************************************************************/
-/*                             DES mode ECB                                   */
-/******************************************************************************/
+    /* Enable CRYP clock */
+    RCC_AHB2PeriphClockCmd(RCC_AHB2Periph_CRYP, ENABLE);
 
-/*=====================================================
-  Encryption ECB mode                                        
-======================================================*/
+    /******************************************************************************/
+    /*                             DES mode ECB                                   */
+    /******************************************************************************/
 
-  /* Encrypt the plaintext message */
-  if(CRYP_DES_ECB(MODE_ENCRYPT,DESkey,Plaintext,PLAIN_TEXT_SIZE,Encryptedtext) == SUCCESS)
-  {
-    /* Display encrypted Data*/
-    Display_EncryptedData(DES,ECB,PLAIN_TEXT_SIZE);
-  }
+    /*=====================================================
+      Encryption ECB mode
+    ======================================================*/
 
-/*=====================================================
-    Decryption in ECB mode                                       
-======================================================*/
+    /* Encrypt the plaintext message */
+    if(CRYP_DES_ECB(MODE_ENCRYPT,DESkey,Plaintext,PLAIN_TEXT_SIZE,Encryptedtext) == SUCCESS) {
+        /* Display encrypted Data*/
+        Display_EncryptedData(DES,ECB,PLAIN_TEXT_SIZE);
+    }
 
-  /* Decrypt the plaintext message  */
-  if(CRYP_DES_ECB(MODE_DECRYPT,DESkey,Encryptedtext,PLAIN_TEXT_SIZE,Decryptedtext) == SUCCESS)
-  {
-    /* Display decrypted data*/
-    Display_DecryptedData(DES,ECB,PLAIN_TEXT_SIZE);
-  }
+    /*=====================================================
+        Decryption in ECB mode
+    ======================================================*/
 
-/******************************************************************************/
-/*                             DES mode CBC                                   */
-/******************************************************************************/
+    /* Decrypt the plaintext message  */
+    if(CRYP_DES_ECB(MODE_DECRYPT,DESkey,Encryptedtext,PLAIN_TEXT_SIZE,Decryptedtext) == SUCCESS) {
+        /* Display decrypted data*/
+        Display_DecryptedData(DES,ECB,PLAIN_TEXT_SIZE);
+    }
 
-/*=====================================================
-  Encryption CBC mode                                        
-======================================================*/
+    /******************************************************************************/
+    /*                             DES mode CBC                                   */
+    /******************************************************************************/
 
-  /* Encrypt the plaintext message*/
-  if(CRYP_DES_CBC(MODE_ENCRYPT,DESkey,IV_1,Plaintext,PLAIN_TEXT_SIZE,Encryptedtext) == SUCCESS)
-  {
-    /* Display encrypted Data*/
-    Display_EncryptedData(DES,CBC,PLAIN_TEXT_SIZE);
-  }
-/*=====================================================
-    Decryption in CBC mode                                       
-======================================================*/
+    /*=====================================================
+      Encryption CBC mode
+    ======================================================*/
 
-  /* Decrypt the plaintext message  */
-  if(CRYP_DES_CBC(MODE_DECRYPT,DESkey,IV_1,Encryptedtext,PLAIN_TEXT_SIZE,Decryptedtext) == SUCCESS)
-  {
-    /* Display decrypted data*/
-    Display_DecryptedData(DES,CBC,PLAIN_TEXT_SIZE);
-  }
+    /* Encrypt the plaintext message*/
+    if(CRYP_DES_CBC(MODE_ENCRYPT,DESkey,IV_1,Plaintext,PLAIN_TEXT_SIZE,Encryptedtext) == SUCCESS) {
+        /* Display encrypted Data*/
+        Display_EncryptedData(DES,CBC,PLAIN_TEXT_SIZE);
+    }
+    /*=====================================================
+        Decryption in CBC mode
+    ======================================================*/
 
-/******************************************************************************/
-/*                             TDES mode ECB                                   */
-/******************************************************************************/
+    /* Decrypt the plaintext message  */
+    if(CRYP_DES_CBC(MODE_DECRYPT,DESkey,IV_1,Encryptedtext,PLAIN_TEXT_SIZE,Decryptedtext) == SUCCESS) {
+        /* Display decrypted data*/
+        Display_DecryptedData(DES,CBC,PLAIN_TEXT_SIZE);
+    }
 
-/*=====================================================
-  Encryption ECB mode                                        
-======================================================*/
+    /******************************************************************************/
+    /*                             TDES mode ECB                                   */
+    /******************************************************************************/
 
-  /* Encrypt the plaintext message*/
-  if(CRYP_TDES_ECB(MODE_ENCRYPT,TDESkey,Plaintext,PLAIN_TEXT_SIZE,Encryptedtext) == SUCCESS)
-  {
-    /* Display encrypted Data*/
-    Display_EncryptedData(TDES,ECB,PLAIN_TEXT_SIZE);
-  }
-/*=====================================================
-    Decryption in ECB mode                                       
-======================================================*/
+    /*=====================================================
+      Encryption ECB mode
+    ======================================================*/
 
-  /* Decrypt the plaintext message  */
-  if(CRYP_TDES_ECB(MODE_DECRYPT,TDESkey,Encryptedtext,PLAIN_TEXT_SIZE,Decryptedtext) == SUCCESS)
-  {
-    /* Display decrypted data*/
-    Display_DecryptedData(TDES,ECB,PLAIN_TEXT_SIZE);
-  }
+    /* Encrypt the plaintext message*/
+    if(CRYP_TDES_ECB(MODE_ENCRYPT,TDESkey,Plaintext,PLAIN_TEXT_SIZE,Encryptedtext) == SUCCESS) {
+        /* Display encrypted Data*/
+        Display_EncryptedData(TDES,ECB,PLAIN_TEXT_SIZE);
+    }
+    /*=====================================================
+        Decryption in ECB mode
+    ======================================================*/
 
-/******************************************************************************/
-/*                             TDES mode CBC                                   */
-/******************************************************************************/
+    /* Decrypt the plaintext message  */
+    if(CRYP_TDES_ECB(MODE_DECRYPT,TDESkey,Encryptedtext,PLAIN_TEXT_SIZE,Decryptedtext) == SUCCESS) {
+        /* Display decrypted data*/
+        Display_DecryptedData(TDES,ECB,PLAIN_TEXT_SIZE);
+    }
 
-/*=====================================================
-  Encryption CBC mode                                        
-======================================================*/
+    /******************************************************************************/
+    /*                             TDES mode CBC                                   */
+    /******************************************************************************/
 
-  /* Encrypt the plaintext message*/
-  if(CRYP_TDES_CBC(MODE_ENCRYPT,TDESkey,IV_1,Plaintext,PLAIN_TEXT_SIZE,Encryptedtext) == SUCCESS)
-  {
-    /* Display encrypted Data*/
-    Display_EncryptedData(TDES,CBC,PLAIN_TEXT_SIZE);
-  }
-/*=====================================================
-    Decryption in CBC mode                                       
-======================================================*/
+    /*=====================================================
+      Encryption CBC mode
+    ======================================================*/
 
-  /* Decrypt the plaintext message  */
-  if(CRYP_TDES_CBC(MODE_DECRYPT,TDESkey,IV_1,Encryptedtext,PLAIN_TEXT_SIZE,Decryptedtext) == SUCCESS)
-  {
-    /* Display decrypted data*/
-    Display_DecryptedData(TDES,CBC,PLAIN_TEXT_SIZE);  
-  }
-/******************************************************************************/
+    /* Encrypt the plaintext message*/
+    if(CRYP_TDES_CBC(MODE_ENCRYPT,TDESkey,IV_1,Plaintext,PLAIN_TEXT_SIZE,Encryptedtext) == SUCCESS) {
+        /* Display encrypted Data*/
+        Display_EncryptedData(TDES,CBC,PLAIN_TEXT_SIZE);
+    }
+    /*=====================================================
+        Decryption in CBC mode
+    ======================================================*/
 
-  while(1);  
+    /* Decrypt the plaintext message  */
+    if(CRYP_TDES_CBC(MODE_DECRYPT,TDESkey,IV_1,Encryptedtext,PLAIN_TEXT_SIZE,Decryptedtext) == SUCCESS) {
+        /* Display decrypted data*/
+        Display_DecryptedData(TDES,CBC,PLAIN_TEXT_SIZE);
+    }
+    /******************************************************************************/
+
+    while(1);
 }
 
 /**
-  * @brief  Display Plain Data 
+  * @brief  Display Plain Data
   * @param  datalength: length of the data to display
   * @retval None
   */
 static void Display_PlainData(uint32_t datalength)
 {
-  uint32_t BufferCounter = 0;
-  uint32_t count = 0;
-  
-  printf("\n\r =============================================================\n\r");
-  printf(" ================= Crypt Using HW Crypto  ====================\n\r");
-  printf(" =============================================================\n\r");
-  printf(" ---------------------------------------\n\r");
-  printf(" Plain Data :\n\r");
-  printf(" ---------------------------------------\n\r");
-  
-  for(BufferCounter = 0; BufferCounter < datalength; BufferCounter++)
-  {
-    printf("[0x%02X]", Plaintext[BufferCounter]);
+    uint32_t BufferCounter = 0;
+    uint32_t count = 0;
 
-    count++;
-    if(count == 8)
-    { 
-      count = 0;
-      printf("  Block %d \n\r", BufferCounter/8);
+    printf("\n\r =============================================================\n\r");
+    printf(" ================= Crypt Using HW Crypto  ====================\n\r");
+    printf(" =============================================================\n\r");
+    printf(" ---------------------------------------\n\r");
+    printf(" Plain Data :\n\r");
+    printf(" ---------------------------------------\n\r");
+
+    for(BufferCounter = 0; BufferCounter < datalength; BufferCounter++) {
+        printf("[0x%02X]", Plaintext[BufferCounter]);
+
+        count++;
+        if(count == 8) {
+            count = 0;
+            printf("  Block %d \n\r", BufferCounter/8);
+        }
     }
-  }
 }
 /**
-  * @brief  Display Encrypted Data 
+  * @brief  Display Encrypted Data
   * @param  Algo: Algorithm used (DES or TDES)
   * @param  mode: chaining mode
   * @param  datalength: length of the data to display
@@ -246,38 +237,33 @@ static void Display_PlainData(uint32_t datalength)
   */
 static void Display_EncryptedData(uint8_t Algo, uint8_t mode, uint32_t datalength)
 {
-  uint32_t BufferCounter = 0;
-  uint32_t count = 0;
+    uint32_t BufferCounter = 0;
+    uint32_t count = 0;
 
-  printf("\n\r =======================================\n\r");
-  printf("  Encrypted Data %cDES Mode ",Algo);
+    printf("\n\r =======================================\n\r");
+    printf("  Encrypted Data %cDES Mode ",Algo);
 
-  if(mode == ECB)
-  {
-    printf("ECB\n\r");
-  } 
-  else/* if(mode == CBC)*/
-  {
-    printf("CBC\n\r");
-  }
-     
-  printf(" ---------------------------------------\n\r");
-  
-  for(BufferCounter = 0; BufferCounter < datalength; BufferCounter++)
-  {
-    printf("[0x%02X]", Encryptedtext[BufferCounter]);
-    count++;
-
-    if(count == 8)
-    { 
-      count = 0;
-      printf(" Block %d \n\r", BufferCounter/8);
+    if(mode == ECB) {
+        printf("ECB\n\r");
+    } else { /* if(mode == CBC)*/
+        printf("CBC\n\r");
     }
-  }
+
+    printf(" ---------------------------------------\n\r");
+
+    for(BufferCounter = 0; BufferCounter < datalength; BufferCounter++) {
+        printf("[0x%02X]", Encryptedtext[BufferCounter]);
+        count++;
+
+        if(count == 8) {
+            count = 0;
+            printf(" Block %d \n\r", BufferCounter/8);
+        }
+    }
 }
 
 /**
-  * @brief  Display Decrypted Data 
+  * @brief  Display Decrypted Data
   * @param  Algo: Algorithm used (DES or TDES)
   * @param  mode: chaining mode
   * @param  datalength: length of the data to display
@@ -285,53 +271,48 @@ static void Display_EncryptedData(uint8_t Algo, uint8_t mode, uint32_t datalengt
   */
 static void Display_DecryptedData(uint8_t Algo, uint8_t mode, uint32_t datalength)
 {
-  uint32_t BufferCounter = 0;
-  uint32_t count = 0;
+    uint32_t BufferCounter = 0;
+    uint32_t count = 0;
 
-  printf("\n\r =======================================\n\r");
-  printf(" Decrypted Data %cDES Mode ",Algo);
+    printf("\n\r =======================================\n\r");
+    printf(" Decrypted Data %cDES Mode ",Algo);
 
-  if(mode == ECB)
-  {
-    printf("ECB\n\r");
-  } 
-  else/* if(mode == CBC)*/
-  {
-    printf("CBC\n\r");
-  }
-   
-  printf(" ---------------------------------------\n\r");
-  
-  for(BufferCounter = 0; BufferCounter < datalength; BufferCounter++)
-  {
-    printf("[0x%02X]", Decryptedtext[BufferCounter]);
-    count++;
-
-    if(count == 8)
-    { 
-      count = 0;
-      printf(" Block %d \n\r", BufferCounter/8);
+    if(mode == ECB) {
+        printf("ECB\n\r");
+    } else { /* if(mode == CBC)*/
+        printf("CBC\n\r");
     }
-  }
+
+    printf(" ---------------------------------------\n\r");
+
+    for(BufferCounter = 0; BufferCounter < datalength; BufferCounter++) {
+        printf("[0x%02X]", Decryptedtext[BufferCounter]);
+        count++;
+
+        if(count == 8) {
+            count = 0;
+            printf(" Block %d \n\r", BufferCounter/8);
+        }
+    }
 }
 
 /**
-  * @brief  USART configuration 
+  * @brief  USART configuration
   * @param  None
   * @retval None
   */
 static void USART_Config(void)
 {
-  USART_InitTypeDef USART_InitStructure;
-  
-  USART_InitStructure.USART_BaudRate = 115200;
-  USART_InitStructure.USART_WordLength = USART_WordLength_8b;
-  USART_InitStructure.USART_StopBits = USART_StopBits_1;
-  USART_InitStructure.USART_Parity = USART_Parity_No;
-  USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
-  USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
+    USART_InitTypeDef USART_InitStructure;
 
-  STM_EVAL_COMInit(COM1, &USART_InitStructure);
+    USART_InitStructure.USART_BaudRate = 115200;
+    USART_InitStructure.USART_WordLength = USART_WordLength_8b;
+    USART_InitStructure.USART_StopBits = USART_StopBits_1;
+    USART_InitStructure.USART_Parity = USART_Parity_No;
+    USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
+    USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
+
+    STM_EVAL_COMInit(COM1, &USART_InitStructure);
 }
 
 /**
@@ -339,17 +320,16 @@ static void USART_Config(void)
   * @param  None
   * @retval None
   */
-PUTCHAR_PROTOTYPE
-{
-  /* Place your implementation of fputc here */
-  /* e.g. write a character to the USART */
-  USART_SendData(EVAL_COM1, (uint8_t) ch);
+PUTCHAR_PROTOTYPE {
+    /* Place your implementation of fputc here */
+    /* e.g. write a character to the USART */
+    USART_SendData(EVAL_COM1, (uint8_t) ch);
 
-  /* Loop until the end of transmission */
-  while (USART_GetFlagStatus(EVAL_COM1, USART_FLAG_TC) == RESET)
-  {}
+    /* Loop until the end of transmission */
+    while (USART_GetFlagStatus(EVAL_COM1, USART_FLAG_TC) == RESET)
+    {}
 
-  return ch;
+    return ch;
 }
 
 #ifdef  USE_FULL_ASSERT
@@ -362,23 +342,22 @@ PUTCHAR_PROTOTYPE
   * @retval None
   */
 void assert_failed(uint8_t* file, uint32_t line)
-{ 
-  /* User can add his own implementation to report the file name and line number,
-     ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+{
+    /* User can add his own implementation to report the file name and line number,
+       ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
 
-  /* Infinite loop */
-  while (1)
-  {
-  }
+    /* Infinite loop */
+    while (1) {
+    }
 }
 #endif
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

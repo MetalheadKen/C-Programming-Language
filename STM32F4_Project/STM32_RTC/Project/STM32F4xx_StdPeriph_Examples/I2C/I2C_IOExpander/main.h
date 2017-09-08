@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    I2C/I2C_IOExpander/main.c 
+  * @file    I2C/I2C_IOExpander/main.c
   * @author  MCD Application Team
   * @version V1.1.0
   * @date    18-January-2013
@@ -16,8 +16,8 @@
   *
   *        http://www.st.com/software_license_agreement_liberty_v2
   *
-  * Unless required by applicable law or agreed to in writing, software 
-  * distributed under the License is distributed on an "AS IS" BASIS, 
+  * Unless required by applicable law or agreed to in writing, software
+  * distributed under the License is distributed on an "AS IS" BASIS,
   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   * See the License for the specific language governing permissions and
   * limitations under the License.
@@ -31,17 +31,17 @@
 
 /* Includes ------------------------------------------------------------------*/
 #if defined (USE_STM324xG_EVAL)
-  #include "stm324xg_eval.h"
-  #include "stm324xg_eval_lcd.h"
-  #include "stm324xg_eval_ioe.h"
+#include "stm324xg_eval.h"
+#include "stm324xg_eval_lcd.h"
+#include "stm324xg_eval_ioe.h"
 
-#elif defined (USE_STM324x7I_EVAL) 
-  #include "stm324x7i_eval.h"
-  #include "stm324x7i_eval_lcd.h"
-  #include "stm324x7i_eval_ioe.h"
+#elif defined (USE_STM324x7I_EVAL)
+#include "stm324x7i_eval.h"
+#include "stm324x7i_eval_lcd.h"
+#include "stm324x7i_eval_ioe.h"
 
 #else
- #error "Please select first the Evaluation board used in your application (in Project Options)"
+#error "Please select first the Evaluation board used in your application (in Project Options)"
 #endif
 
 
@@ -49,15 +49,15 @@
 /* Exported constants --------------------------------------------------------*/
 
 /* #define BUTTON_POLLING_MODE */
-#define BUTTON_INTERRUPT_MODE     
+#define BUTTON_INTERRUPT_MODE
 
 /* #define IOE_POLLING_MODE */
 #define IOE_INTERRUPT_MODE
 
 #ifdef BUTTON_POLLING_MODE
-  #define BUTTON_MODE  BUTTON_MODE_GPIO
+#define BUTTON_MODE  BUTTON_MODE_GPIO
 #else
-  #define BUTTON_MODE  BUTTON_MODE_EXTI
+#define BUTTON_MODE  BUTTON_MODE_EXTI
 #endif 	/* BUTTON_POLLING_MODE */
 
 /* Exported macro ------------------------------------------------------------*/

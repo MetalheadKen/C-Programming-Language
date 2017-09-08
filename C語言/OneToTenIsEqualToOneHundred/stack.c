@@ -6,76 +6,80 @@
  */
 #include "stack.h"
 
-Node *creatNode(void) {
-	Node *newNode = (Node *)malloc(sizeof(Node));
-	if(newNode == NULL)
-		printf("No available Memory!\n");
+Node *creatNode(void)
+{
+    Node *newNode = (Node *)malloc(sizeof(Node));
+    if(newNode == NULL)
+        printf("No available Memory!\n");
 
-	return newNode;
+    return newNode;
 }
 
-int isEmpty(Node *stack) {
-	return stack == NULL;
+int isEmpty(Node *stack)
+{
+    return stack == NULL;
 }
 
-Node *Push(double entry, Node *stack) {
-	Node *newNode = creatNode();
+Node *Push(double entry, Node *stack)
+{
+    Node *newNode = creatNode();
 
-	if(newNode == NULL)
-		printf("No available Memory!\n");
+    if(newNode == NULL)
+        printf("No available Memory!\n");
 
-	newNode->data = entry;
-	newNode->next = stack;
-	stack = newNode;
-	return stack;
+    newNode->data = entry;
+    newNode->next = stack;
+    stack = newNode;
+    return stack;
 }
 
-Node *Pop(Node *stack) {
-	Node *tempNode;
+Node *Pop(Node *stack)
+{
+    Node *tempNode;
 
-	if(isEmpty(stack))
-	{
-		printf("Stack is Empty!\n");
-		return stack;
-	}
+    if(isEmpty(stack)) {
+        printf("Stack is Empty!\n");
+        return stack;
+    }
 
-	tempNode = stack;
-	stack = stack->next;
+    tempNode = stack;
+    stack = stack->next;
 
-	free(tempNode);
+    free(tempNode);
 
-	return stack;
+    return stack;
 }
 
-Node *clearStack(Node *stack) {
-	Node *tempNode;
+Node *clearStack(Node *stack)
+{
+    Node *tempNode;
 
-	while(tempNode != NULL)
-	{
-		tempNode = stack;
-		stack = stack->next;
+    while(tempNode != NULL) {
+        tempNode = stack;
+        stack = stack->next;
 
-		free(tempNode);
-	}
+        free(tempNode);
+    }
 
-	printf("Stack cleared!\n");
-	return stack;
+    printf("Stack cleared!\n");
+    return stack;
 }
 
-void printStack(Node *stack) {
-	if(isEmpty(stack))
-		return;
+void printStack(Node *stack)
+{
+    if(isEmpty(stack))
+        return;
 
-	Node *newStack = stack;
+    Node *newStack = stack;
 
-	printf("Stack:\n");
-	while(newStack != NULL)
-	{
-		printf("%d\n", newStack->data);
-		newStack = newStack->next;
-	}
+    printf("Stack:\n");
+    while(newStack != NULL) {
+        printf("%d\n", newStack->data);
+        newStack = newStack->next;
+    }
 }
 
-int getTopValue(Node *stack) {
-	return stack->data;
+int getTopValue(Node *stack)
+{
+    return stack->data;
 }

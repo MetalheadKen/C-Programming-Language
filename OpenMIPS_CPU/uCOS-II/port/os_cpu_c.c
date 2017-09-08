@@ -102,7 +102,7 @@ void  OSTaskDelHook (OS_TCB *ptcb)
 * Note(s)    : 1) Interrupts are disabled during this call.
 *********************************************************************************************************
 */
-#if OS_CPU_HOOKS_EN > 0 
+#if OS_CPU_HOOKS_EN > 0
 void  OSTaskReturnHook (OS_TCB *ptcb)
 {
     ptcb = ptcb;                       /* Prevent compiler warning                                     */
@@ -126,7 +126,7 @@ void  OSTaskReturnHook (OS_TCB *ptcb)
 void  OSTaskIdleHook (void)
 {
 
-} 
+}
 #endif
 
 /*
@@ -155,11 +155,11 @@ void  OSTaskStatHook (void)
 *
 * Arguments  : task     is a pointer to the task code.
 *
-*              p_arg    is a pointer to a user supplied data area 
+*              p_arg    is a pointer to a user supplied data area
 *
-*              ptos     is a pointer to the top of stack.  OSTaskStkInit() assumes that 'ptos' points to 
-*                       a free entry on the stack.  If OS_STK_GROWTH is set to 1 then 'ptos' will contain 
-*                       the HIGHEST valid address of the stack.  Similarly, if OS_STK_GROWTH is set to 0, 
+*              ptos     is a pointer to the top of stack.  OSTaskStkInit() assumes that 'ptos' points to
+*                       a free entry on the stack.  If OS_STK_GROWTH is set to 1 then 'ptos' will contain
+*                       the HIGHEST valid address of the stack.  Similarly, if OS_STK_GROWTH is set to 0,
 *                       'ptos' will contain the lowest valid address of the stack.
 *
 *              opt      specifies options that can be used to alter the behavior of OSTaskStkInit()
@@ -168,7 +168,7 @@ void  OSTaskStatHook (void)
 * Returns    : The location corresponding to the top of the stack
 *
 * Note(s)    : 1) Interrupts are enabled when each task starts executing.
-* 
+*
 *              2) An initialized stack has the structure shown below.
 *
 *              OSTCBHighRdy->OSTCBStkPtr + 0x00    Free Entry                    (LOW Memory)
@@ -209,24 +209,24 @@ void  OSTaskStatHook (void)
 *********************************************************************************************************
 */
 
-OS_STK  *OSTaskStkInit (void  (*task)(void *pd), 
-			void   *p_arg, 
-			OS_STK *ptos, 
-			INT16U  opt)
+OS_STK  *OSTaskStkInit (void  (*task)(void *pd),
+                        void   *p_arg,
+                        OS_STK *ptos,
+                        INT16U  opt)
 {
     INT32U  *pstk;
     INT32U   sr_val;
     INT32U   gp_val;
 
 
-    (void)opt;                                 /* Prevent compiler warning for unused arguments        */              
+    (void)opt;                                 /* Prevent compiler warning for unused arguments        */
 
     asm volatile("mfc0   %0,$12"   : "=r"(sr_val));
     sr_val  |= 0x00000401;                     /* Initialize stack to allow for tick interrupt         */
 
     asm volatile("addi   %0,$28,0" : "=r"(gp_val));
 
-    pstk     = (INT32U *)ptos; 
+    pstk     = (INT32U *)ptos;
 
     pstk--;                                    /* Ensure that a free entry is being referenced         */
     *pstk--  = (INT32U)task;                   /* GPR[31] (ra) is used by OSStartHighRdy()             */
@@ -269,15 +269,15 @@ OS_STK  *OSTaskStkInit (void  (*task)(void *pd),
 
 /*
 *********************************************************************************************************
-*                                           TASK SWITCH HOOK    
+*                                           TASK SWITCH HOOK
 *
-* Description: This function is called when a task switch is performed.  This allows you to perform 
+* Description: This function is called when a task switch is performed.  This allows you to perform
 *              other operations during a contex switch.
 *
 * Arguments  : None
 *
 * Note(s)    : 1) Interrupts are disabled during this call.
-*              2) It is assumed that the global pointer OSTCBHighRdy points to the TCB of the task that 
+*              2) It is assumed that the global pointer OSTCBHighRdy points to the TCB of the task that
 *                 will be switched in (i.e. the highest priority task), and that OSTCBCur points to the
 *                 task being switched out (i.e. the preempted task).
 *********************************************************************************************************
@@ -286,11 +286,11 @@ OS_STK  *OSTaskStkInit (void  (*task)(void *pd),
 void  OSTaskSwHook (void)
 {
 }
-#endif       
+#endif
 
 /*
 *********************************************************************************************************
-*                                            OS_TCBInit() HOOK 
+*                                            OS_TCBInit() HOOK
 *
 * Description: This function is called by OS_TCBInit() after setting up most of the TCB.
 *
@@ -343,14 +343,13 @@ void  BSP_Interrupt_Handler (void)
     cause_reg  = cause_val;                     /* 得到Exc Code        */
     cause_ip = cause_reg & 0x0000FF00;
     //uart_print_str("I am in BSP_Interrupt_Handler  ");
-    if((cause_ip & 0x00000400) != 0 )
-    {
-    	//uart_print_str("Ready To Call TickISR  ");
+    if((cause_ip & 0x00000400) != 0 ) {
+        //uart_print_str("Ready To Call TickISR  ");
         TickISR(0x50000);
         //asm ("mfc0   %0,$13"   : "=r"(cause_val));
         //cause_val = cause_val & 0xfffffbff;
         //asm volatile("mtc0   %0,$13" : : "r"(cause_val));
-    	/*TickInterruptClear();*/
+        /*TickInterruptClear();*/
     }
 }
 
@@ -372,29 +371,22 @@ void  BSP_Exception_Handler (void)
     INT32U   EPC;
     asm volatile("mfc0   %0,$13"   : "=r"(cause_val));
     cause_exccode  = (cause_val & 0x0000007C);                     /* 得到Exc Code        */
-    if(cause_exccode == 0x00000020 )                             /* 判断是否是由于syscall指令引起 */
-    {
-    	OSIntCtxSw();                                           
+    if(cause_exccode == 0x00000020 ) {                           /* 判断是否是由于syscall指令引起 */
+        OSIntCtxSw();
+    } else if(cause_exccode == 0x00000034) {                     /* 判断是否是由于Txx指令引起 */
+        OSIntCtxSw();
+    } else if(cause_exccode == 0x00000030) {                     /* 判断是否是由于溢出引起 */
+        OSIntCtxSw();
+    } else if(cause_exccode == 0x00000028) {                      /* 判断是否是由于invalid instruction引起 */
+        //asm volatile("mfc0   %0,$14"   : "=r"(EPC));
+        //uart_print_str("Error Cause By Invalid Instruction");
+        //uart_print_str("The Address of Invalid Instruction is");
+        //uart_print_int(EPC);
+        //uart_print_str("\n");
+        //if((cause_val & 0x80000000) !=0 )
+        //uart_print_str("Invalid Instruction is in delay slot");
+        // else
+        //	uart_print_str("Invalid Instruction is not in delay slot");
+        OSIntCtxSw();
     }
-    else if(cause_exccode == 0x00000034)                         /* 判断是否是由于Txx指令引起 */
-    {
-    	OSIntCtxSw();
-    }
-    else if(cause_exccode == 0x00000030)                         /* 判断是否是由于溢出引起 */
-    {
-    	OSIntCtxSw();
-    }
-    else if(cause_exccode == 0x00000028)                          /* 判断是否是由于invalid instruction引起 */
-    {
-    	//asm volatile("mfc0   %0,$14"   : "=r"(EPC));
-      //uart_print_str("Error Cause By Invalid Instruction");
-      //uart_print_str("The Address of Invalid Instruction is");
-    	//uart_print_int(EPC);
-    	//uart_print_str("\n");
-    	//if((cause_val & 0x80000000) !=0 )
-    		//uart_print_str("Invalid Instruction is in delay slot");
-     // else
-      //	uart_print_str("Invalid Instruction is not in delay slot");
-      OSIntCtxSw();
-    } 
 }

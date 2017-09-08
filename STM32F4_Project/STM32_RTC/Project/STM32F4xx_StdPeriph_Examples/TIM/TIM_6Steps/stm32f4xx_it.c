@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    TIM/TIM_6Steps/stm32f4xx_it.c 
+  * @file    TIM/TIM_6Steps/stm32f4xx_it.c
   * @author  MCD Application Team
   * @version V1.1.0
   * @date    18-January-2013
@@ -18,8 +18,8 @@
   *
   *        http://www.st.com/software_license_agreement_liberty_v2
   *
-  * Unless required by applicable law or agreed to in writing, software 
-  * distributed under the License is distributed on an "AS IS" BASIS, 
+  * Unless required by applicable law or agreed to in writing, software
+  * distributed under the License is distributed on an "AS IS" BASIS,
   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   * See the License for the specific language governing permissions and
   * limitations under the License.
@@ -36,7 +36,7 @@
 
 /** @addtogroup TIM_6Steps
   * @{
-  */ 
+  */
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -66,9 +66,9 @@ void NMI_Handler(void)
   */
 void HardFault_Handler(void)
 {
-  /* Go to infinite loop when Hard Fault exception occurs */
-  while (1)
-  {}
+    /* Go to infinite loop when Hard Fault exception occurs */
+    while (1)
+    {}
 }
 
 /**
@@ -78,9 +78,9 @@ void HardFault_Handler(void)
   */
 void MemManage_Handler(void)
 {
-  /* Go to infinite loop when Memory Manage exception occurs */
-  while (1)
-  {}
+    /* Go to infinite loop when Memory Manage exception occurs */
+    while (1)
+    {}
 }
 
 /**
@@ -90,9 +90,9 @@ void MemManage_Handler(void)
   */
 void BusFault_Handler(void)
 {
-  /* Go to infinite loop when Bus Fault exception occurs */
-  while (1)
-  {}
+    /* Go to infinite loop when Bus Fault exception occurs */
+    while (1)
+    {}
 }
 
 /**
@@ -102,9 +102,9 @@ void BusFault_Handler(void)
   */
 void UsageFault_Handler(void)
 {
-  /* Go to infinite loop when Usage Fault exception occurs */
-  while (1)
-  {}
+    /* Go to infinite loop when Usage Fault exception occurs */
+    while (1)
+    {}
 }
 
 /**
@@ -138,8 +138,8 @@ void PendSV_Handler(void)
   */
 void SysTick_Handler(void)
 {
-  /* Generate TIM1 COM event by software */
-  TIM_GenerateEvent(TIM1, TIM_EventSource_COM);
+    /* Generate TIM1 COM event by software */
+    TIM_GenerateEvent(TIM1, TIM_EventSource_COM);
 }
 
 /******************************************************************************/
@@ -150,132 +150,121 @@ void SysTick_Handler(void)
 /******************************************************************************/
 
 /**
-  * @brief  This function handles TIM1 Trigger and commutation and TIM11 
+  * @brief  This function handles TIM1 Trigger and commutation and TIM11
   *         global interrupts requests.
   * @param  None
   * @retval None
   */
 void TIM1_TRG_COM_TIM11_IRQHandler(void)
 {
-  /* Clear TIM1 COM pending bit */
-  TIM_ClearITPendingBit(TIM1, TIM_IT_COM);
+    /* Clear TIM1 COM pending bit */
+    TIM_ClearITPendingBit(TIM1, TIM_IT_COM);
 
-  if (uwStep == 1)
-  {
-    /* Next step: Step 2 Configuration -------------------------------------- */
-    /*  Channel3 configuration */
-    TIM_CCxCmd(TIM1, TIM_Channel_3, TIM_CCx_Disable);
-    TIM_CCxNCmd(TIM1, TIM_Channel_3, TIM_CCxN_Disable);
+    if (uwStep == 1) {
+        /* Next step: Step 2 Configuration -------------------------------------- */
+        /*  Channel3 configuration */
+        TIM_CCxCmd(TIM1, TIM_Channel_3, TIM_CCx_Disable);
+        TIM_CCxNCmd(TIM1, TIM_Channel_3, TIM_CCxN_Disable);
 
-    /*  Channel1 configuration */
-    TIM_SelectOCxM(TIM1, TIM_Channel_1, TIM_OCMode_PWM1);
-    TIM_CCxCmd(TIM1, TIM_Channel_1, TIM_CCx_Enable);
-    TIM_CCxNCmd(TIM1, TIM_Channel_1, TIM_CCxN_Disable);
+        /*  Channel1 configuration */
+        TIM_SelectOCxM(TIM1, TIM_Channel_1, TIM_OCMode_PWM1);
+        TIM_CCxCmd(TIM1, TIM_Channel_1, TIM_CCx_Enable);
+        TIM_CCxNCmd(TIM1, TIM_Channel_1, TIM_CCxN_Disable);
 
-    /*  Channel2 configuration */
-    TIM_SelectOCxM(TIM1, TIM_Channel_2, TIM_OCMode_PWM1 );
-    TIM_CCxCmd(TIM1, TIM_Channel_2, TIM_CCx_Disable);
-    TIM_CCxNCmd(TIM1, TIM_Channel_2, TIM_CCxN_Enable);
-    uwStep++;
-  }
-  else if (uwStep == 2)
-  {
-    /* Next step: Step 3 Configuration -------------------------------------- */
-    /*  Channel2 configuration */
-    TIM_SelectOCxM(TIM1, TIM_Channel_2, TIM_OCMode_PWM1);
-    TIM_CCxCmd(TIM1, TIM_Channel_2, TIM_CCx_Disable);
-    TIM_CCxNCmd(TIM1, TIM_Channel_2, TIM_CCxN_Enable);
-    
-    /*  Channel3 configuration */
-    TIM_SelectOCxM(TIM1, TIM_Channel_3, TIM_OCMode_PWM1);
-    TIM_CCxCmd(TIM1, TIM_Channel_3, TIM_CCx_Enable);
-    TIM_CCxNCmd(TIM1, TIM_Channel_3, TIM_CCxN_Disable);
+        /*  Channel2 configuration */
+        TIM_SelectOCxM(TIM1, TIM_Channel_2, TIM_OCMode_PWM1 );
+        TIM_CCxCmd(TIM1, TIM_Channel_2, TIM_CCx_Disable);
+        TIM_CCxNCmd(TIM1, TIM_Channel_2, TIM_CCxN_Enable);
+        uwStep++;
+    } else if (uwStep == 2) {
+        /* Next step: Step 3 Configuration -------------------------------------- */
+        /*  Channel2 configuration */
+        TIM_SelectOCxM(TIM1, TIM_Channel_2, TIM_OCMode_PWM1);
+        TIM_CCxCmd(TIM1, TIM_Channel_2, TIM_CCx_Disable);
+        TIM_CCxNCmd(TIM1, TIM_Channel_2, TIM_CCxN_Enable);
 
-    /*  Channel1 configuration */
-    TIM_CCxCmd(TIM1, TIM_Channel_1, TIM_CCx_Disable);
-    TIM_CCxNCmd(TIM1, TIM_Channel_1, TIM_CCxN_Disable);
-    uwStep++;
-  }
-  else if (uwStep == 3)
-  {
-    /* Next step: Step 4 Configuration -------------------------------------- */
-    /*  Channel3 configuration */
-    TIM_SelectOCxM(TIM1, TIM_Channel_3, TIM_OCMode_PWM1);
-    TIM_CCxCmd(TIM1, TIM_Channel_3, TIM_CCx_Enable);
-    TIM_CCxNCmd(TIM1, TIM_Channel_3, TIM_CCxN_Disable);
+        /*  Channel3 configuration */
+        TIM_SelectOCxM(TIM1, TIM_Channel_3, TIM_OCMode_PWM1);
+        TIM_CCxCmd(TIM1, TIM_Channel_3, TIM_CCx_Enable);
+        TIM_CCxNCmd(TIM1, TIM_Channel_3, TIM_CCxN_Disable);
 
-    /*  Channel2 configuration */
-    TIM_CCxCmd(TIM1, TIM_Channel_2, TIM_CCx_Disable);
-    TIM_CCxNCmd(TIM1, TIM_Channel_2, TIM_CCxN_Disable);
+        /*  Channel1 configuration */
+        TIM_CCxCmd(TIM1, TIM_Channel_1, TIM_CCx_Disable);
+        TIM_CCxNCmd(TIM1, TIM_Channel_1, TIM_CCxN_Disable);
+        uwStep++;
+    } else if (uwStep == 3) {
+        /* Next step: Step 4 Configuration -------------------------------------- */
+        /*  Channel3 configuration */
+        TIM_SelectOCxM(TIM1, TIM_Channel_3, TIM_OCMode_PWM1);
+        TIM_CCxCmd(TIM1, TIM_Channel_3, TIM_CCx_Enable);
+        TIM_CCxNCmd(TIM1, TIM_Channel_3, TIM_CCxN_Disable);
 
-    /*  Channel1 configuration */
-    TIM_SelectOCxM(TIM1, TIM_Channel_1, TIM_OCMode_PWM1);
-    TIM_CCxCmd(TIM1, TIM_Channel_1, TIM_CCx_Disable);
-    TIM_CCxNCmd(TIM1, TIM_Channel_1, TIM_CCxN_Enable);
-    uwStep++;
-  }
-  else if (uwStep == 4)
-  {
-    /* Next step: Step 5 Configuration -------------------------------------- */
-    /*  Channel3 configuration */
-    TIM_CCxCmd(TIM1, TIM_Channel_3, TIM_CCx_Disable);
-    TIM_CCxNCmd(TIM1, TIM_Channel_3, TIM_CCxN_Disable);
+        /*  Channel2 configuration */
+        TIM_CCxCmd(TIM1, TIM_Channel_2, TIM_CCx_Disable);
+        TIM_CCxNCmd(TIM1, TIM_Channel_2, TIM_CCxN_Disable);
 
-    /*  Channel1 configuration */
-    TIM_SelectOCxM(TIM1, TIM_Channel_1, TIM_OCMode_PWM1);
-    TIM_CCxCmd(TIM1, TIM_Channel_1, TIM_CCx_Disable);
-    TIM_CCxNCmd(TIM1, TIM_Channel_1, TIM_CCxN_Enable);
+        /*  Channel1 configuration */
+        TIM_SelectOCxM(TIM1, TIM_Channel_1, TIM_OCMode_PWM1);
+        TIM_CCxCmd(TIM1, TIM_Channel_1, TIM_CCx_Disable);
+        TIM_CCxNCmd(TIM1, TIM_Channel_1, TIM_CCxN_Enable);
+        uwStep++;
+    } else if (uwStep == 4) {
+        /* Next step: Step 5 Configuration -------------------------------------- */
+        /*  Channel3 configuration */
+        TIM_CCxCmd(TIM1, TIM_Channel_3, TIM_CCx_Disable);
+        TIM_CCxNCmd(TIM1, TIM_Channel_3, TIM_CCxN_Disable);
 
-    /*  Channel2 configuration */
-    TIM_SelectOCxM(TIM1, TIM_Channel_2, TIM_OCMode_PWM1);
-    TIM_CCxCmd(TIM1, TIM_Channel_2, TIM_CCx_Enable);
-    TIM_CCxNCmd(TIM1, TIM_Channel_2, TIM_CCxN_Disable);
-    uwStep++;
-  }
-  else if (uwStep == 5)
-  {
-    /* Next step: Step 6 Configuration -------------------------------------- */
-    /*  Channel3 configuration */
-    TIM_SelectOCxM(TIM1, TIM_Channel_3, TIM_OCMode_PWM1);
-    TIM_CCxCmd(TIM1, TIM_Channel_3, TIM_CCx_Disable);
-    TIM_CCxNCmd(TIM1, TIM_Channel_3, TIM_CCxN_Enable);
+        /*  Channel1 configuration */
+        TIM_SelectOCxM(TIM1, TIM_Channel_1, TIM_OCMode_PWM1);
+        TIM_CCxCmd(TIM1, TIM_Channel_1, TIM_CCx_Disable);
+        TIM_CCxNCmd(TIM1, TIM_Channel_1, TIM_CCxN_Enable);
 
-    /*  Channel1 configuration */
-    TIM_CCxCmd(TIM1, TIM_Channel_1, TIM_CCx_Disable);
-    TIM_CCxNCmd(TIM1, TIM_Channel_1, TIM_CCxN_Disable);
+        /*  Channel2 configuration */
+        TIM_SelectOCxM(TIM1, TIM_Channel_2, TIM_OCMode_PWM1);
+        TIM_CCxCmd(TIM1, TIM_Channel_2, TIM_CCx_Enable);
+        TIM_CCxNCmd(TIM1, TIM_Channel_2, TIM_CCxN_Disable);
+        uwStep++;
+    } else if (uwStep == 5) {
+        /* Next step: Step 6 Configuration -------------------------------------- */
+        /*  Channel3 configuration */
+        TIM_SelectOCxM(TIM1, TIM_Channel_3, TIM_OCMode_PWM1);
+        TIM_CCxCmd(TIM1, TIM_Channel_3, TIM_CCx_Disable);
+        TIM_CCxNCmd(TIM1, TIM_Channel_3, TIM_CCxN_Enable);
 
-    /*  Channel2 configuration */
-    TIM_SelectOCxM(TIM1, TIM_Channel_2, TIM_OCMode_PWM1);
-    TIM_CCxCmd(TIM1, TIM_Channel_2, TIM_CCx_Enable);
-    TIM_CCxNCmd(TIM1, TIM_Channel_2, TIM_CCxN_Disable);
-    uwStep++;
-  }
-  else
-  {
-    /* Next step: Step 1 Configuration -------------------------------------- */
-    /*  Channel1 configuration */
-    TIM_SelectOCxM(TIM1, TIM_Channel_1, TIM_OCMode_PWM1);
-    TIM_CCxCmd(TIM1, TIM_Channel_1, TIM_CCx_Enable);
-    TIM_CCxNCmd(TIM1, TIM_Channel_2, TIM_CCxN_Disable);
+        /*  Channel1 configuration */
+        TIM_CCxCmd(TIM1, TIM_Channel_1, TIM_CCx_Disable);
+        TIM_CCxNCmd(TIM1, TIM_Channel_1, TIM_CCxN_Disable);
 
-    /*  Channel3 configuration */
-    TIM_SelectOCxM(TIM1, TIM_Channel_3, TIM_OCMode_PWM1);
-    TIM_CCxCmd(TIM1, TIM_Channel_3, TIM_CCx_Disable);
-    TIM_CCxNCmd(TIM1, TIM_Channel_3, TIM_CCxN_Enable);
+        /*  Channel2 configuration */
+        TIM_SelectOCxM(TIM1, TIM_Channel_2, TIM_OCMode_PWM1);
+        TIM_CCxCmd(TIM1, TIM_Channel_2, TIM_CCx_Enable);
+        TIM_CCxNCmd(TIM1, TIM_Channel_2, TIM_CCxN_Disable);
+        uwStep++;
+    } else {
+        /* Next step: Step 1 Configuration -------------------------------------- */
+        /*  Channel1 configuration */
+        TIM_SelectOCxM(TIM1, TIM_Channel_1, TIM_OCMode_PWM1);
+        TIM_CCxCmd(TIM1, TIM_Channel_1, TIM_CCx_Enable);
+        TIM_CCxNCmd(TIM1, TIM_Channel_2, TIM_CCxN_Disable);
 
-    /*  Channel2 configuration */
-    TIM_CCxCmd(TIM1, TIM_Channel_2, TIM_CCx_Disable);
-    TIM_CCxNCmd(TIM1, TIM_Channel_2, TIM_CCxN_Disable);
-    uwStep = 1;
-  }
+        /*  Channel3 configuration */
+        TIM_SelectOCxM(TIM1, TIM_Channel_3, TIM_OCMode_PWM1);
+        TIM_CCxCmd(TIM1, TIM_Channel_3, TIM_CCx_Disable);
+        TIM_CCxNCmd(TIM1, TIM_Channel_3, TIM_CCxN_Enable);
+
+        /*  Channel2 configuration */
+        TIM_CCxCmd(TIM1, TIM_Channel_2, TIM_CCx_Disable);
+        TIM_CCxNCmd(TIM1, TIM_Channel_2, TIM_CCxN_Disable);
+        uwStep = 1;
+    }
 }
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

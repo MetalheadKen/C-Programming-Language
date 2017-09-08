@@ -18,7 +18,7 @@ extern __IO uint8_t EthLinkStatus;
 /* By Include "main.c" */
 extern void LCD_Init(void);
 
-/* By Include "my_uart.h" */	
+/* By Include "my_uart.h" */
 extern void Usart3_Interrupt(void);
 
 #ifdef USB_OTG_HS_DEDICATED_EP1_ENABLED
@@ -46,10 +46,9 @@ void NMI_Handler(void)
   */
 void HardFault_Handler(void)
 {
-  /* Go to infinite loop when Hard Fault exception occurs */
-	while (1)
-	{
-	}
+    /* Go to infinite loop when Hard Fault exception occurs */
+    while (1) {
+    }
 }
 
 /**
@@ -59,10 +58,9 @@ void HardFault_Handler(void)
   */
 void MemManage_Handler(void)
 {
-  /* Go to infinite loop when Memory Manage exception occurs */
-	while (1)
-	{
-	}
+    /* Go to infinite loop when Memory Manage exception occurs */
+    while (1) {
+    }
 }
 
 /**
@@ -72,10 +70,9 @@ void MemManage_Handler(void)
   */
 void BusFault_Handler(void)
 {
-  /* Go to infinite loop when Bus Fault exception occurs */
-	while (1)
-	{
-	}
+    /* Go to infinite loop when Bus Fault exception occurs */
+    while (1) {
+    }
 }
 
 /**
@@ -85,10 +82,9 @@ void BusFault_Handler(void)
   */
 void UsageFault_Handler(void)
 {
-  /* Go to infinite loop when Usage Fault exception occurs */
-	while (1)
-	{
-	}
+    /* Go to infinite loop when Usage Fault exception occurs */
+    while (1) {
+    }
 }
 
 /**
@@ -125,9 +121,9 @@ void PendSV_Handler(void)
   */
 void SysTick_Handler(void)
 {
-	TimingDelay_Decrement();
-	/* Update the LocalTime by adding SYSTEMTICK_PERIOD_MS each SysTick interrupt */
-	Time_Update();
+    TimingDelay_Decrement();
+    /* Update the LocalTime by adding SYSTEMTICK_PERIOD_MS each SysTick interrupt */
+    Time_Update();
 }
 
 /**
@@ -138,42 +134,38 @@ void SysTick_Handler(void)
 void EXTI2_IRQHandler(void)
 {
     EXTI_ClearITPendingBit(EXTI_Line2);
-		STM_EVAL_LEDToggle(LED2);
+    STM_EVAL_LEDToggle(LED2);
 }
 
-void EXTI15_10_IRQHandler(void) 
+void EXTI15_10_IRQHandler(void)
 {
-	if (EXTI_GetITStatus(EXTI_Line15) != RESET)
-	{
-		if (EthLinkStatus == 0)
-		{
-			/*connect to tcp server */ 
-			tcp_echoclient_connect();
-		}
-		/* Clear the EXTI line  pending bit */
-		EXTI_ClearITPendingBit(KEY_BUTTON_EXTI_LINE);
-	}
-	
-	if (EXTI_GetITStatus(ETH_LINK_EXTI_LINE) != RESET)
-	{
-		Eth_Link_ITHandler(DP83848_PHY_ADDRESS);
-		/* Clear interrupt pending bit */
-		EXTI_ClearITPendingBit(ETH_LINK_EXTI_LINE);
-	}
-	
-	if(EXTI_GetITStatus(TAMPER_BUTTON_EXTI_LINE) != RESET)
-  {
-    /* Display the current date and time */
-    RTC_TimeShow();
-		RTC_DateShow();
-		
-		for(uint32_t i = 0; i < 0x06FFFFFF; i++);
-    
-		LCD_Init();
-		
-    /* Clear the Tamper Button EXTI line pending bit */
-    EXTI_ClearITPendingBit(TAMPER_BUTTON_EXTI_LINE);
-  }
+    if (EXTI_GetITStatus(EXTI_Line15) != RESET) {
+        if (EthLinkStatus == 0) {
+            /*connect to tcp server */
+            tcp_echoclient_connect();
+        }
+        /* Clear the EXTI line  pending bit */
+        EXTI_ClearITPendingBit(KEY_BUTTON_EXTI_LINE);
+    }
+
+    if (EXTI_GetITStatus(ETH_LINK_EXTI_LINE) != RESET) {
+        Eth_Link_ITHandler(DP83848_PHY_ADDRESS);
+        /* Clear interrupt pending bit */
+        EXTI_ClearITPendingBit(ETH_LINK_EXTI_LINE);
+    }
+
+    if(EXTI_GetITStatus(TAMPER_BUTTON_EXTI_LINE) != RESET) {
+        /* Display the current date and time */
+        RTC_TimeShow();
+        RTC_DateShow();
+
+        for(uint32_t i = 0; i < 0x06FFFFFF; i++);
+
+        LCD_Init();
+
+        /* Clear the Tamper Button EXTI line pending bit */
+        EXTI_ClearITPendingBit(TAMPER_BUTTON_EXTI_LINE);
+    }
 }
 
 /******************************************************************************/
@@ -185,48 +177,46 @@ void EXTI15_10_IRQHandler(void)
 
 void EXTI0_IRQHabdler(void)
 {
-	if(EXTI_GetITStatus(WAKEUP_BUTTON_EXTI_LINE) != RESET)
-  {  
-    /* Display the current alarm */
-    RTC_AlarmShow();
-     
-    /* Clear the Wakeup Button EXTI line pending bit */
-    EXTI_ClearITPendingBit(WAKEUP_BUTTON_EXTI_LINE);
-  }
-	
-	#if USE_WWDG
-	if (EXTI_GetITStatus(KEY_BUTTON_EXTI_LINE) != RESET)
-  {  
-    /* Clear the Key Button EXTI Line Pending Bit */
-    EXTI_ClearITPendingBit(KEY_BUTTON_EXTI_LINE);
-    
-    /* As the following address is invalid (not mapped), a Hardfault exception
-	  will be generated with an infinite loop and when the WWDG counter falls to 63
-    the WWDG reset occurs */
- 	  *(__IO uint32_t *) 0xA0001000 = 0xFF;
-  }
-	#endif
+    if(EXTI_GetITStatus(WAKEUP_BUTTON_EXTI_LINE) != RESET) {
+        /* Display the current alarm */
+        RTC_AlarmShow();
+
+        /* Clear the Wakeup Button EXTI line pending bit */
+        EXTI_ClearITPendingBit(WAKEUP_BUTTON_EXTI_LINE);
+    }
+
+#if USE_WWDG
+    if (EXTI_GetITStatus(KEY_BUTTON_EXTI_LINE) != RESET) {
+        /* Clear the Key Button EXTI Line Pending Bit */
+        EXTI_ClearITPendingBit(KEY_BUTTON_EXTI_LINE);
+
+        /* As the following address is invalid (not mapped), a Hardfault exception
+          will be generated with an infinite loop and when the WWDG counter falls to 63
+        the WWDG reset occurs */
+        *(__IO uint32_t *) 0xA0001000 = 0xFF;
+    }
+#endif
 }
 
 void USART1_IRQHandler(void)
 {
-	uint8_t RxByte;
+    uint8_t RxByte;
 
-	RxByte = (USART_ReceiveData(EVAL_COM1) & 0x7F);
-	USART_SendData(EVAL_COM1, RxByte);
+    RxByte = (USART_ReceiveData(EVAL_COM1) & 0x7F);
+    USART_SendData(EVAL_COM1, RxByte);
 }
 
 /* USART3 中斷函數 */
 /* 函數名稱為官方設定，只要偵測到 USART3 有資料輸入，這個函數就會被自動執行（收到一個字元就會被執行一次） */
 void USART3_IRQHandler(void)
 {
-		Usart3_Interrupt();
+    Usart3_Interrupt();
 }
 
 void SDIO_IRQHandler(void)
 {
-  /* Process All SDIO Interrupt Sources */
-  SD_ProcessIRQSrc();
+    /* Process All SDIO Interrupt Sources */
+    SD_ProcessIRQSrc();
 }
 
 /**
@@ -237,18 +227,17 @@ void SDIO_IRQHandler(void)
   */
 void SD_SDIO_DMA_IRQHANDLER(void)
 {
-  /* Process DMA2 Stream3 or DMA2 Stream6 Interrupt Sources */
-  SD_ProcessDMAIRQ();
+    /* Process DMA2 Stream3 or DMA2 Stream6 Interrupt Sources */
+    SD_ProcessDMAIRQ();
 }
 
 void RTC_Alarm_IRQHandler(void)
 {
-  if(RTC_GetITStatus(RTC_IT_ALRA) != RESET)
-  {
-    STM_EVAL_LEDToggle(LED1);
-    RTC_ClearITPendingBit(RTC_IT_ALRA);
-    EXTI_ClearITPendingBit(EXTI_Line17);
-  } 
+    if(RTC_GetITStatus(RTC_IT_ALRA) != RESET) {
+        STM_EVAL_LEDToggle(LED1);
+        RTC_ClearITPendingBit(RTC_IT_ALRA);
+        EXTI_ClearITPendingBit(EXTI_Line17);
+    }
 }
 
 /**

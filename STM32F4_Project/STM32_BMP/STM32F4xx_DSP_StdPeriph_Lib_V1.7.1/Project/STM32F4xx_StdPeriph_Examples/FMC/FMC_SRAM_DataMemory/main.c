@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    FMC/FMC_SRAM_DataMemory/main.c 
+  * @file    FMC/FMC_SRAM_DataMemory/main.c
   * @author  MCD Application Team
   * @version V1.7.0
   * @date    22-April-2016
@@ -16,8 +16,8 @@
   *
   *        http://www.st.com/software_license_agreement_liberty_v2
   *
-  * Unless required by applicable law or agreed to in writing, software 
-  * distributed under the License is distributed on an "AS IS" BASIS, 
+  * Unless required by applicable law or agreed to in writing, software
+  * distributed under the License is distributed on an "AS IS" BASIS,
   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   * See the License for the specific language governing permissions and
   * limitations under the License.
@@ -59,27 +59,25 @@ __IO uint32_t MSPValue = 0;
   */
 int main(void)
 {
-  /*!< At this stage the microcontroller clock setting is already configured, 
-       this is done through SystemInit() function which is called from startup
-       files (startup_stm32f40_41xxx.s/startup_stm32f427_437xx.s/
-       startup_stm32f429_439xx.s/startup_stm32f401xx.s) before to branch to 
-       application main. To reconfigure the default setting of SystemInit() 
-       function, refer to system_stm32f4xx.c file
-     */      
-     
-  for (uwIndex = 0; uwIndex <1024 ; uwIndex++)
-  {
-     aTable[uwIndex] =uwIndex;
-  }
+    /*!< At this stage the microcontroller clock setting is already configured,
+         this is done through SystemInit() function which is called from startup
+         files (startup_stm32f40_41xxx.s/startup_stm32f427_437xx.s/
+         startup_stm32f429_439xx.s/startup_stm32f401xx.s) before to branch to
+         application main. To reconfigure the default setting of SystemInit()
+         function, refer to system_stm32f4xx.c file
+       */
 
-  uwTabAddr = (uint32_t)aTable; /* should be 0x640xxxxx */
+    for (uwIndex = 0; uwIndex <1024 ; uwIndex++) {
+        aTable[uwIndex] =uwIndex;
+    }
 
-  /* Get main stack pointer value */
-  MSPValue = __get_MSP(); /* should be 0x640xxxxx */
+    uwTabAddr = (uint32_t)aTable; /* should be 0x640xxxxx */
 
-  while (1)
-  {
-  } 
+    /* Get main stack pointer value */
+    MSPValue = __get_MSP(); /* should be 0x640xxxxx */
+
+    while (1) {
+    }
 }
 
 #ifdef  USE_FULL_ASSERT
@@ -92,20 +90,19 @@ int main(void)
   * @retval None
   */
 void assert_failed(uint8_t* file, uint32_t line)
-{ 
-  /* User can add his own implementation to report the file name and line number,
-     ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+{
+    /* User can add his own implementation to report the file name and line number,
+       ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
 
-  /* Infinite loop */
-  while (1)
-  {
-  }
+    /* Infinite loop */
+    while (1) {
+    }
 }
 #endif
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}

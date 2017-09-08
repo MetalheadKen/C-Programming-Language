@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    ADC/ADC_DualModeRegulSimu/main.c 
+  * @file    ADC/ADC_DualModeRegulSimu/main.c
   * @author  MCD Application Team
   * @version V1.1.0
   * @date    18-January-2013
@@ -16,15 +16,15 @@
   *
   *        http://www.st.com/software_license_agreement_liberty_v2
   *
-  * Unless required by applicable law or agreed to in writing, software 
-  * distributed under the License is distributed on an "AS IS" BASIS, 
+  * Unless required by applicable law or agreed to in writing, software
+  * distributed under the License is distributed on an "AS IS" BASIS,
   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   * See the License for the specific language governing permissions and
   * limitations under the License.
   *
   ******************************************************************************
   */
-  
+
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __MAIN_H
 #define __MAIN_H
@@ -38,11 +38,11 @@
 /* Exported macro ------------------------------------------------------------*/
 #if defined (USE_STM324xG_EVAL)
 
-  #define ADC_CCR_ADDRESS    ((uint32_t)0x40012308)
+#define ADC_CCR_ADDRESS    ((uint32_t)0x40012308)
 
-#else /* defined (USE_STM324x7I_EVAL)*/ 
+#else /* defined (USE_STM324x7I_EVAL)*/
 
-  #define ADC_CCR_ADDRESS    ((uint32_t)0x40012308)
+#define ADC_CCR_ADDRESS    ((uint32_t)0x40012308)
 
 #endif
 /* Exported functions ------------------------------------------------------- */

@@ -1,11 +1,11 @@
 /**
   ******************************************************************************
-  * @file    USART/USART_HyperTerminal/stm32f4xx_it.c 
+  * @file    USART/USART_HyperTerminal/stm32f4xx_it.c
   * @author  MCD Application Team
   * @version V1.7.0
   * @date    22-April-2016
   * @brief   Main Interrupt Service Routines.
-  *          This file provides template for all exceptions handler and 
+  *          This file provides template for all exceptions handler and
   *          peripherals interrupt service routine.
   ******************************************************************************
   * @attention
@@ -18,8 +18,8 @@
   *
   *        http://www.st.com/software_license_agreement_liberty_v2
   *
-  * Unless required by applicable law or agreed to in writing, software 
-  * distributed under the License is distributed on an "AS IS" BASIS, 
+  * Unless required by applicable law or agreed to in writing, software
+  * distributed under the License is distributed on an "AS IS" BASIS,
   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   * See the License for the specific language governing permissions and
   * limitations under the License.
@@ -52,8 +52,8 @@ uint8_t aTxBuffer[] = "\n\rUSART Hyperterminal Interrupts Example: USART-Hyperte
 uint8_t aRxBuffer[RXBUFFERSIZE];
 uint8_t ubNbrOfDataToTransfer = TXBUFFERSIZE;
 uint8_t ubNbrOfDataToRead = RXBUFFERSIZE;
-__IO uint8_t ubTxCounter = 0; 
-__IO uint16_t uhRxCounter = 0; 
+__IO uint8_t ubTxCounter = 0;
+__IO uint16_t uhRxCounter = 0;
 
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
@@ -78,10 +78,9 @@ void NMI_Handler(void)
   */
 void HardFault_Handler(void)
 {
-  /* Go to infinite loop when Hard Fault exception occurs */
-  while (1)
-  {
-  }
+    /* Go to infinite loop when Hard Fault exception occurs */
+    while (1) {
+    }
 }
 
 /**
@@ -91,10 +90,9 @@ void HardFault_Handler(void)
   */
 void MemManage_Handler(void)
 {
-  /* Go to infinite loop when Memory Manage exception occurs */
-  while (1)
-  {
-  }
+    /* Go to infinite loop when Memory Manage exception occurs */
+    while (1) {
+    }
 }
 
 /**
@@ -104,10 +102,9 @@ void MemManage_Handler(void)
   */
 void BusFault_Handler(void)
 {
-  /* Go to infinite loop when Bus Fault exception occurs */
-  while (1)
-  {
-  }
+    /* Go to infinite loop when Bus Fault exception occurs */
+    while (1) {
+    }
 }
 
 /**
@@ -117,10 +114,9 @@ void BusFault_Handler(void)
   */
 void UsageFault_Handler(void)
 {
-  /* Go to infinite loop when Usage Fault exception occurs */
-  while (1)
-  {
-  }
+    /* Go to infinite loop when Usage Fault exception occurs */
+    while (1) {
+    }
 }
 
 /**
@@ -173,37 +169,33 @@ void SysTick_Handler(void)
   */
 void USARTx_IRQHANDLER(void)
 {
-  if(USART_GetITStatus(EVAL_COM1, USART_IT_RXNE) != RESET)
-  {
-    /* Read one byte from the receive data register */
-    aRxBuffer[uhRxCounter++] = (USART_ReceiveData(EVAL_COM1) & 0x7F);
+    if(USART_GetITStatus(EVAL_COM1, USART_IT_RXNE) != RESET) {
+        /* Read one byte from the receive data register */
+        aRxBuffer[uhRxCounter++] = (USART_ReceiveData(EVAL_COM1) & 0x7F);
 
-    if(uhRxCounter == ubNbrOfDataToRead)
-    {
-      /* Disable the EVAL_COM1 Receive interrupt */
-      USART_ITConfig(EVAL_COM1, USART_IT_RXNE, DISABLE);
+        if(uhRxCounter == ubNbrOfDataToRead) {
+            /* Disable the EVAL_COM1 Receive interrupt */
+            USART_ITConfig(EVAL_COM1, USART_IT_RXNE, DISABLE);
+        }
     }
-  }
 
-  if(USART_GetITStatus(EVAL_COM1, USART_IT_TXE) != RESET)
-  {   
-    /* Write one byte to the transmit data register */
-    USART_SendData(EVAL_COM1, aTxBuffer[ubTxCounter++]);
+    if(USART_GetITStatus(EVAL_COM1, USART_IT_TXE) != RESET) {
+        /* Write one byte to the transmit data register */
+        USART_SendData(EVAL_COM1, aTxBuffer[ubTxCounter++]);
 
-    if(ubTxCounter == ubNbrOfDataToTransfer)
-    {
-      /* Disable the EVAL_COM1 Transmit interrupt */
-      USART_ITConfig(EVAL_COM1, USART_IT_TXE, DISABLE);
+        if(ubTxCounter == ubNbrOfDataToTransfer) {
+            /* Disable the EVAL_COM1 Transmit interrupt */
+            USART_ITConfig(EVAL_COM1, USART_IT_TXE, DISABLE);
+        }
     }
-  }
 }
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

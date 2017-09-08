@@ -3,8 +3,8 @@
   * @file    netconf.h
   * @author  MCD Application Team
   * @version V1.0.0
-  * @date    31-October-2011 
-  * @brief   This file contains all the functions prototypes for the netconf.c 
+  * @date    31-October-2011
+  * @brief   This file contains all the functions prototypes for the netconf.c
   *          file.
   ******************************************************************************
   * @attention
@@ -25,9 +25,9 @@
 #define __NETCONF_H
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
-   
+
 /* Includes ------------------------------------------------------------------*/
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/

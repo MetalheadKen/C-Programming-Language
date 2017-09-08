@@ -3,7 +3,7 @@
   * @file    tcp_echoclient.h
   * @author  MCD Application Team
   * @version V1.0.0
-  * @date    31-October-2011 
+  * @date    31-October-2011
   * @brief   Header file for tcp_echoclient.c
   ******************************************************************************
   * @attention
@@ -18,7 +18,7 @@
   * <h2><center>&copy; COPYRIGHT 2011 STMicroelectronics</center></h2>
   ******************************************************************************
   */
-  
+
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __TCP_ECHOCLIENT_H__
 #define __TCP_ECHOCLIENT_H__

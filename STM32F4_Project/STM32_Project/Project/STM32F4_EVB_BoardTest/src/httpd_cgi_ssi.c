@@ -18,83 +18,75 @@ extern uint8_t in_out_flag;
 char const* TAGCHAR="t";
 char const** TAGS=&TAGCHAR;
 
-/* CGI handler for Login */ 
+/* CGI handler for Login */
 const char * LOGIN_CGI_Handler(int iIndex, int iNumParams, char *pcParam[], char *pcValue[]);
 
 /* Html request for "/login.cgi" will start LOGIN_CGI_Handler */
-const tCGI LOGIN_CGI={"/login.cgi", LOGIN_CGI_Handler};
+const tCGI LOGIN_CGI= {"/login.cgi", LOGIN_CGI_Handler};
 
 /* Cgi call table, only one CGI used */
 tCGI CGI_TAB[1];
 
 u16_t CHECK_Handler(int iIndex, char *pcInsert, int iInsertLen)
 {
-  /* We have only one SSI handler iIndex = 0 */
-  if (iIndex ==0)
-  {  
-      /* prepare data to be inserted in html */
-		if(in_out_flag == 1)
-		{
-			*pcInsert 			= (char)('I');
-			*(pcInsert + 1) = (char)('N');
-		}
-		else
-		{
-			*pcInsert 			= (char)('O');
-			*(pcInsert + 1) = (char)('U');
-			*(pcInsert + 2) = (char)('T');
-		}
-    
-    /* 4 characters need to be inserted in html*/
-    return 4;
-  }
-  return 0;
+    /* We have only one SSI handler iIndex = 0 */
+    if (iIndex ==0) {
+        /* prepare data to be inserted in html */
+        if(in_out_flag == 1) {
+            *pcInsert 			= (char)('I');
+            *(pcInsert + 1) = (char)('N');
+        } else {
+            *pcInsert 			= (char)('O');
+            *(pcInsert + 1) = (char)('U');
+            *(pcInsert + 2) = (char)('T');
+        }
+
+        /* 4 characters need to be inserted in html*/
+        return 4;
+    }
+    return 0;
 }
 
 const char *LOGIN_CGI_Handler(int iIndex, int iNumParams, char *pcParam[], char *pcValue[])
 {
-  uint32_t i = 0;
-  
-  /* We have only one SSI handler iIndex = 0 */
-  if (iIndex == 0)
-  {    
-    /* Check cgi parameter : example GET /leds.cgi?led=2&led=4 */
-    for (i = 0; i < iNumParams; i++)
-    {
-      /* check parameter "user" */
-      if(strcmp(pcParam[i] , "user") == 0)   
-      {
-				/* 確認帳號 */
-        if(strcmp(pcValue[i], "root") == 0) 
-				{
-					/* 確認密碼 */
-					if(strcmp(pcValue[i + 1], "123456") == 0)
-						return "/Select_Option.html";
-				}
-      }
+    uint32_t i = 0;
+
+    /* We have only one SSI handler iIndex = 0 */
+    if (iIndex == 0) {
+        /* Check cgi parameter : example GET /leds.cgi?led=2&led=4 */
+        for (i = 0; i < iNumParams; i++) {
+            /* check parameter "user" */
+            if(strcmp(pcParam[i], "user") == 0) {
+                /* 確認帳號 */
+                if(strcmp(pcValue[i], "root") == 0) {
+                    /* 確認密碼 */
+                    if(strcmp(pcValue[i + 1], "123456") == 0)
+                        return "/Select_Option.html";
+                }
+            }
+        }
     }
-  }
-	
-  return "/Login_Failure.html";  
+
+    return "/Login_Failure.html";
 }
 
 /**
  * Initialize SSI handlers
  */
 void httpd_ssi_init(void)
-{  
-  /* configure SSI handlers (ADC page SSI) */
-  http_set_ssi_handler(CHECK_Handler, (char const **)TAGS, 1);
+{
+    /* configure SSI handlers (ADC page SSI) */
+    http_set_ssi_handler(CHECK_Handler, (char const **)TAGS, 1);
 }
 
 /**
  * Initialize CGI handlers
  */
 void httpd_cgi_init(void)
-{ 
-  /* configure CGI handlers (LEDs control CGI) */
-  CGI_TAB[0] = LOGIN_CGI;
-  http_set_cgi_handlers(CGI_TAB, 1);
+{
+    /* configure CGI handlers (LEDs control CGI) */
+    CGI_TAB[0] = LOGIN_CGI;
+    http_set_cgi_handlers(CGI_TAB, 1);
 }
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

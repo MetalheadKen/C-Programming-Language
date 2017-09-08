@@ -31,7 +31,7 @@
 #define __STM32F4_EVB_H
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
@@ -57,46 +57,41 @@
 /** @defgroup STM324F4_EVB_LOW_LEVEL_Exported_Types
   * @{
   */
-typedef enum
-{
-  LED1 = 0,
-  LED2 = 1,
-  LED3 = 2,
-  LED4 = 3
+typedef enum {
+    LED1 = 0,
+    LED2 = 1,
+    LED3 = 2,
+    LED4 = 3
 } Led_TypeDef;
 
-typedef enum
-{
-	BUTTON_WAKEUP	= 0,
-	BUTTON_TAMPER	= 1,
-	BUTTON_KEY		= 2
-/*	BUTTON_RIGHT	= 3,
-	BUTTON_LEFT		= 4,
-	BUTTON_UP		= 5,
-	BUTTON_DOWN		= 6,
-	BUTTON_SEL		= 7*/
+typedef enum {
+    BUTTON_WAKEUP	= 0,
+    BUTTON_TAMPER	= 1,
+    BUTTON_KEY		= 2
+                      /*	BUTTON_RIGHT	= 3,
+                      	BUTTON_LEFT		= 4,
+                      	BUTTON_UP		= 5,
+                      	BUTTON_DOWN		= 6,
+                      	BUTTON_SEL		= 7*/
 } Button_TypeDef;
 
-typedef enum
-{
-	BUTTON_MODE_GPIO = 0,
-	BUTTON_MODE_EXTI = 1
+typedef enum {
+    BUTTON_MODE_GPIO = 0,
+    BUTTON_MODE_EXTI = 1
 } ButtonMode_TypeDef;
 
-typedef enum
-{
-	JOY_NONE	= 0,
-	JOY_SEL	= 1,
-	JOY_DOWN	= 2,
-	JOY_LEFT	= 3,
-	JOY_RIGHT	= 4,
-	JOY_UP	= 5
+typedef enum {
+    JOY_NONE	= 0,
+    JOY_SEL	= 1,
+    JOY_DOWN	= 2,
+    JOY_LEFT	= 3,
+    JOY_RIGHT	= 4,
+    JOY_UP	= 5
 } JOYState_TypeDef
 ;
 
-typedef enum
-{
-	COM1 = 0
+typedef enum {
+    COM1 = 0
 } COM_TypeDef;
 /**
   * @}
@@ -110,7 +105,7 @@ typedef enum
   * @brief  Define for STM32F4_EVB board
   */
 #if !defined (USE_STM32F4_EVB)
-	#define USE_STM32F4_EVB
+#define USE_STM32F4_EVB
 #endif
 
 /** @addtogroup STM32F4_EVB_LOW_LEVEL_LED
@@ -234,25 +229,25 @@ typedef enum
 //#define SD_SDIO_DMA_STREAM6           6
 
 #ifdef SD_SDIO_DMA_STREAM3
-	#define SD_SDIO_DMA_STREAM 			DMA2_Stream3
-	#define SD_SDIO_DMA_CHANNEL			DMA_Channel_4
-	#define SD_SDIO_DMA_FLAG_FEIF		DMA_FLAG_FEIF3
-	#define SD_SDIO_DMA_FLAG_DMEIF		DMA_FLAG_DMEIF3
-	#define SD_SDIO_DMA_FLAG_TEIF		DMA_FLAG_TEIF3
-	#define SD_SDIO_DMA_FLAG_HTIF		DMA_FLAG_HTIF3
-	#define SD_SDIO_DMA_FLAG_TCIF		DMA_FLAG_TCIF3
-	#define SD_SDIO_DMA_IRQn			DMA2_Stream3_IRQn
-	#define SD_SDIO_DMA_IRQHANDLER		DMA2_Stream3_IRQHandler
+#define SD_SDIO_DMA_STREAM 			DMA2_Stream3
+#define SD_SDIO_DMA_CHANNEL			DMA_Channel_4
+#define SD_SDIO_DMA_FLAG_FEIF		DMA_FLAG_FEIF3
+#define SD_SDIO_DMA_FLAG_DMEIF		DMA_FLAG_DMEIF3
+#define SD_SDIO_DMA_FLAG_TEIF		DMA_FLAG_TEIF3
+#define SD_SDIO_DMA_FLAG_HTIF		DMA_FLAG_HTIF3
+#define SD_SDIO_DMA_FLAG_TCIF		DMA_FLAG_TCIF3
+#define SD_SDIO_DMA_IRQn			DMA2_Stream3_IRQn
+#define SD_SDIO_DMA_IRQHANDLER		DMA2_Stream3_IRQHandler
 #elif defined SD_SDIO_DMA_STREAM6
-	#define SD_SDIO_DMA_STREAM			DMA2_Stream6
-	#define SD_SDIO_DMA_CHANNEL			DMA_Channel_4
-	#define SD_SDIO_DMA_FLAG_FEIF		DMA_FLAG_FEIF6
-	#define SD_SDIO_DMA_FLAG_DMEIF		DMA_FLAG_DMEIF6
-	#define SD_SDIO_DMA_FLAG_TEIF		DMA_FLAG_TEIF6
-	#define SD_SDIO_DMA_FLAG_HTIF		DMA_FLAG_HTIF6
-	#define SD_SDIO_DMA_FLAG_TCIF		DMA_FLAG_TCIF6
-	#define SD_SDIO_DMA_IRQn			DMA2_Stream6_IRQn
-	#define SD_SDIO_DMA_IRQHANDLER		DMA2_Stream6_IRQHandler
+#define SD_SDIO_DMA_STREAM			DMA2_Stream6
+#define SD_SDIO_DMA_CHANNEL			DMA_Channel_4
+#define SD_SDIO_DMA_FLAG_FEIF		DMA_FLAG_FEIF6
+#define SD_SDIO_DMA_FLAG_DMEIF		DMA_FLAG_DMEIF6
+#define SD_SDIO_DMA_FLAG_TEIF		DMA_FLAG_TEIF6
+#define SD_SDIO_DMA_FLAG_HTIF		DMA_FLAG_HTIF6
+#define SD_SDIO_DMA_FLAG_TCIF		DMA_FLAG_TCIF6
+#define SD_SDIO_DMA_IRQn			DMA2_Stream6_IRQn
+#define SD_SDIO_DMA_IRQHANDLER		DMA2_Stream6_IRQHandler
 #endif /* SD_SDIO_DMA_STREAM3 */
 
 /**

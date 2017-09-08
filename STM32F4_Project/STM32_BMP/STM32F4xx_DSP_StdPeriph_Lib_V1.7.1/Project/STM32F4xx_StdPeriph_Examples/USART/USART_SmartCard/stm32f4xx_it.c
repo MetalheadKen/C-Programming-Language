@@ -1,11 +1,11 @@
 /**
   ******************************************************************************
-  * @file    USART/USART_SmartCard/stm32f4xx_it.c 
+  * @file    USART/USART_SmartCard/stm32f4xx_it.c
   * @author  MCD Application Team
   * @version V1.7.0
   * @date    22-April-2016
   * @brief   Main Interrupt Service Routines.
-  *          This file provides template for all exceptions handler and 
+  *          This file provides template for all exceptions handler and
   *          peripherals interrupt service routine.
   ******************************************************************************
   * @attention
@@ -18,8 +18,8 @@
   *
   *        http://www.st.com/software_license_agreement_liberty_v2
   *
-  * Unless required by applicable law or agreed to in writing, software 
-  * distributed under the License is distributed on an "AS IS" BASIS, 
+  * Unless required by applicable law or agreed to in writing, software
+  * distributed under the License is distributed on an "AS IS" BASIS,
   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   * See the License for the specific language governing permissions and
   * limitations under the License.
@@ -68,10 +68,9 @@ void NMI_Handler(void)
   */
 void HardFault_Handler(void)
 {
-  /* Go to infinite loop when Hard Fault exception occurs */
-  while (1)
-  {
-  }
+    /* Go to infinite loop when Hard Fault exception occurs */
+    while (1) {
+    }
 }
 
 /**
@@ -81,10 +80,9 @@ void HardFault_Handler(void)
   */
 void MemManage_Handler(void)
 {
-  /* Go to infinite loop when Memory Manage exception occurs */
-  while (1)
-  {
-  }
+    /* Go to infinite loop when Memory Manage exception occurs */
+    while (1) {
+    }
 }
 
 /**
@@ -94,10 +92,9 @@ void MemManage_Handler(void)
   */
 void BusFault_Handler(void)
 {
-  /* Go to infinite loop when Bus Fault exception occurs */
-  while (1)
-  {
-  }
+    /* Go to infinite loop when Bus Fault exception occurs */
+    while (1) {
+    }
 }
 
 /**
@@ -107,10 +104,9 @@ void BusFault_Handler(void)
   */
 void UsageFault_Handler(void)
 {
-  /* Go to infinite loop when Usage Fault exception occurs */
-  while (1)
-  {
-  }
+    /* Go to infinite loop when Usage Fault exception occurs */
+    while (1) {
+    }
 }
 
 /**
@@ -147,11 +143,10 @@ void PendSV_Handler(void)
   */
 void SysTick_Handler(void)
 {
-  /* Decrement the TimingDelay variable */
-  if (TimingDelay != 0x00)
-  {
-    TimingDelay--;
-  }
+    /* Decrement the TimingDelay variable */
+    if (TimingDelay != 0x00) {
+        TimingDelay--;
+    }
 }
 
 /******************************************************************************/
@@ -168,35 +163,31 @@ void SysTick_Handler(void)
   */
 void SC_USART_IRQHandler(void)
 {
-  /* If a Frame error is signaled by the card */
-  if(USART_GetITStatus(SC_USART, USART_IT_FE) != RESET)
-  {
-    USART_ReceiveData(SC_USART);
-    
-    /* Resend the byte that failed to be received (by the Smartcard) correctly */
-    SC_ParityErrorHandler();
-  }
-  
-  /* If the SC_USART detects a parity error */
-  if(USART_GetITStatus(SC_USART, USART_IT_PE) != RESET)
-  {
-    /* Flush the SC_USART DR register */
-    USART_ReceiveData(SC_USART);
-  }
-  
-  /* If a Overrun error is signaled by the card */
-  if(USART_GetITStatus(SC_USART, USART_IT_ORE) != RESET)
-  {
-    /* Flush the SC_USART DR register */
-    USART_ReceiveData(SC_USART);
-  }
-  
-  /* If a Noise error is signaled by the card */
-  if(USART_GetITStatus(SC_USART, USART_IT_NE) != RESET)
-  {
-    /* Flush the SC_USART DR register */
-    USART_ReceiveData(SC_USART);
-  }
+    /* If a Frame error is signaled by the card */
+    if(USART_GetITStatus(SC_USART, USART_IT_FE) != RESET) {
+        USART_ReceiveData(SC_USART);
+
+        /* Resend the byte that failed to be received (by the Smartcard) correctly */
+        SC_ParityErrorHandler();
+    }
+
+    /* If the SC_USART detects a parity error */
+    if(USART_GetITStatus(SC_USART, USART_IT_PE) != RESET) {
+        /* Flush the SC_USART DR register */
+        USART_ReceiveData(SC_USART);
+    }
+
+    /* If a Overrun error is signaled by the card */
+    if(USART_GetITStatus(SC_USART, USART_IT_ORE) != RESET) {
+        /* Flush the SC_USART DR register */
+        USART_ReceiveData(SC_USART);
+    }
+
+    /* If a Noise error is signaled by the card */
+    if(USART_GetITStatus(SC_USART, USART_IT_NE) != RESET) {
+        /* Flush the SC_USART DR register */
+        USART_ReceiveData(SC_USART);
+    }
 }
 
 /**
@@ -206,35 +197,34 @@ void SC_USART_IRQHandler(void)
   */
 void SC_OFF_EXTI_IRQHandler(void)
 {
-  if(EXTI_GetITStatus(SC_OFF_EXTI_LINE) != RESET)
-  {
-    /* Clear EXTI Line Pending Bit */
-    EXTI_ClearITPendingBit(SC_OFF_EXTI_LINE);
+    if(EXTI_GetITStatus(SC_OFF_EXTI_LINE) != RESET) {
+        /* Clear EXTI Line Pending Bit */
+        EXTI_ClearITPendingBit(SC_OFF_EXTI_LINE);
 
-    /* Toggle LED1..4 */
-    STM_EVAL_LEDToggle(LED1);
-    STM_EVAL_LEDToggle(LED2);
-    STM_EVAL_LEDToggle(LED3);
-    STM_EVAL_LEDToggle(LED4);
-    
-    /* Smartcard detected */
-    CardInserted = 1;
+        /* Toggle LED1..4 */
+        STM_EVAL_LEDToggle(LED1);
+        STM_EVAL_LEDToggle(LED2);
+        STM_EVAL_LEDToggle(LED3);
+        STM_EVAL_LEDToggle(LED4);
 
-    /* Enable CMDVCC */
-    SC_PowerCmd(ENABLE);
+        /* Smartcard detected */
+        CardInserted = 1;
 
-    /* Reset the card */
-    SC_Reset(Bit_RESET);
-  }
+        /* Enable CMDVCC */
+        SC_PowerCmd(ENABLE);
+
+        /* Reset the card */
+        SC_Reset(Bit_RESET);
+    }
 }
 
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

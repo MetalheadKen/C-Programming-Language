@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    FLASH/FLASH_Program/main.c 
+  * @file    FLASH/FLASH_Program/main.c
   * @author  MCD Application Team
   * @version V1.1.0
   * @date    18-January-2013
@@ -16,15 +16,15 @@
   *
   *        http://www.st.com/software_license_agreement_liberty_v2
   *
-  * Unless required by applicable law or agreed to in writing, software 
-  * distributed under the License is distributed on an "AS IS" BASIS, 
+  * Unless required by applicable law or agreed to in writing, software
+  * distributed under the License is distributed on an "AS IS" BASIS,
   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   * See the License for the specific language governing permissions and
   * limitations under the License.
   *
   ******************************************************************************
   */
-  
+
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __MAIN_H
 #define __MAIN_H
@@ -32,13 +32,13 @@
 /* Includes ------------------------------------------------------------------*/
 
 #if defined (USE_STM324xG_EVAL)
-  #include "stm324xg_eval.h"
+#include "stm324xg_eval.h"
 
-#elif defined (USE_STM324x7I_EVAL) 
-  #include "stm324x7i_eval.h"
+#elif defined (USE_STM324x7I_EVAL)
+#include "stm324x7i_eval.h"
 
 #else
- #error "Please select first the Evaluation board used in your application (in Project Options)"
+#error "Please select first the Evaluation board used in your application (in Project Options)"
 #endif
 
 /* Exported types ------------------------------------------------------------*/
@@ -50,9 +50,9 @@
 
 #else /* USE_STM324x7I_EVAL*/
 #define FLASH_USER_END_ADDR     ADDR_FLASH_SECTOR_23   /* End @ of user Flash area */
-#endif 
+#endif
 
-/* Base address of the Flash sectors */ 
+/* Base address of the Flash sectors */
 #define ADDR_FLASH_SECTOR_0     ((uint32_t)0x08000000) /* Base @ of Sector 0, 16 Kbytes */
 #define ADDR_FLASH_SECTOR_1     ((uint32_t)0x08004000) /* Base @ of Sector 1, 16 Kbytes */
 #define ADDR_FLASH_SECTOR_2     ((uint32_t)0x08008000) /* Base @ of Sector 2, 16 Kbytes */

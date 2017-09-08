@@ -89,14 +89,13 @@
  *
  */
 typedef const char *(*tCGIHandler)(int iIndex, int iNumParams, char *pcParam[],
-                             char *pcValue[]);
+                                   char *pcValue[]);
 
 /*
  * Structure defining the base filename (URL) of a CGI and the associated
  * function which is to be called when that URL is requested.
  */
-typedef struct
-{
+typedef struct {
     const char *pcCGIName;
     tCGIHandler pfnCGIHandler;
 } tCGI;
@@ -157,7 +156,7 @@ typedef u16_t (*tSSIHandler)(int iIndex, char *pcInsert, int iInsertLen
 #if LWIP_HTTPD_FILE_STATE
                              , void *connection_state
 #endif /* LWIP_HTTPD_FILE_STATE */
-                             );
+                            );
 
 void http_set_ssi_handler(tSSIHandler pfnSSIHandler,
                           const char **ppcTags, int iNumTags);

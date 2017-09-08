@@ -12,8 +12,8 @@
 #include <stdlib.h>
 
 struct _Node {
-	double data;
-	struct _Node *next;
+    double data;
+    struct _Node *next;
 };
 
 typedef struct _Node Node;

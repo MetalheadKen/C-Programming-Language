@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    GPIO/GPIO_IOToggle/main.h 
+  * @file    GPIO/GPIO_IOToggle/main.h
   * @author  MCD Application Team
   * @version V1.7.0
   * @date    22-April-2016
@@ -16,15 +16,15 @@
   *
   *        http://www.st.com/software_license_agreement_liberty_v2
   *
-  * Unless required by applicable law or agreed to in writing, software 
-  * distributed under the License is distributed on an "AS IS" BASIS, 
+  * Unless required by applicable law or agreed to in writing, software
+  * distributed under the License is distributed on an "AS IS" BASIS,
   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   * See the License for the specific language governing permissions and
   * limitations under the License.
   *
   ******************************************************************************
   */
-  
+
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __MAIN_H
 #define __MAIN_H
@@ -33,34 +33,34 @@
 #include "stm32f4xx.h"
 
 #if defined (USE_STM324xG_EVAL)
-  #include "stm324xg_eval.h"
+#include "stm324xg_eval.h"
 
-#elif defined (USE_STM324x7I_EVAL) 
-  #include "stm324x7i_eval.h"
+#elif defined (USE_STM324x7I_EVAL)
+#include "stm324x7i_eval.h"
 
-#elif defined (USE_STM324x9I_EVAL) 
-  #include "stm324x9i_eval.h"
+#elif defined (USE_STM324x9I_EVAL)
+#include "stm324x9i_eval.h"
 
 #else
- #error "Please select first the Evaluation board used in your application (in Project Options)"
+#error "Please select first the Evaluation board used in your application (in Project Options)"
 #endif
 
 /* Exported define -----------------------------------------------------------*/
 #if defined (USE_STM324xG_EVAL)
-  #define LED1_PIN                         GPIO_Pin_6
-  #define LED2_PIN                         GPIO_Pin_8
+#define LED1_PIN                         GPIO_Pin_6
+#define LED2_PIN                         GPIO_Pin_8
 
 #endif /* USE_STM324xG_EVAL */
 
-#if defined (USE_STM324x7I_EVAL)    
-  #define LED1_PIN                         GPIO_Pin_6
-  #define LED2_PIN                         GPIO_Pin_8
+#if defined (USE_STM324x7I_EVAL)
+#define LED1_PIN                         GPIO_Pin_6
+#define LED2_PIN                         GPIO_Pin_8
 
 #endif /* USE_STM324x7I_EVAL */
 
-#if defined (USE_STM324x9I_EVAL)    
-  #define LED1_PIN                         GPIO_Pin_6
-  #define LED2_PIN                         GPIO_Pin_7
+#if defined (USE_STM324x9I_EVAL)
+#define LED1_PIN                         GPIO_Pin_6
+#define LED2_PIN                         GPIO_Pin_7
 
 #endif /* USE_STM324x9I_EVAL */
 

@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    CEC/CEC_DataExchange/main.h 
+  * @file    CEC/CEC_DataExchange/main.h
   * @author  MCD Application Team
   * @version V1.7.0
   * @date    22-April-2016
@@ -16,8 +16,8 @@
   *
   *        http://www.st.com/software_license_agreement_liberty_v2
   *
-  * Unless required by applicable law or agreed to in writing, software 
-  * distributed under the License is distributed on an "AS IS" BASIS, 
+  * Unless required by applicable law or agreed to in writing, software
+  * distributed under the License is distributed on an "AS IS" BASIS,
   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   * See the License for the specific language governing permissions and
   * limitations under the License.
@@ -36,9 +36,9 @@
 #define CEC_MAX_PAYLOAD                  16
 
 /* Uncomment the line below if you use the CEC peripheral as a Device 1 */
-//#define DEVICE_1   
-/* Uncomment the line below if you use the CEC peripheral as a Device 2 */ 
-#define DEVICE_2 
+//#define DEVICE_1
+/* Uncomment the line below if you use the CEC peripheral as a Device 2 */
+#define DEVICE_2
 #define DEVICE_ADDRESS_1               0x01  /* CEC device 1 address   */
 #define DEVICE_ADDRESS_2               0x03  /* CEC device 2 address   */
 

@@ -16,14 +16,14 @@
   *
   *        http://www.st.com/software_license_agreement_liberty_v2
   *
-  * Unless required by applicable law or agreed to in writing, software 
-  * distributed under the License is distributed on an "AS IS" BASIS, 
+  * Unless required by applicable law or agreed to in writing, software
+  * distributed under the License is distributed on an "AS IS" BASIS,
   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   * See the License for the specific language governing permissions and
   * limitations under the License.
   *
   ******************************************************************************
-  */ 
+  */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef  __LCD_LOG_H__
@@ -36,10 +36,10 @@
 /** @addtogroup Utilities
   * @{
   */
-  
+
 /** @addtogroup STM32_EVAL
   * @{
-  */ 
+  */
 
 /** @addtogroup Common
   * @{
@@ -48,16 +48,16 @@
 /** @addtogroup LCD_LOG
   * @{
   */
-  
+
 /** @defgroup LCD_LOG
-  * @brief 
+  * @brief
   * @{
-  */ 
+  */
 
 
 /** @defgroup LCD_LOG_Exported_Defines
   * @{
-  */ 
+  */
 #ifdef __GNUC__
 /* With GCC/RAISONANCE, small printf (option LD Linker->Libraries->Small printf
    set to 'Yes') calls __io_putchar() */
@@ -69,31 +69,30 @@
 /** These value can be changed by user */
 
 #ifdef LCD_SCROLL_ENABLED
- #define     LCD_CACHE_DEPTH     (YWINDOW_SIZE + CACHE_SIZE)
+#define     LCD_CACHE_DEPTH     (YWINDOW_SIZE + CACHE_SIZE)
 #else
- #define     LCD_CACHE_DEPTH     YWINDOW_SIZE
+#define     LCD_CACHE_DEPTH     YWINDOW_SIZE
 #endif
 /**
   * @}
-  */ 
+  */
 
 /** @defgroup LCD_LOG_Exported_Types
   * @{
-  */ 
-typedef struct _LCD_LOG_line
-{
-  uint8_t  line[XWINDOW_MAX];
-  uint16_t color;
+  */
+typedef struct _LCD_LOG_line {
+    uint8_t  line[XWINDOW_MAX];
+    uint16_t color;
 
-}LCD_LOG_line;
+} LCD_LOG_line;
 
 /**
   * @}
-  */ 
+  */
 
 /** @defgroup LCD_LOG_Exported_Macros
   * @{
-  */ 
+  */
 #define  LCD_ErrLog(...)    LCD_LineColor = Red;\
                             printf("ERROR: ") ;\
                             printf(__VA_ARGS__);\
@@ -108,31 +107,31 @@ typedef struct _LCD_LOG_line
                             LCD_LineColor = LCD_LOG_DEFAULT_COLOR
 /**
   * @}
-  */ 
+  */
 
 /** @defgroup LCD_LOG_Exported_Variables
   * @{
-  */ 
+  */
 extern uint16_t LCD_LineColor;
 /**
   * @}
-  */ 
+  */
 
 /** @defgroup LCD_LOG_Exported_FunctionsPrototype
   * @{
-  */ 
+  */
 void LCD_LOG_Init(void);
 void LCD_LOG_DeInit(void);
 void LCD_LOG_SetHeader(uint8_t *Title);
 void LCD_LOG_SetFooter(uint8_t *Status);
 void LCD_LOG_ClearTextZone(void);
 #ifdef LCD_SCROLL_ENABLED
- ErrorStatus LCD_LOG_ScrollBack(void);
- ErrorStatus LCD_LOG_ScrollForward(void);
+ErrorStatus LCD_LOG_ScrollBack(void);
+ErrorStatus LCD_LOG_ScrollForward(void);
 #endif
 /**
   * @}
-  */ 
+  */
 
 
 #endif /* __LCD_LOG_H__ */
@@ -143,10 +142,6 @@ void LCD_LOG_ClearTextZone(void);
 
 /**
   * @}
-  */ 
-
-/**
-  * @}
   */
 
 /**
@@ -155,6 +150,10 @@ void LCD_LOG_ClearTextZone(void);
 
 /**
   * @}
-  */  
+  */
+
+/**
+  * @}
+  */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    TIM/TIM_PWMInput/stm32f4xx_it.c 
+  * @file    TIM/TIM_PWMInput/stm32f4xx_it.c
   * @author  MCD Application Team
   * @version V1.7.0
   * @date    22-April-2016
@@ -18,8 +18,8 @@
   *
   *        http://www.st.com/software_license_agreement_liberty_v2
   *
-  * Unless required by applicable law or agreed to in writing, software 
-  * distributed under the License is distributed on an "AS IS" BASIS, 
+  * Unless required by applicable law or agreed to in writing, software
+  * distributed under the License is distributed on an "AS IS" BASIS,
   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   * See the License for the specific language governing permissions and
   * limitations under the License.
@@ -36,7 +36,7 @@
 
 /** @addtogroup TIM_PWMInput
   * @{
-  */ 
+  */
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -69,9 +69,9 @@ void NMI_Handler(void)
   */
 void HardFault_Handler(void)
 {
-  /* Go to infinite loop when Hard Fault exception occurs */
-  while (1)
-  {}
+    /* Go to infinite loop when Hard Fault exception occurs */
+    while (1)
+    {}
 }
 
 /**
@@ -81,9 +81,9 @@ void HardFault_Handler(void)
   */
 void MemManage_Handler(void)
 {
-  /* Go to infinite loop when Memory Manage exception occurs */
-  while (1)
-  {}
+    /* Go to infinite loop when Memory Manage exception occurs */
+    while (1)
+    {}
 }
 
 /**
@@ -93,9 +93,9 @@ void MemManage_Handler(void)
   */
 void BusFault_Handler(void)
 {
-  /* Go to infinite loop when Bus Fault exception occurs */
-  while (1)
-  {}
+    /* Go to infinite loop when Bus Fault exception occurs */
+    while (1)
+    {}
 }
 
 /**
@@ -105,9 +105,9 @@ void BusFault_Handler(void)
   */
 void UsageFault_Handler(void)
 {
-  /* Go to infinite loop when Usage Fault exception occurs */
-  while (1)
-  {}
+    /* Go to infinite loop when Usage Fault exception occurs */
+    while (1)
+    {}
 }
 
 /**
@@ -156,38 +156,35 @@ void SysTick_Handler(void)
   */
 void TIM4_IRQHandler(void)
 {
-  RCC_ClocksTypeDef RCC_Clocks;
-  RCC_GetClocksFreq(&RCC_Clocks);
+    RCC_ClocksTypeDef RCC_Clocks;
+    RCC_GetClocksFreq(&RCC_Clocks);
 
-  /* Clear TIM4 Capture compare interrupt pending bit */
-  TIM_ClearITPendingBit(TIM4, TIM_IT_CC2);
+    /* Clear TIM4 Capture compare interrupt pending bit */
+    TIM_ClearITPendingBit(TIM4, TIM_IT_CC2);
 
-  /* Get the Input Capture value */
-  IC2Value = TIM_GetCapture2(TIM4);
+    /* Get the Input Capture value */
+    IC2Value = TIM_GetCapture2(TIM4);
 
-  if (IC2Value != 0)
-  {
-    /* Duty cycle computation */
-    DutyCycle = (TIM_GetCapture1(TIM4) * 100) / IC2Value;
+    if (IC2Value != 0) {
+        /* Duty cycle computation */
+        DutyCycle = (TIM_GetCapture1(TIM4) * 100) / IC2Value;
 
-    /* Frequency computation 
-       TIM4 counter clock = (RCC_Clocks.HCLK_Frequency)/2 */
+        /* Frequency computation
+           TIM4 counter clock = (RCC_Clocks.HCLK_Frequency)/2 */
 
-    Frequency = (RCC_Clocks.HCLK_Frequency)/2 / IC2Value;
-  }
-  else
-  {
-    DutyCycle = 0;
-    Frequency = 0;
-  }
+        Frequency = (RCC_Clocks.HCLK_Frequency)/2 / IC2Value;
+    } else {
+        DutyCycle = 0;
+        Frequency = 0;
+    }
 }
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

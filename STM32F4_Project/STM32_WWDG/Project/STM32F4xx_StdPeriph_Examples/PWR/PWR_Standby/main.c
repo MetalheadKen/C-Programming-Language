@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    PWR/PWR_Standby/main.c 
+  * @file    PWR/PWR_Standby/main.c
   * @author  MCD Application Team
   * @version V1.1.0
   * @date    18-January-2013
@@ -16,8 +16,8 @@
   *
   *        http://www.st.com/software_license_agreement_liberty_v2
   *
-  * Unless required by applicable law or agreed to in writing, software 
-  * distributed under the License is distributed on an "AS IS" BASIS, 
+  * Unless required by applicable law or agreed to in writing, software
+  * distributed under the License is distributed on an "AS IS" BASIS,
   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   * See the License for the specific language governing permissions and
   * limitations under the License.
@@ -34,7 +34,7 @@
 
 /** @addtogroup PWR_STANDBY
   * @{
-  */ 
+  */
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -63,34 +63,33 @@ static void SysTick_Configuration(void);
   */
 int main(void)
 {
-  /*!< At this stage the microcontroller clock setting is already configured, 
-       this is done through SystemInit() function which is called from startup
-       file (startup_stm32f40xx.s/startup_stm32f427x.s) before to branch to 
-       application main.
-       To reconfigure the default setting of SystemInit() function, refer to
-       system_stm32f4xx.c file
-     */     
+    /*!< At this stage the microcontroller clock setting is already configured,
+         this is done through SystemInit() function which is called from startup
+         file (startup_stm32f40xx.s/startup_stm32f427x.s) before to branch to
+         application main.
+         To reconfigure the default setting of SystemInit() function, refer to
+         system_stm32f4xx.c file
+       */
 
-  /* Initialize LEDs and Key Button mounted on EVAL board */
-  STM_EVAL_LEDInit(LED1);
-  STM_EVAL_LEDInit(LED2);
-  STM_EVAL_PBInit(BUTTON_KEY, BUTTON_MODE_EXTI);
+    /* Initialize LEDs and Key Button mounted on EVAL board */
+    STM_EVAL_LEDInit(LED1);
+    STM_EVAL_LEDInit(LED2);
+    STM_EVAL_PBInit(BUTTON_KEY, BUTTON_MODE_EXTI);
 
-  /* RTC configuration */
-  RTC_Config();
+    /* RTC configuration */
+    RTC_Config();
 
-  /* Turn on LED1 */
-  STM_EVAL_LEDOn(LED1);
+    /* Turn on LED1 */
+    STM_EVAL_LEDOn(LED1);
 
-  /* Enable WKUP pin  */
-  PWR_WakeUpPinCmd(ENABLE);
+    /* Enable WKUP pin  */
+    PWR_WakeUpPinCmd(ENABLE);
 
-  /* Configure the SysTick to generate an interrupt each 250 ms */
-  SysTick_Configuration();
+    /* Configure the SysTick to generate an interrupt each 250 ms */
+    SysTick_Configuration();
 
-  while (1)
-  {
-  }
+    while (1) {
+    }
 }
 
 /**
@@ -100,105 +99,98 @@ int main(void)
   */
 static void RTC_Config(void)
 {
-  RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE);
+    RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE);
 
-  /* Allow access to BKP Domain */
-  PWR_BackupAccessCmd(ENABLE);
+    /* Allow access to BKP Domain */
+    PWR_BackupAccessCmd(ENABLE);
 
-  /* Clear Wakeup flag */
-  PWR_ClearFlag(PWR_FLAG_WU);
+    /* Clear Wakeup flag */
+    PWR_ClearFlag(PWR_FLAG_WU);
 
-  /* Check if the StandBy flag is set */
-  if (PWR_GetFlagStatus(PWR_FLAG_SB) != RESET)
-  {
-    /* Clear StandBy flag */
-    PWR_ClearFlag(PWR_FLAG_SB);
+    /* Check if the StandBy flag is set */
+    if (PWR_GetFlagStatus(PWR_FLAG_SB) != RESET) {
+        /* Clear StandBy flag */
+        PWR_ClearFlag(PWR_FLAG_SB);
 
-    /* Wait for RTC APB registers synchronisation (needed after start-up from Reset)*/
-    RTC_WaitForSynchro();
-    /* No need to configure the RTC as the RTC config(clock source, enable,
-       prescaler,...) are kept after wake-up from STANDBY */
-  }
-  else
-  {
-    /* RTC Configuration ******************************************************/
-    /* Reset Backup Domain */
-    RCC_BackupResetCmd(ENABLE);
-    RCC_BackupResetCmd(DISABLE);
+        /* Wait for RTC APB registers synchronisation (needed after start-up from Reset)*/
+        RTC_WaitForSynchro();
+        /* No need to configure the RTC as the RTC config(clock source, enable,
+           prescaler,...) are kept after wake-up from STANDBY */
+    } else {
+        /* RTC Configuration ******************************************************/
+        /* Reset Backup Domain */
+        RCC_BackupResetCmd(ENABLE);
+        RCC_BackupResetCmd(DISABLE);
 
 #if defined (RTC_CLOCK_SOURCE_LSI)  /* LSI used as RTC source clock*/
-/* The RTC Clock may varies due to LSI frequency dispersion. */   
-    /* Enable the LSI OSC */ 
-    RCC_LSICmd(ENABLE);
+        /* The RTC Clock may varies due to LSI frequency dispersion. */
+        /* Enable the LSI OSC */
+        RCC_LSICmd(ENABLE);
 
-    /* Wait till LSI is ready */  
-    while(RCC_GetFlagStatus(RCC_FLAG_LSIRDY) == RESET)
-    {
-    }
+        /* Wait till LSI is ready */
+        while(RCC_GetFlagStatus(RCC_FLAG_LSIRDY) == RESET) {
+        }
 
-    /* Select the RTC Clock Source */
-    RCC_RTCCLKConfig(RCC_RTCCLKSource_LSI);
-  
-    SynchPrediv = 0xFF;
-    AsynchPrediv = 0x7F;
+        /* Select the RTC Clock Source */
+        RCC_RTCCLKConfig(RCC_RTCCLKSource_LSI);
+
+        SynchPrediv = 0xFF;
+        AsynchPrediv = 0x7F;
 
 #elif defined (RTC_CLOCK_SOURCE_LSE) /* LSE used as RTC source clock */
-    /* Enable the LSE OSC */
-    RCC_LSEConfig(RCC_LSE_ON);
+        /* Enable the LSE OSC */
+        RCC_LSEConfig(RCC_LSE_ON);
 
-    /* Wait till LSE is ready */  
-    while(RCC_GetFlagStatus(RCC_FLAG_LSERDY) == RESET)
-    {
-    }
+        /* Wait till LSE is ready */
+        while(RCC_GetFlagStatus(RCC_FLAG_LSERDY) == RESET) {
+        }
 
-    /* Select the RTC Clock Source */
-    RCC_RTCCLKConfig(RCC_RTCCLKSource_LSE);
-  
-    SynchPrediv = 0xFF;
-    AsynchPrediv = 0x7F;
+        /* Select the RTC Clock Source */
+        RCC_RTCCLKConfig(RCC_RTCCLKSource_LSE);
+
+        SynchPrediv = 0xFF;
+        AsynchPrediv = 0x7F;
 
 #else
-  #error Please select the RTC Clock source inside the main.c file
+#error Please select the RTC Clock source inside the main.c file
 #endif /* RTC_CLOCK_SOURCE_LSI */
 
-    /* Enable the RTC Clock */
-    RCC_RTCCLKCmd(ENABLE);
+        /* Enable the RTC Clock */
+        RCC_RTCCLKCmd(ENABLE);
 
-    /* Wait for RTC APB registers synchronisation (needed after start-up from Reset)*/
-    RTC_WaitForSynchro();
+        /* Wait for RTC APB registers synchronisation (needed after start-up from Reset)*/
+        RTC_WaitForSynchro();
 
-    /* Set the RTC time base to 1s */
-    RTC_InitStructure.RTC_HourFormat = RTC_HourFormat_24;
-    RTC_InitStructure.RTC_AsynchPrediv = 0x7F;
-    RTC_InitStructure.RTC_SynchPrediv = 0x00FF;
+        /* Set the RTC time base to 1s */
+        RTC_InitStructure.RTC_HourFormat = RTC_HourFormat_24;
+        RTC_InitStructure.RTC_AsynchPrediv = 0x7F;
+        RTC_InitStructure.RTC_SynchPrediv = 0x00FF;
 
-    if (RTC_Init(&RTC_InitStructure) == ERROR)
-    {
-      /* Turn on LED2 */
-      STM_EVAL_LEDOn(LED2);
-      
-      /* User can add here some code to deal with this error */
-      while(1);
+        if (RTC_Init(&RTC_InitStructure) == ERROR) {
+            /* Turn on LED2 */
+            STM_EVAL_LEDOn(LED2);
+
+            /* User can add here some code to deal with this error */
+            while(1);
+        }
+
+        /* Set the time to 01h 00mn 00s AM */
+        RTC_TimeStructure.RTC_H12     = RTC_H12_AM;
+        RTC_TimeStructure.RTC_Hours   = 0x01;
+        RTC_TimeStructure.RTC_Minutes = 0x00;
+        RTC_TimeStructure.RTC_Seconds = 0x00;
+
+        if(RTC_SetTime(RTC_Format_BCD, &RTC_TimeStructure) == ERROR) {
+            /* Turn on LED2 */
+            STM_EVAL_LEDOn(LED2);
+
+            /* User can add here some code to deal with this error */
+            while(1);
+        }
     }
 
-    /* Set the time to 01h 00mn 00s AM */
-    RTC_TimeStructure.RTC_H12     = RTC_H12_AM;
-    RTC_TimeStructure.RTC_Hours   = 0x01;
-    RTC_TimeStructure.RTC_Minutes = 0x00;
-    RTC_TimeStructure.RTC_Seconds = 0x00;  
-  
-    if(RTC_SetTime(RTC_Format_BCD, &RTC_TimeStructure) == ERROR)
-    {
-      /* Turn on LED2 */
-      STM_EVAL_LEDOn(LED2);
-      
-      /* User can add here some code to deal with this error */
-      while(1);
-    }
-  }
-
-  /* Clear RTC Alarm Flag */ 
-  RTC_ClearFlag(RTC_FLAG_ALRAF);
+    /* Clear RTC Alarm Flag */
+    RTC_ClearFlag(RTC_FLAG_ALRAF);
 }
 
 /**
@@ -208,18 +200,17 @@ static void RTC_Config(void)
   */
 static void SysTick_Configuration(void)
 {
-  /* SysTick interrupt each 250 ms */
-  if (SysTick_Config((SystemCoreClock/8) / 4))
-  { 
-    /* Capture error */ 
-    while (1);
-  }
+    /* SysTick interrupt each 250 ms */
+    if (SysTick_Config((SystemCoreClock/8) / 4)) {
+        /* Capture error */
+        while (1);
+    }
 
-  /* Select AHB clock(HCLK) divided by 8 as SysTick clock source */
-  SysTick_CLKSourceConfig(SysTick_CLKSource_HCLK_Div8);
+    /* Select AHB clock(HCLK) divided by 8 as SysTick clock source */
+    SysTick_CLKSourceConfig(SysTick_CLKSource_HCLK_Div8);
 
-  /* Set SysTick Preemption Priority to 1 */
-  NVIC_SetPriority(SysTick_IRQn, 0x04);
+    /* Set SysTick Preemption Priority to 1 */
+    NVIC_SetPriority(SysTick_IRQn, 0x04);
 }
 
 
@@ -233,23 +224,22 @@ static void SysTick_Configuration(void)
   * @retval None
   */
 void assert_failed(uint8_t* file, uint32_t line)
-{ 
-  /* User can add his own implementation to report the file name and line number,
-     ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+{
+    /* User can add his own implementation to report the file name and line number,
+       ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
 
-  /* Infinite loop */
-  while (1)
-  {
-  }
+    /* Infinite loop */
+    while (1) {
+    }
 }
 #endif
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

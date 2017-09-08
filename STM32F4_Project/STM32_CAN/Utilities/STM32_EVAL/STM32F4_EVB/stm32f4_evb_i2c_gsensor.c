@@ -26,22 +26,22 @@
   ******************************************************************************
   */
 
-  /* File Info : ---------------------------------------------------------------
+/* File Info : ---------------------------------------------------------------
 
-    Note:
-    -----
-    - This driver uses the DMA method for sending and receiving data on I2C bus
-      which allow higher efficiency and reliability of the communication.
+  Note:
+  -----
+  - This driver uses the DMA method for sending and receiving data on I2C bus
+    which allow higher efficiency and reliability of the communication.
 
-    SUPPORTED FEATURES:
-      - IO Read/write : Set/Reset and Read (Polling/Interrupt)
-      - Joystick: config and Read (Polling/Interrupt)
-      - Touch Screen Features: Single point mode (Polling/Interrupt)
-      - TempSensor Feature: accuracy not determined (Polling).
+  SUPPORTED FEATURES:
+    - IO Read/write : Set/Reset and Read (Polling/Interrupt)
+    - Joystick: config and Read (Polling/Interrupt)
+    - Touch Screen Features: Single point mode (Polling/Interrupt)
+    - TempSensor Feature: accuracy not determined (Polling).
 
-    UNSUPPORTED FEATURES:
-      - Row ADC Feature is not supported (not implemented on STM32F4_EVB board)
-  ----------------------------------------------------------------------------*/
+  UNSUPPORTED FEATURES:
+    - Row ADC Feature is not supported (not implemented on STM32F4_EVB board)
+----------------------------------------------------------------------------*/
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f4_evb_i2c_gsensor.h"
@@ -113,10 +113,10 @@
 ********************************************************************************/
 void i2c_timeoutusercallback(void)
 {
-	sEE_LowLevel_DeInit();
-	sEE_LowLevel_Init();
+    sEE_LowLevel_DeInit();
+    sEE_LowLevel_Init();
 
-	return;
+    return;
 }
 
 /********************************************************************************
@@ -124,57 +124,47 @@ void i2c_timeoutusercallback(void)
 ********************************************************************************/
 void i2c_single_write(uint8_t i2c_addr, uint8_t reg, uint8_t data)
 {
-	uint32_t I2C_TimeOut;
-	
-	I2C_TimeOut = TIMEOUT_MAX;
-	while (I2C_GetFlagStatus(I2C1, I2C_FLAG_BUSY))
-	{
-		if (I2C_TimeOut-- == 0)
-		{
-			i2c_timeoutusercallback();
-			return;
-		}
-	}
-	I2C_GenerateSTART(I2C1, ENABLE);
-	while (!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_MODE_SELECT))
-	{
-		if (I2C_TimeOut-- == 0)
-		{
-			i2c_timeoutusercallback();
-			return;
-		}
-	}
-	I2C_Send7bitAddress(I2C1, i2c_addr, I2C_Direction_Transmitter);
-	while (!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_TRANSMITTER_MODE_SELECTED))
-	{
-		if (I2C_TimeOut-- == 0)
-		{
-			i2c_timeoutusercallback();
-			return;
-		}
-	}
-	I2C_SendData(I2C1, reg); // register address(SUB)
-	while (!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_BYTE_TRANSMITTED)) /* EV8 */
-	{
-		if (I2C_TimeOut-- == 0)
-		{
-			i2c_timeoutusercallback();
-			return;
-		}
-	}
-	I2C_SendData(I2C1, data); // data(DATA)
-	while (!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_BYTE_TRANSMITTED)) /* EV8 */
-	{
-		if (I2C_TimeOut-- == 0)
-		{
-			i2c_timeoutusercallback();
-			return;
-		}
-	}
-	I2C_AcknowledgeConfig(I2C1, DISABLE);
-	I2C_GenerateSTOP(I2C1, ENABLE);
+    uint32_t I2C_TimeOut;
 
-	return;
+    I2C_TimeOut = TIMEOUT_MAX;
+    while (I2C_GetFlagStatus(I2C1, I2C_FLAG_BUSY)) {
+        if (I2C_TimeOut-- == 0) {
+            i2c_timeoutusercallback();
+            return;
+        }
+    }
+    I2C_GenerateSTART(I2C1, ENABLE);
+    while (!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_MODE_SELECT)) {
+        if (I2C_TimeOut-- == 0) {
+            i2c_timeoutusercallback();
+            return;
+        }
+    }
+    I2C_Send7bitAddress(I2C1, i2c_addr, I2C_Direction_Transmitter);
+    while (!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_TRANSMITTER_MODE_SELECTED)) {
+        if (I2C_TimeOut-- == 0) {
+            i2c_timeoutusercallback();
+            return;
+        }
+    }
+    I2C_SendData(I2C1, reg); // register address(SUB)
+    while (!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_BYTE_TRANSMITTED)) { /* EV8 */
+        if (I2C_TimeOut-- == 0) {
+            i2c_timeoutusercallback();
+            return;
+        }
+    }
+    I2C_SendData(I2C1, data); // data(DATA)
+    while (!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_BYTE_TRANSMITTED)) { /* EV8 */
+        if (I2C_TimeOut-- == 0) {
+            i2c_timeoutusercallback();
+            return;
+        }
+    }
+    I2C_AcknowledgeConfig(I2C1, DISABLE);
+    I2C_GenerateSTOP(I2C1, ENABLE);
+
+    return;
 }
 
 /********************************************************************************
@@ -182,61 +172,50 @@ void i2c_single_write(uint8_t i2c_addr, uint8_t reg, uint8_t data)
 ********************************************************************************/
 void i2c_multiple_write(uint8_t i2c_addr, uint8_t reg, uint8_t *data, uint8_t length)
 {
-	uint32_t I2C_TimeOut;
-	uint8_t i;
-	
-	I2C_TimeOut = TIMEOUT_MAX;
-	while (I2C_GetFlagStatus(I2C1, I2C_FLAG_BUSY))
-	{
-		if (I2C_TimeOut-- == 0)
-		{
-			i2c_timeoutusercallback();
-			return;
-		}
-	}
-	I2C_GenerateSTART(I2C1, ENABLE);
-	while (!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_MODE_SELECT))
-	{
-		if (I2C_TimeOut-- == 0)
-		{
-			i2c_timeoutusercallback();
-			return;
-		}
-	}
-	I2C_Send7bitAddress(I2C1, i2c_addr, I2C_Direction_Transmitter);
-	while (!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_TRANSMITTER_MODE_SELECTED))
-	{
-		if (I2C_TimeOut-- == 0)
-		{
-			i2c_timeoutusercallback();
-			return;
-		}
-	}
-	I2C_SendData(I2C1, reg); // register address(SUB)
-	while (!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_BYTE_TRANSMITTED)) /* EV8 */
-	{
-		if (I2C_TimeOut-- == 0)
-		{
-			i2c_timeoutusercallback();
-			return;
-		}
-	}
-	for (i = 0; i < length; i++)
-	{
-		I2C_SendData(I2C1, *(data + i)); // data(DATA)
-		while (!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_BYTE_TRANSMITTED)) /* EV8 */
-		{
-			if (I2C_TimeOut-- == 0)
-			{
-				i2c_timeoutusercallback();
-				return;
-			}
-		}
-	}
-	I2C_AcknowledgeConfig(I2C1, DISABLE);
-	I2C_GenerateSTOP(I2C1, ENABLE);
+    uint32_t I2C_TimeOut;
+    uint8_t i;
 
-	return;
+    I2C_TimeOut = TIMEOUT_MAX;
+    while (I2C_GetFlagStatus(I2C1, I2C_FLAG_BUSY)) {
+        if (I2C_TimeOut-- == 0) {
+            i2c_timeoutusercallback();
+            return;
+        }
+    }
+    I2C_GenerateSTART(I2C1, ENABLE);
+    while (!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_MODE_SELECT)) {
+        if (I2C_TimeOut-- == 0) {
+            i2c_timeoutusercallback();
+            return;
+        }
+    }
+    I2C_Send7bitAddress(I2C1, i2c_addr, I2C_Direction_Transmitter);
+    while (!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_TRANSMITTER_MODE_SELECTED)) {
+        if (I2C_TimeOut-- == 0) {
+            i2c_timeoutusercallback();
+            return;
+        }
+    }
+    I2C_SendData(I2C1, reg); // register address(SUB)
+    while (!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_BYTE_TRANSMITTED)) { /* EV8 */
+        if (I2C_TimeOut-- == 0) {
+            i2c_timeoutusercallback();
+            return;
+        }
+    }
+    for (i = 0; i < length; i++) {
+        I2C_SendData(I2C1, *(data + i)); // data(DATA)
+        while (!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_BYTE_TRANSMITTED)) { /* EV8 */
+            if (I2C_TimeOut-- == 0) {
+                i2c_timeoutusercallback();
+                return;
+            }
+        }
+    }
+    I2C_AcknowledgeConfig(I2C1, DISABLE);
+    I2C_GenerateSTOP(I2C1, ENABLE);
+
+    return;
 }
 
 /********************************************************************************
@@ -244,75 +223,61 @@ void i2c_multiple_write(uint8_t i2c_addr, uint8_t reg, uint8_t *data, uint8_t le
 ********************************************************************************/
 void i2c_single_read(uint8_t i2c_addr, uint8_t reg, uint8_t *data)
 {
-	uint32_t I2C_TimeOut;
-	
-	I2C_TimeOut = TIMEOUT_MAX;
-	while (I2C_GetFlagStatus(I2C1, I2C_FLAG_BUSY))
-	{
-		if (I2C_TimeOut-- == 0)
-		{
-			i2c_timeoutusercallback();
-			return;
-		}
-	}
-	I2C_GenerateSTART(I2C1, ENABLE);
-	while (!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_MODE_SELECT))
-	{
-		if (I2C_TimeOut-- == 0)
-		{
-			i2c_timeoutusercallback();
-			return;
-		}
-	}
-	I2C_Send7bitAddress(I2C1, i2c_addr, I2C_Direction_Transmitter);
-	while (!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_TRANSMITTER_MODE_SELECTED))
-	{
-		if (I2C_TimeOut-- == 0)
-		{
-			i2c_timeoutusercallback();
-			return;
-		}
-	}
-	I2C_SendData(I2C1, reg);
-	while (!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_BYTE_TRANSMITTED)) /* EV8 */
-	{
-		if (I2C_TimeOut-- == 0)
-		{
-			i2c_timeoutusercallback();
-			return;
-		}
-	}
-	I2C_GenerateSTART(I2C1, ENABLE);
-	while (!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_MODE_SELECT))
-	{
-		if (I2C_TimeOut-- == 0)
-		{
-			i2c_timeoutusercallback();
-			return;
-		}
-	}
-	I2C_Send7bitAddress(I2C1, i2c_addr | I2C_READ_BIT, I2C_Direction_Receiver);
-	while (!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_RECEIVER_MODE_SELECTED))
-	{
-		if (I2C_TimeOut-- == 0)
-		{
-			i2c_timeoutusercallback();
-			return;
-		}
-	}
-	I2C_AcknowledgeConfig(I2C1, DISABLE);
-	I2C_GenerateSTOP(I2C1, ENABLE);
-	while (I2C_GetFlagStatus(I2C1, I2C_FLAG_RXNE) == RESET)
-	{
-		if (I2C_TimeOut-- == 0)
-		{
-			i2c_timeoutusercallback();
-			return;
-		}
-	}
-	*data = I2C_ReceiveData(I2C1);
+    uint32_t I2C_TimeOut;
 
-	return;
+    I2C_TimeOut = TIMEOUT_MAX;
+    while (I2C_GetFlagStatus(I2C1, I2C_FLAG_BUSY)) {
+        if (I2C_TimeOut-- == 0) {
+            i2c_timeoutusercallback();
+            return;
+        }
+    }
+    I2C_GenerateSTART(I2C1, ENABLE);
+    while (!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_MODE_SELECT)) {
+        if (I2C_TimeOut-- == 0) {
+            i2c_timeoutusercallback();
+            return;
+        }
+    }
+    I2C_Send7bitAddress(I2C1, i2c_addr, I2C_Direction_Transmitter);
+    while (!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_TRANSMITTER_MODE_SELECTED)) {
+        if (I2C_TimeOut-- == 0) {
+            i2c_timeoutusercallback();
+            return;
+        }
+    }
+    I2C_SendData(I2C1, reg);
+    while (!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_BYTE_TRANSMITTED)) { /* EV8 */
+        if (I2C_TimeOut-- == 0) {
+            i2c_timeoutusercallback();
+            return;
+        }
+    }
+    I2C_GenerateSTART(I2C1, ENABLE);
+    while (!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_MODE_SELECT)) {
+        if (I2C_TimeOut-- == 0) {
+            i2c_timeoutusercallback();
+            return;
+        }
+    }
+    I2C_Send7bitAddress(I2C1, i2c_addr | I2C_READ_BIT, I2C_Direction_Receiver);
+    while (!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_RECEIVER_MODE_SELECTED)) {
+        if (I2C_TimeOut-- == 0) {
+            i2c_timeoutusercallback();
+            return;
+        }
+    }
+    I2C_AcknowledgeConfig(I2C1, DISABLE);
+    I2C_GenerateSTOP(I2C1, ENABLE);
+    while (I2C_GetFlagStatus(I2C1, I2C_FLAG_RXNE) == RESET) {
+        if (I2C_TimeOut-- == 0) {
+            i2c_timeoutusercallback();
+            return;
+        }
+    }
+    *data = I2C_ReceiveData(I2C1);
+
+    return;
 }
 
 /********************************************************************************
@@ -320,93 +285,76 @@ void i2c_single_read(uint8_t i2c_addr, uint8_t reg, uint8_t *data)
 ********************************************************************************/
 void i2c_multiple_read(uint8_t i2c_addr, uint8_t reg, uint8_t *data, uint8_t length)
 {
-	uint32_t I2C_TimeOut;
-	uint8_t NumByteToRead, i;
-	
-	I2C_TimeOut = TIMEOUT_MAX;
-	NumByteToRead = length;
-	i = 0;
-	while (I2C_GetFlagStatus(I2C1, I2C_FLAG_BUSY))
-	{
-		if (I2C_TimeOut-- == 0)
-		{
-			i2c_timeoutusercallback();
-			return;
-		}
-	}
-	I2C_GenerateSTART(I2C1, ENABLE);
-	while (!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_MODE_SELECT))
-	{
-		if (I2C_TimeOut-- == 0)
-		{
-			i2c_timeoutusercallback();
-			return;
-		}
-	}
-	I2C_Send7bitAddress(I2C1, i2c_addr, I2C_Direction_Transmitter);
-	while (!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_TRANSMITTER_MODE_SELECTED))
-	{
-		if (I2C_TimeOut-- == 0)
-		{
-			i2c_timeoutusercallback();
-			return;
-		}
-	}
-	I2C_SendData(I2C1, reg); //Register Address
-	while (!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_BYTE_TRANSMITTED)) /* EV8 */
-	{
-		if (I2C_TimeOut-- == 0)
-		{
-			i2c_timeoutusercallback();
-			return;
-		}
-	}
-	I2C_GenerateSTART(I2C1, ENABLE);
-	while (!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_MODE_SELECT))
-	{
-		if (I2C_TimeOut-- == 0)
-		{
-			i2c_timeoutusercallback();
-			return;
-		}
-	}
-	I2C_Send7bitAddress(I2C1, i2c_addr | I2C_READ_BIT, I2C_Direction_Receiver);
-	while (!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_RECEIVER_MODE_SELECTED))
-	{
-		if (I2C_TimeOut-- == 0)
-		{
-			i2c_timeoutusercallback();
-			return;
-		}
-	}
-	I2C_AcknowledgeConfig(I2C1, ENABLE);
-	while (NumByteToRead)
-	{
-		if (NumByteToRead == 1) // n-1 byte
-		{
-			I2C_AcknowledgeConfig(I2C1, DISABLE);
-			I2C_GenerateSTOP(I2C1, ENABLE);
-			while (I2C_GetFlagStatus(I2C1, I2C_FLAG_RXNE) == RESET)
-			{
-				if (I2C_TimeOut-- == 0)
-				{
-					i2c_timeoutusercallback();
-					return;
-				}
-			}
-			*(data + i) = I2C_ReceiveData(I2C1);
-			NumByteToRead--;
-			i++;
-		}
-		if (I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_BYTE_RECEIVED))
-		{
-			*(data + i) = I2C_ReceiveData(I2C1);
-			NumByteToRead--;
-			i++;
-		}
-	}
+    uint32_t I2C_TimeOut;
+    uint8_t NumByteToRead, i;
 
-	return;
+    I2C_TimeOut = TIMEOUT_MAX;
+    NumByteToRead = length;
+    i = 0;
+    while (I2C_GetFlagStatus(I2C1, I2C_FLAG_BUSY)) {
+        if (I2C_TimeOut-- == 0) {
+            i2c_timeoutusercallback();
+            return;
+        }
+    }
+    I2C_GenerateSTART(I2C1, ENABLE);
+    while (!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_MODE_SELECT)) {
+        if (I2C_TimeOut-- == 0) {
+            i2c_timeoutusercallback();
+            return;
+        }
+    }
+    I2C_Send7bitAddress(I2C1, i2c_addr, I2C_Direction_Transmitter);
+    while (!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_TRANSMITTER_MODE_SELECTED)) {
+        if (I2C_TimeOut-- == 0) {
+            i2c_timeoutusercallback();
+            return;
+        }
+    }
+    I2C_SendData(I2C1, reg); //Register Address
+    while (!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_BYTE_TRANSMITTED)) { /* EV8 */
+        if (I2C_TimeOut-- == 0) {
+            i2c_timeoutusercallback();
+            return;
+        }
+    }
+    I2C_GenerateSTART(I2C1, ENABLE);
+    while (!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_MODE_SELECT)) {
+        if (I2C_TimeOut-- == 0) {
+            i2c_timeoutusercallback();
+            return;
+        }
+    }
+    I2C_Send7bitAddress(I2C1, i2c_addr | I2C_READ_BIT, I2C_Direction_Receiver);
+    while (!I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_RECEIVER_MODE_SELECTED)) {
+        if (I2C_TimeOut-- == 0) {
+            i2c_timeoutusercallback();
+            return;
+        }
+    }
+    I2C_AcknowledgeConfig(I2C1, ENABLE);
+    while (NumByteToRead) {
+        if (NumByteToRead == 1) { // n-1 byte
+            I2C_AcknowledgeConfig(I2C1, DISABLE);
+            I2C_GenerateSTOP(I2C1, ENABLE);
+            while (I2C_GetFlagStatus(I2C1, I2C_FLAG_RXNE) == RESET) {
+                if (I2C_TimeOut-- == 0) {
+                    i2c_timeoutusercallback();
+                    return;
+                }
+            }
+            *(data + i) = I2C_ReceiveData(I2C1);
+            NumByteToRead--;
+            i++;
+        }
+        if (I2C_CheckEvent(I2C1, I2C_EVENT_MASTER_BYTE_RECEIVED)) {
+            *(data + i) = I2C_ReceiveData(I2C1);
+            NumByteToRead--;
+            i++;
+        }
+    }
+
+    return;
 }
 
 /**
@@ -416,34 +364,33 @@ void i2c_multiple_read(uint8_t i2c_addr, uint8_t reg, uint8_t *data, uint8_t len
   */
 void GSensor_Init(void)
 {
-	uint8_t RegValue[7];
+    uint8_t RegValue[7];
 
-	// skip i2c initialize
-	i2c_single_read(GSENSOR_I2C_ADDR, Who_Am_I, RegValue);
-	switch (RegValue[0])
-	{
-		case LIS331DLH_ID:
-			LCD_DisplayStringLine(LCD_LINE_17, (uint8_t *)" GSensor : LIS331DLH");
-			break;
-		case LIS3DH_ID:
-			LCD_DisplayStringLine(LCD_LINE_17, (uint8_t *)" GSensor : LIS3DH");
-			break;
-		case LIS331DL_ID:
-			LCD_DisplayStringLine(LCD_LINE_17, (uint8_t *)" GSensor : LIS331DL");
-			break;
-		case LIS3DSH_ID:
-			LCD_DisplayStringLine(LCD_LINE_17, (uint8_t *)" GSensor : LIS3DSH");
-			break;
-		default:
-			LCD_DisplayStringLine(LCD_LINE_17, (uint8_t *)" GSensor : detect error");
-			break;
-	}
-	  //    i2c_single_write(GSENSOR_I2C_ADR_WRITE, LIS3DH_CTRL_REG1, 0x67);
-     //   i2c_single_write(GSENSOR_I2C_ADR_WRITE, LIS3DH_CTRL_REG2, 0x00);
-     //   i2c_single_write(GSENSOR_I2C_ADR_WRITE, LIS3DH_CTRL_REG3, 0x00);
-     //   i2c_single_write(GSENSOR_I2C_ADR_WRITE, LIS3DH_CTRL_REG4, 0x10);
-     //   i2c_single_write(GSENSOR_I2C_ADR_WRITE, LIS3DH_CTRL_REG5, 0x00);
-     //   i2c_single_write(GSENSOR_I2C_ADR_WRITE, LIS3DH_CTRL_REG6, 0x00);
+    // skip i2c initialize
+    i2c_single_read(GSENSOR_I2C_ADDR, Who_Am_I, RegValue);
+    switch (RegValue[0]) {
+        case LIS331DLH_ID:
+            LCD_DisplayStringLine(LCD_LINE_17, (uint8_t *)" GSensor : LIS331DLH");
+            break;
+        case LIS3DH_ID:
+            LCD_DisplayStringLine(LCD_LINE_17, (uint8_t *)" GSensor : LIS3DH");
+            break;
+        case LIS331DL_ID:
+            LCD_DisplayStringLine(LCD_LINE_17, (uint8_t *)" GSensor : LIS331DL");
+            break;
+        case LIS3DSH_ID:
+            LCD_DisplayStringLine(LCD_LINE_17, (uint8_t *)" GSensor : LIS3DSH");
+            break;
+        default:
+            LCD_DisplayStringLine(LCD_LINE_17, (uint8_t *)" GSensor : detect error");
+            break;
+    }
+    //    i2c_single_write(GSENSOR_I2C_ADR_WRITE, LIS3DH_CTRL_REG1, 0x67);
+    //   i2c_single_write(GSENSOR_I2C_ADR_WRITE, LIS3DH_CTRL_REG2, 0x00);
+    //   i2c_single_write(GSENSOR_I2C_ADR_WRITE, LIS3DH_CTRL_REG3, 0x00);
+    //   i2c_single_write(GSENSOR_I2C_ADR_WRITE, LIS3DH_CTRL_REG4, 0x10);
+    //   i2c_single_write(GSENSOR_I2C_ADR_WRITE, LIS3DH_CTRL_REG5, 0x00);
+    //   i2c_single_write(GSENSOR_I2C_ADR_WRITE, LIS3DH_CTRL_REG6, 0x00);
 }
 
 /**

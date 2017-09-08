@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    DCMI/DCMI_CameraExample/main.c 
+  * @file    DCMI/DCMI_CameraExample/main.c
   * @author  MCD Application Team
   * @version V1.7.0
   * @date    22-April-2016
@@ -16,8 +16,8 @@
   *
   *        http://www.st.com/software_license_agreement_liberty_v2
   *
-  * Unless required by applicable law or agreed to in writing, software 
-  * distributed under the License is distributed on an "AS IS" BASIS, 
+  * Unless required by applicable law or agreed to in writing, software
+  * distributed under the License is distributed on an "AS IS" BASIS,
   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   * See the License for the specific language governing permissions and
   * limitations under the License.
@@ -37,7 +37,7 @@
 
 /** @addtogroup DCMI_CameraExample
   * @{
-  */ 
+  */
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -67,130 +67,119 @@ static void ADC_Config(void);
   */
 int main(void)
 {
-  /*!< At this stage the microcontroller clock setting is already configured, 
-       this is done through SystemInit() function which is called from startup
-       files (startup_stm32f40_41xxx.s/startup_stm32f427_437xx.s/startup_stm32f429_439xx.s)
-       before to branch to application main.
-     */
+    /*!< At this stage the microcontroller clock setting is already configured,
+         this is done through SystemInit() function which is called from startup
+         files (startup_stm32f40_41xxx.s/startup_stm32f427_437xx.s/startup_stm32f429_439xx.s)
+         before to branch to application main.
+       */
 
-  /* SysTick end of count event each 10ms */
-  RCC_GetClocksFreq(&RCC_Clocks);
-  SysTick_Config(RCC_Clocks.HCLK_Frequency / 100);
+    /* SysTick end of count event each 10ms */
+    RCC_GetClocksFreq(&RCC_Clocks);
+    SysTick_Config(RCC_Clocks.HCLK_Frequency / 100);
 
-  /* Initialize LEDs mounted on EVAL board */
-  STM_EVAL_LEDInit(LED1);
-  STM_EVAL_LEDInit(LED2);
-  STM_EVAL_LEDInit(LED3);
-  STM_EVAL_LEDInit(LED4);
+    /* Initialize LEDs mounted on EVAL board */
+    STM_EVAL_LEDInit(LED1);
+    STM_EVAL_LEDInit(LED2);
+    STM_EVAL_LEDInit(LED3);
+    STM_EVAL_LEDInit(LED4);
 
-  STM_EVAL_LEDOn(LED1);
+    STM_EVAL_LEDOn(LED1);
 
- /* Initialize the LCD */
-  LCD_Init();
-  LCD_Clear(Black);
-  LCD_SetTextColor(White);
+    /* Initialize the LCD */
+    LCD_Init();
+    LCD_Clear(Black);
+    LCD_SetTextColor(White);
 
-  LCD_LOG_SetHeader((uint8_t*)"STM32 Camera Demo");
-  LCD_LOG_SetFooter ((uint8_t*)"   Copyright (c) STMicroelectronics" );
+    LCD_LOG_SetHeader((uint8_t*)"STM32 Camera Demo");
+    LCD_LOG_SetFooter ((uint8_t*)"   Copyright (c) STMicroelectronics" );
 
-  /* ADC configuration */
-  ADC_Config();
+    /* ADC configuration */
+    ADC_Config();
 
-  /* Initializes the DCMI interface (I2C and GPIO) used to configure the camera */
-  OV2640_HW_Init();
+    /* Initializes the DCMI interface (I2C and GPIO) used to configure the camera */
+    OV2640_HW_Init();
 
-  /* Read the OV9655/OV2640 Manufacturer identifier */
-  OV9655_ReadID(&OV9655_Camera_ID);
-  OV2640_ReadID(&OV2640_Camera_ID);
+    /* Read the OV9655/OV2640 Manufacturer identifier */
+    OV9655_ReadID(&OV9655_Camera_ID);
+    OV2640_ReadID(&OV2640_Camera_ID);
 
-  if(OV9655_Camera_ID.PID  == 0x96)
-  {
-    Camera = OV9655_CAMERA;
-    sprintf((char*)abuffer, "OV9655 Camera ID 0x%x", OV9655_Camera_ID.PID);
-    ValueMax = 2;
-  }
-  else if(OV2640_Camera_ID.PIDH  == 0x26)
-  {
-    Camera = OV2640_CAMERA;
-    sprintf((char*)abuffer, "OV2640 Camera ID 0x%x", OV2640_Camera_ID.PIDH);
-    ValueMax = 2;
-  }
-  else
-  {
-    LCD_SetTextColor(LCD_COLOR_RED);
-    LCD_DisplayStringLine(LINE(4), (uint8_t*)"Check the Camera HW and try again");
-    while(1);  
-  }
-
-  LCD_SetTextColor(LCD_COLOR_YELLOW);
-  LCD_DisplayStringLine(LINE(4), (uint8_t*)abuffer);
-  LCD_SetTextColor(LCD_COLOR_WHITE);
-  Delay(200);
-
-  /* Initialize demo */
-  ImageFormat = (ImageFormat_TypeDef)Demo_Init();
-
-  /* Configure the Camera module mounted on STM324xG-EVAL/STM324x7I-EVAL boards */
-  Demo_LCD_Clear();
-  LCD_DisplayStringLine(LINE(4), (uint8_t*)"Camera Init..               ");
-  Camera_Config();
-
-  sprintf((char*)abuffer, " Image selected: %s", ImageForematArray[ImageFormat]);
-  LCD_DisplayStringLine(LINE(4),(uint8_t*)abuffer);
-
-  /* Enable DMA2 stream 1 and DCMI interface then start image capture */
-  DMA_Cmd(DMA2_Stream1, ENABLE); 
-  DCMI_Cmd(ENABLE); 
-
-  /* Insert 100ms delay: wait 100ms */
-  Delay(200); 
-
-  DCMI_CaptureCmd(ENABLE); 
-
-  LCD_ClearLine(LINE(4));
-  Demo_LCD_Clear();
-
-  if(ImageFormat == BMP_QQVGA)
-  {
-    /* LCD Display window */
-    LCD_SetDisplayWindow(179, 239, 120, 160);
-    LCD_WriteReg(LCD_REG_3, 0x1038);
-    LCD_WriteRAM_Prepare(); 
-  }
-  else if(ImageFormat == BMP_QVGA)
-  {
-    /* LCD Display window */
-    LCD_SetDisplayWindow(239, 319, 240, 320);
-    LCD_WriteReg(LCD_REG_3, 0x1038);
-    LCD_WriteRAM_Prepare(); 
-  }
-
-  while(1)
-  {
-    /* Blink LD1, LED2 and LED4 */
-    STM_EVAL_LEDToggle(LED1);
-    STM_EVAL_LEDToggle(LED2);
-    STM_EVAL_LEDToggle(LED3);
-    STM_EVAL_LEDToggle(LED4);
-
-    /* Insert 100ms delay */
-    Delay(10);
-
-    /* Get the last ADC3 conversion result data */
-    uhADCVal = ADC_GetConversionValue(ADC3);
-    
-    /* Change the Brightness of camera using "Brightness Adjustment" register:
-       For OV9655 camera Brightness can be positively (0x01 ~ 0x7F) and negatively (0x80 ~ 0xFF) adjusted
-       For OV2640 camera Brightness can be positively (0x20 ~ 0x40) and negatively (0 ~ 0x20) adjusted */
-    if(Camera == OV9655_CAMERA)
-    {
-      OV9655_BrightnessConfig(uhADCVal);
+    if(OV9655_Camera_ID.PID  == 0x96) {
+        Camera = OV9655_CAMERA;
+        sprintf((char*)abuffer, "OV9655 Camera ID 0x%x", OV9655_Camera_ID.PID);
+        ValueMax = 2;
+    } else if(OV2640_Camera_ID.PIDH  == 0x26) {
+        Camera = OV2640_CAMERA;
+        sprintf((char*)abuffer, "OV2640 Camera ID 0x%x", OV2640_Camera_ID.PIDH);
+        ValueMax = 2;
+    } else {
+        LCD_SetTextColor(LCD_COLOR_RED);
+        LCD_DisplayStringLine(LINE(4), (uint8_t*)"Check the Camera HW and try again");
+        while(1);
     }
-    if(Camera == OV2640_CAMERA)
-    {
-      OV2640_BrightnessConfig(uhADCVal/2);
+
+    LCD_SetTextColor(LCD_COLOR_YELLOW);
+    LCD_DisplayStringLine(LINE(4), (uint8_t*)abuffer);
+    LCD_SetTextColor(LCD_COLOR_WHITE);
+    Delay(200);
+
+    /* Initialize demo */
+    ImageFormat = (ImageFormat_TypeDef)Demo_Init();
+
+    /* Configure the Camera module mounted on STM324xG-EVAL/STM324x7I-EVAL boards */
+    Demo_LCD_Clear();
+    LCD_DisplayStringLine(LINE(4), (uint8_t*)"Camera Init..               ");
+    Camera_Config();
+
+    sprintf((char*)abuffer, " Image selected: %s", ImageForematArray[ImageFormat]);
+    LCD_DisplayStringLine(LINE(4),(uint8_t*)abuffer);
+
+    /* Enable DMA2 stream 1 and DCMI interface then start image capture */
+    DMA_Cmd(DMA2_Stream1, ENABLE);
+    DCMI_Cmd(ENABLE);
+
+    /* Insert 100ms delay: wait 100ms */
+    Delay(200);
+
+    DCMI_CaptureCmd(ENABLE);
+
+    LCD_ClearLine(LINE(4));
+    Demo_LCD_Clear();
+
+    if(ImageFormat == BMP_QQVGA) {
+        /* LCD Display window */
+        LCD_SetDisplayWindow(179, 239, 120, 160);
+        LCD_WriteReg(LCD_REG_3, 0x1038);
+        LCD_WriteRAM_Prepare();
+    } else if(ImageFormat == BMP_QVGA) {
+        /* LCD Display window */
+        LCD_SetDisplayWindow(239, 319, 240, 320);
+        LCD_WriteReg(LCD_REG_3, 0x1038);
+        LCD_WriteRAM_Prepare();
     }
-  }
+
+    while(1) {
+        /* Blink LD1, LED2 and LED4 */
+        STM_EVAL_LEDToggle(LED1);
+        STM_EVAL_LEDToggle(LED2);
+        STM_EVAL_LEDToggle(LED3);
+        STM_EVAL_LEDToggle(LED4);
+
+        /* Insert 100ms delay */
+        Delay(10);
+
+        /* Get the last ADC3 conversion result data */
+        uhADCVal = ADC_GetConversionValue(ADC3);
+
+        /* Change the Brightness of camera using "Brightness Adjustment" register:
+           For OV9655 camera Brightness can be positively (0x01 ~ 0x7F) and negatively (0x80 ~ 0xFF) adjusted
+           For OV2640 camera Brightness can be positively (0x20 ~ 0x40) and negatively (0 ~ 0x20) adjusted */
+        if(Camera == OV9655_CAMERA) {
+            OV9655_BrightnessConfig(uhADCVal);
+        }
+        if(Camera == OV2640_CAMERA) {
+            OV2640_BrightnessConfig(uhADCVal/2);
+        }
+    }
 }
 
 /**
@@ -200,47 +189,47 @@ int main(void)
   */
 static void ADC_Config(void)
 {
-  ADC_InitTypeDef ADC_InitStructure;
-  ADC_CommonInitTypeDef ADC_CommonInitStructure;
-  GPIO_InitTypeDef GPIO_InitStructure;
+    ADC_InitTypeDef ADC_InitStructure;
+    ADC_CommonInitTypeDef ADC_CommonInitStructure;
+    GPIO_InitTypeDef GPIO_InitStructure;
 
-  /* Enable ADC3 clock */
-  RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC3, ENABLE);
+    /* Enable ADC3 clock */
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC3, ENABLE);
 
-  /* GPIOF clock enable */
-  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOF, ENABLE); 
+    /* GPIOF clock enable */
+    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOF, ENABLE);
 
-  /* Configure ADC Channel7 as analog */
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9; 
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AN;
-  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL ;
-  GPIO_Init(GPIOF, &GPIO_InitStructure);
+    /* Configure ADC Channel7 as analog */
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AN;
+    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL ;
+    GPIO_Init(GPIOF, &GPIO_InitStructure);
 
-  /* ADC Common Init */
-  ADC_CommonInitStructure.ADC_Mode = ADC_Mode_Independent;
-  ADC_CommonInitStructure.ADC_Prescaler = ADC_Prescaler_Div6;
-  ADC_CommonInitStructure.ADC_DMAAccessMode = ADC_DMAAccessMode_Disabled;
-  ADC_CommonInitStructure.ADC_TwoSamplingDelay = ADC_TwoSamplingDelay_5Cycles; 
-  ADC_CommonInit(&ADC_CommonInitStructure); 
+    /* ADC Common Init */
+    ADC_CommonInitStructure.ADC_Mode = ADC_Mode_Independent;
+    ADC_CommonInitStructure.ADC_Prescaler = ADC_Prescaler_Div6;
+    ADC_CommonInitStructure.ADC_DMAAccessMode = ADC_DMAAccessMode_Disabled;
+    ADC_CommonInitStructure.ADC_TwoSamplingDelay = ADC_TwoSamplingDelay_5Cycles;
+    ADC_CommonInit(&ADC_CommonInitStructure);
 
-  /* ADC3 Configuration ------------------------------------------------------*/
-  ADC_StructInit(&ADC_InitStructure);
-  ADC_InitStructure.ADC_Resolution = ADC_Resolution_8b;
-  ADC_InitStructure.ADC_ScanConvMode = DISABLE;
-  ADC_InitStructure.ADC_ContinuousConvMode = ENABLE;
-  ADC_InitStructure.ADC_ExternalTrigConvEdge = ADC_ExternalTrigConvEdge_None; 
-  ADC_InitStructure.ADC_DataAlign = ADC_DataAlign_Right;
-  ADC_InitStructure.ADC_NbrOfConversion = 1;
-  ADC_Init(ADC3, &ADC_InitStructure);
+    /* ADC3 Configuration ------------------------------------------------------*/
+    ADC_StructInit(&ADC_InitStructure);
+    ADC_InitStructure.ADC_Resolution = ADC_Resolution_8b;
+    ADC_InitStructure.ADC_ScanConvMode = DISABLE;
+    ADC_InitStructure.ADC_ContinuousConvMode = ENABLE;
+    ADC_InitStructure.ADC_ExternalTrigConvEdge = ADC_ExternalTrigConvEdge_None;
+    ADC_InitStructure.ADC_DataAlign = ADC_DataAlign_Right;
+    ADC_InitStructure.ADC_NbrOfConversion = 1;
+    ADC_Init(ADC3, &ADC_InitStructure);
 
-  /* ADC3 Regular Channel Config */
-  ADC_RegularChannelConfig(ADC3, ADC_Channel_7, 1, ADC_SampleTime_56Cycles);
+    /* ADC3 Regular Channel Config */
+    ADC_RegularChannelConfig(ADC3, ADC_Channel_7, 1, ADC_SampleTime_56Cycles);
 
-  /* Enable ADC3 */
-  ADC_Cmd(ADC3, ENABLE);
+    /* Enable ADC3 */
+    ADC_Cmd(ADC3, ENABLE);
 
-  /* ADC3 regular Software Start Conv */ 
-  ADC_SoftwareStartConv(ADC3);
+    /* ADC3 regular Software Start Conv */
+    ADC_SoftwareStartConv(ADC3);
 }
 
 #ifdef  USE_FULL_ASSERT
@@ -252,23 +241,22 @@ static void ADC_Config(void)
   * @retval None
   */
 void assert_failed(uint8_t* file, uint32_t line)
-{ 
-  /* User can add his own implementation to report the file name and line number,
-     ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+{
+    /* User can add his own implementation to report the file name and line number,
+       ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
 
-  /* Infinite loop */
-  while (1)
-  {
-  }
+    /* Infinite loop */
+    while (1) {
+    }
 }
 #endif
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

@@ -16,8 +16,8 @@
   *
   *        http://www.st.com/software_license_agreement_liberty_v2
   *
-  * Unless required by applicable law or agreed to in writing, software 
-  * distributed under the License is distributed on an "AS IS" BASIS, 
+  * Unless required by applicable law or agreed to in writing, software
+  * distributed under the License is distributed on an "AS IS" BASIS,
   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   * See the License for the specific language governing permissions and
   * limitations under the License.
@@ -34,38 +34,38 @@
 
 /** @addtogroup RNG_MultiRNG
   * @{
-  */ 
+  */
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 
 #if defined (USE_STM324xG_EVAL)
-  #define MESSAGE1   "  To Generate 8x32bit RNG, Press Key  >>"
-  #define MESSAGE2   "*** RNG  Example ***"
-  #define MESSAGE3   "  Press KEY button " 
-  #define MESSAGE4   "     to START     "
-  #define MESSAGE5   "   [ 0x%08X ]   "
-  #define LINENUM            0x13
-  #define FONTSIZE         Font8x12
+#define MESSAGE1   "  To Generate 8x32bit RNG, Press Key  >>"
+#define MESSAGE2   "*** RNG  Example ***"
+#define MESSAGE3   "  Press KEY button "
+#define MESSAGE4   "     to START     "
+#define MESSAGE5   "   [ 0x%08X ]   "
+#define LINENUM            0x13
+#define FONTSIZE         Font8x12
 
-#elif defined (USE_STM324x7I_EVAL) 
-  #define MESSAGE1   "  To Generate 8x32bit RNG, Press Key  >>"
-  #define MESSAGE2   "*** RNG  Example ***"
-  #define MESSAGE3   "  Press KEY button " 
-  #define MESSAGE4   "     to START     "
-  #define MESSAGE5   "   [ 0x%08X ]   "
-  #define LINENUM          0x13
-  #define FONTSIZE       Font8x12
+#elif defined (USE_STM324x7I_EVAL)
+#define MESSAGE1   "  To Generate 8x32bit RNG, Press Key  >>"
+#define MESSAGE2   "*** RNG  Example ***"
+#define MESSAGE3   "  Press KEY button "
+#define MESSAGE4   "     to START     "
+#define MESSAGE5   "   [ 0x%08X ]   "
+#define LINENUM          0x13
+#define FONTSIZE       Font8x12
 
 #else
-  #define MESSAGE1   "  To Generate 8x32bit RNG, Press Key  >>"
-  #define MESSAGE2   "******** RNG  Example ********"
-  #define MESSAGE3   "       Press KEY button       "
-  #define MESSAGE4   "           to START           "
-  #define MESSAGE5   "        [ 0x%08X ]        "
-  #define LINENUM           0x15
-  #define FONTSIZE        Font12x12
-  #define BUTTON_KEY      BUTTON_TAMPER
+#define MESSAGE1   "  To Generate 8x32bit RNG, Press Key  >>"
+#define MESSAGE2   "******** RNG  Example ********"
+#define MESSAGE3   "       Press KEY button       "
+#define MESSAGE4   "           to START           "
+#define MESSAGE5   "        [ 0x%08X ]        "
+#define LINENUM           0x15
+#define FONTSIZE        Font12x12
+#define BUTTON_KEY      BUTTON_TAMPER
 #endif
 
 /* Private macro -------------------------------------------------------------*/
@@ -76,13 +76,13 @@ static void Display_Init(void);
 static void Display(uint32_t rng, uint8_t line);
 
 #ifdef __GNUC__
-  /* With GCC/RAISONANCE, small printf (option LD Linker->Libraries->Small printf
-     set to 'Yes') calls __io_putchar() */
-  #define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
+/* With GCC/RAISONANCE, small printf (option LD Linker->Libraries->Small printf
+   set to 'Yes') calls __io_putchar() */
+#define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
 #else
-  #define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
+#define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
 #endif /* __GNUC__ */
-  
+
 /* Private functions ---------------------------------------------------------*/
 
 /**
@@ -92,51 +92,46 @@ static void Display(uint32_t rng, uint8_t line);
   */
 int main(void)
 {
- uint32_t random32bit = 0;
- uint32_t counter = 0;
+    uint32_t random32bit = 0;
+    uint32_t counter = 0;
 
-  /*!< At this stage the microcontroller clock setting is already configured, 
-       this is done through SystemInit() function which is called from startup
-       files (startup_stm32f40_41xxx.s/startup_stm32f427_437xx.s/startup_stm32f429_439xx.s)
-       before to branch to application main. 
-       To reconfigure the default setting of SystemInit() function, refer to
-       system_stm32f4xx.c file
-     */
+    /*!< At this stage the microcontroller clock setting is already configured,
+         this is done through SystemInit() function which is called from startup
+         files (startup_stm32f40_41xxx.s/startup_stm32f427_437xx.s/startup_stm32f429_439xx.s)
+         before to branch to application main.
+         To reconfigure the default setting of SystemInit() function, refer to
+         system_stm32f4xx.c file
+       */
 
-  /* Display init (LCD or/and USART)*/
-  Display_Init();
-  
-  /* Key Button configuration */
-  STM_EVAL_PBInit(BUTTON_KEY, BUTTON_MODE_GPIO);
-  
-  /* RNG configuration */
-  RNG_Config();
+    /* Display init (LCD or/and USART)*/
+    Display_Init();
 
-  while (1)
-  {
-    /* Wait until Key button is pressed */
-    while(STM_EVAL_PBGetState(BUTTON_KEY) != RESET)
-    {
+    /* Key Button configuration */
+    STM_EVAL_PBInit(BUTTON_KEY, BUTTON_MODE_GPIO);
+
+    /* RNG configuration */
+    RNG_Config();
+
+    while (1) {
+        /* Wait until Key button is pressed */
+        while(STM_EVAL_PBGetState(BUTTON_KEY) != RESET) {
+        }
+        /* Loop while Key button is maintained pressed */
+        while(STM_EVAL_PBGetState(BUTTON_KEY) == RESET) {
+        }
+
+        for(counter = 0; counter < 8; counter++) {
+            /* Wait until one RNG number is ready */
+            while(RNG_GetFlagStatus(RNG_FLAG_DRDY)== RESET) {
+            }
+
+            /* Get a 32bit Random number */
+            random32bit = RNG_GetRandomNumber();
+
+            /* Display the Random number value on the LCD or/and USART */
+            Display(random32bit, counter+1);
+        }
     }
-    /* Loop while Key button is maintained pressed */
-    while(STM_EVAL_PBGetState(BUTTON_KEY) == RESET)
-    {
-    }
-
-    for(counter = 0; counter < 8; counter++)
-    {
-      /* Wait until one RNG number is ready */
-      while(RNG_GetFlagStatus(RNG_FLAG_DRDY)== RESET)
-      {
-      }
-
-      /* Get a 32bit Random number */       
-      random32bit = RNG_GetRandomNumber();
-
-      /* Display the Random number value on the LCD or/and USART */
-      Display(random32bit, counter+1);
-    }
-  }
 }
 
 /**
@@ -145,12 +140,12 @@ int main(void)
   * @retval None
   */
 static void RNG_Config(void)
-{  
- /* Enable RNG clock source */
-  RCC_AHB2PeriphClockCmd(RCC_AHB2Periph_RNG, ENABLE);
+{
+    /* Enable RNG clock source */
+    RCC_AHB2PeriphClockCmd(RCC_AHB2Periph_RNG, ENABLE);
 
-  /* RNG Peripheral enable */
-  RNG_Cmd(ENABLE);
+    /* RNG Peripheral enable */
+    RNG_Cmd(ENABLE);
 }
 
 /**
@@ -160,78 +155,78 @@ static void RNG_Config(void)
   */
 static void Display_Init(void)
 {
-#ifdef PRINT_ON_USART 
+#ifdef PRINT_ON_USART
 
- USART_InitTypeDef USART_InitStructure;
-  /* USARTx configured as follows:
-        - BaudRate = 115200 baud  
-        - Word Length = 8 Bits
-        - One Stop Bit
-        - No parity
-        - Hardware flow control disabled (RTS and CTS signals)
-        - Receive and transmit enabled
-  */
-  USART_InitStructure.USART_BaudRate = 115200;
-  USART_InitStructure.USART_WordLength = USART_WordLength_8b;
-  USART_InitStructure.USART_StopBits = USART_StopBits_1;
-  USART_InitStructure.USART_Parity = USART_Parity_No;
-  USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
-  USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
+    USART_InitTypeDef USART_InitStructure;
+    /* USARTx configured as follows:
+          - BaudRate = 115200 baud
+          - Word Length = 8 Bits
+          - One Stop Bit
+          - No parity
+          - Hardware flow control disabled (RTS and CTS signals)
+          - Receive and transmit enabled
+    */
+    USART_InitStructure.USART_BaudRate = 115200;
+    USART_InitStructure.USART_WordLength = USART_WordLength_8b;
+    USART_InitStructure.USART_StopBits = USART_StopBits_1;
+    USART_InitStructure.USART_Parity = USART_Parity_No;
+    USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
+    USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
 
-  STM_EVAL_COMInit(COM1, &USART_InitStructure);
+    STM_EVAL_COMInit(COM1, &USART_InitStructure);
 
-  printf("\n\r ========================================\n");
-  printf("\n\r ==== Multiple RNG Generator Example ====\n");
-  printf("\n\r ======================================== \n\n\r");
-  printf("\n\r  Press key button to generate 8 x 32bit random number\n");
+    printf("\n\r ========================================\n");
+    printf("\n\r ==== Multiple RNG Generator Example ====\n");
+    printf("\n\r ======================================== \n\n\r");
+    printf("\n\r  Press key button to generate 8 x 32bit random number\n");
 #endif
 
-#ifdef PRINT_ON_LCD  
-/* Initialize the LCD */
-  LCD_Init();
+#ifdef PRINT_ON_LCD
+    /* Initialize the LCD */
+    LCD_Init();
 
-/* Display message on LCD ***************************************************/
-#if defined (USE_STM324x9I_EVAL) 
-  /* Initialize the LCD Layers */
-  LCD_LayerInit();
-  /* Enable The Display */
-  LCD_DisplayOn(); 
-  /* Set LCD Background Layer  */
-  LCD_SetLayer(LCD_BACKGROUND_LAYER);
-  /* Clear the Background Layer */ 
-  LCD_Clear(LCD_COLOR_WHITE);
-  
-  /* Set LCD Foreground Layer  */
-  LCD_SetLayer(LCD_FOREGROUND_LAYER);
+    /* Display message on LCD ***************************************************/
+#if defined (USE_STM324x9I_EVAL)
+    /* Initialize the LCD Layers */
+    LCD_LayerInit();
+    /* Enable The Display */
+    LCD_DisplayOn();
+    /* Set LCD Background Layer  */
+    LCD_SetLayer(LCD_BACKGROUND_LAYER);
+    /* Clear the Background Layer */
+    LCD_Clear(LCD_COLOR_WHITE);
 
-  /* Configure the transparency for foreground */
-  LCD_SetTransparency(100);
-#endif /* USE_STM324x9I_EVAL */  
-  
-  /* Clear the LCD */ 
-  LCD_Clear(White);
+    /* Set LCD Foreground Layer  */
+    LCD_SetLayer(LCD_FOREGROUND_LAYER);
 
-  /* Set the LCD Text size */
-  LCD_SetFont(&FONTSIZE);
+    /* Configure the transparency for foreground */
+    LCD_SetTransparency(100);
+#endif /* USE_STM324x9I_EVAL */
 
-  /* Set the LCD Back Color and Text Color*/
-  LCD_SetBackColor(Blue);
-  LCD_SetTextColor(White);
-  
-  LCD_DisplayStringLine(LINE(LINENUM), (uint8_t*)MESSAGE1);
-  LCD_DisplayStringLine(LINE(0x16), (uint8_t*)"                                         ");
-  
-  /* Set the LCD Text size */
-  LCD_SetFont(&Font16x24);
+    /* Clear the LCD */
+    LCD_Clear(White);
 
-  LCD_DisplayStringLine(LINE(0), (uint8_t*)MESSAGE2);
+    /* Set the LCD Text size */
+    LCD_SetFont(&FONTSIZE);
 
-  /* Set the LCD Back Color and Text Color*/
-  LCD_SetBackColor(White);
-  LCD_SetTextColor(Blue); 
+    /* Set the LCD Back Color and Text Color*/
+    LCD_SetBackColor(Blue);
+    LCD_SetTextColor(White);
 
-  LCD_DisplayStringLine(LINE(3), (uint8_t*)MESSAGE3);
-  LCD_DisplayStringLine(LINE(5), (uint8_t*)MESSAGE4);
+    LCD_DisplayStringLine(LINE(LINENUM), (uint8_t*)MESSAGE1);
+    LCD_DisplayStringLine(LINE(0x16), (uint8_t*)"                                         ");
+
+    /* Set the LCD Text size */
+    LCD_SetFont(&Font16x24);
+
+    LCD_DisplayStringLine(LINE(0), (uint8_t*)MESSAGE2);
+
+    /* Set the LCD Back Color and Text Color*/
+    LCD_SetBackColor(White);
+    LCD_SetTextColor(Blue);
+
+    LCD_DisplayStringLine(LINE(3), (uint8_t*)MESSAGE3);
+    LCD_DisplayStringLine(LINE(5), (uint8_t*)MESSAGE4);
 #endif
 }
 
@@ -244,20 +239,19 @@ static void Display_Init(void)
 static void Display(uint32_t rnumber, uint8_t line)
 {
 #ifdef PRINT_ON_LCD
-  uint8_t text[50];
+    uint8_t text[50];
 #endif
 
-#ifdef PRINT_ON_USART  
-  printf("\r [ 0x%08x ]\n", rnumber);
-  if (line == 8)
-  {  
-    printf("\n\r  Press key button to generate 8 x 32bit random number\n");
-  }
+#ifdef PRINT_ON_USART
+    printf("\r [ 0x%08x ]\n", rnumber);
+    if (line == 8) {
+        printf("\n\r  Press key button to generate 8 x 32bit random number\n");
+    }
 #endif
 
 #ifdef PRINT_ON_LCD
-  sprintf((char*)text, MESSAGE5, rnumber);
-  LCD_DisplayStringLine(LINE(line),text);
+    sprintf((char*)text, MESSAGE5, rnumber);
+    LCD_DisplayStringLine(LINE(line),text);
 #endif
 }
 
@@ -266,17 +260,16 @@ static void Display(uint32_t rnumber, uint8_t line)
   * @param  None
   * @retval None
   */
-PUTCHAR_PROTOTYPE
-{
-  /* Place your implementation of fputc here */
-  /* e.g. write a character to the USART */
-  USART_SendData(EVAL_COM1, (uint8_t) ch);
+PUTCHAR_PROTOTYPE {
+    /* Place your implementation of fputc here */
+    /* e.g. write a character to the USART */
+    USART_SendData(EVAL_COM1, (uint8_t) ch);
 
-  /* Loop until the end of transmission */
-  while (USART_GetFlagStatus(EVAL_COM1, USART_FLAG_TC) == RESET)
-  {}
+    /* Loop until the end of transmission */
+    while (USART_GetFlagStatus(EVAL_COM1, USART_FLAG_TC) == RESET)
+    {}
 
-  return ch;
+    return ch;
 }
 
 #ifdef  USE_FULL_ASSERT
@@ -289,14 +282,13 @@ PUTCHAR_PROTOTYPE
   * @retval None
   */
 void assert_failed(uint8_t* file, uint32_t line)
-{ 
-  /* User can add his own implementation to report the file name and line number,
-     ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+{
+    /* User can add his own implementation to report the file name and line number,
+       ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
 
-  /* Infinite loop */
-  while (1)
-  {
-  }
+    /* Infinite loop */
+    while (1) {
+    }
 }
 #endif
 
@@ -306,6 +298,6 @@ void assert_failed(uint8_t* file, uint32_t line)
 
 /**
   * @}
-  */ 
+  */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

@@ -1,7 +1,7 @@
 /*
  ============================================================================
  Name        : PathQuestion.c
- Author      : 
+ Author      :
  Version     :
  Copyright   : Your copyright notice
  Description : Hello World in C, Ansi-style
@@ -11,80 +11,75 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void path (int **array, const int x, const int y) {
-	int i, j;
+void path (int **array, const int x, const int y)
+{
+    int i, j;
 
-	//åˆå§‹åŒ–
-	array[0][0] = 1;
-	for(i = 1; i != x; ++i)
-	{
-		array[i][0] = 1;
-		for(j = 1; j != y; ++j)
-			array[0][j] = 1;
-	}
+    //ªì©l¤Æ
+    array[0][0] = 1;
+    for(i = 1; i != x; ++i) {
+        array[i][0] = 1;
+        for(j = 1; j != y; ++j)
+            array[0][j] = 1;
+    }
 
-	//è¨ˆç®—
-	for(i = 1; i != x; ++i)
-	{
-		for(j = 1; j != y; ++j)
-		{
-			array[i][j] = array[i - 1][j] + array[i - 1][j - 1];
-			if (j != i)
-				array[i][j] += array[i][j - 1];
-		}
-	}
+    //­pºâ
+    for(i = 1; i != x; ++i) {
+        for(j = 1; j != y; ++j) {
+            array[i][j] = array[i - 1][j] + array[i - 1][j - 1];
+            if (j != i)
+                array[i][j] += array[i][j - 1];
+        }
+    }
 
-	printf("ç¸½å…±æœ‰%dç¨®èµ°æ³•\n", array[x - 1][y - 1]);
+    printf("Á`¦@¦³%dºØ¨«ªk\n", array[x - 1][y - 1]);
 }
 
-int main(void) {
-	int x, y, i, j;
+int main(void)
+{
+    int x, y, i, j;
 
-	printf("è«‹è¼¸å…¥å…©å€‹æ­£æ•´æ•¸xã€yä»£è¡¨çµ‚é»ä½ç½®çš„åº§æ¨™ï¼š\n");
-	fflush(stdin);
-	scanf("%d %d", &x, &y);
+    printf("½Ğ¿é¤J¨â­Ó¥¿¾ã¼Æx¡By¥Nªí²×ÂI¦ì¸mªº®y¼Ğ¡G\n");
+    fflush(stdin);
+    scanf("%d %d", &x, &y);
 
-	if(x >= y)
-	{
-		//åº§æ¨™åŒ…å«
-		x++;
-		y++;
-	}
-	else
-	{
-		printf("0");
-		return 0;
-	}
+    if(x >= y) {
+        //®y¼Ğ¥]§t
+        x++;
+        y++;
+    } else {
+        printf("0");
+        return 0;
+    }
 
-	/*å‹•æ…‹å»ºç«‹äºŒç¶­é™£åˆ—ï¼Œç”±ä¸€ç¶­é™£åˆ—æ¨¡æ“¬äºŒç¶­é™£åˆ—
-	malloc(æ•¸é‡ * å‹æ…‹å¤§å°çš„è¨˜æ†¶é«”)
-	malloc()é‹ç®—å­æœƒé…ç½®ä¸€å€‹intæ‰€éœ€è¦çš„ç©ºé–“ï¼Œä¸¦å‚³å›è©²ç©ºé–“çš„ä½å€ï¼Œ
-	æ‰€ä»¥æ‚¨ä½¿ç”¨æŒ‡æ¨™ä¾†å„²å­˜é€™å€‹ä½å€ï¼Œé€™æ®µç¨‹å¼åªé…ç½®ç©ºé–“ä½†ä¸åˆå§‹ç©ºé–“ä¸­ çš„å„²å­˜å€¼ã€‚
-	calloc(æ•¸é‡, å‹æ…‹å¤§å°çš„è¨˜æ†¶é«”)ï¼Œæ‰€æœ‰çš„ç©ºé–“å€¼åˆå§‹ç‚º0*/
-	//int **array = (int **)malloc(x * sizeof(void *));
-	/*int **array = (int **)calloc(x, sizeof(int *));
-	int *array_y = (int *)calloc(x * y, sizeof(int *)); */
-	int **array = (int **)calloc(x + x * y, sizeof(**array));
-	//int **array = (int **)calloc(x + x * y, sizeof(int *));
-	int *array_y = (int *)(array + x); //å°array_yåšåˆå§‹åŒ–ï¼Œä¹‹å¾Œæ¯å€‹Loopçš„array_yæœƒéš¨è‘—xè€Œéå¢
-	//é—œéµåœ¨æ–¼ array_y += yï¼Œarray_yæ¯æ¬¡éš¨è‘—yè€Œéå¢ï¼Œå¦‚æ­¤array[i]å°±èƒ½å–å¾—é©ç•¶çš„è¨˜æ†¶é«”ä½å€äº†ã€‚
-	for(i = 0; i != x; ++i, array_y += y)
-		array[i] = array_y;
+    /*°ÊºA«Ø¥ß¤Gºû°}¦C¡A¥Ñ¤@ºû°}¦C¼ÒÀÀ¤Gºû°}¦C
+    malloc(¼Æ¶q * «¬ºA¤j¤pªº°O¾ĞÅé)
+    malloc()¹Bºâ¤l·|°t¸m¤@­Óint©Ò»İ­nªºªÅ¶¡¡A¨Ã¶Ç¦^¸ÓªÅ¶¡ªº¦ì§}¡A
+    ©Ò¥H±z¨Ï¥Î«ü¼Ğ¨ÓÀx¦s³o­Ó¦ì§}¡A³o¬qµ{¦¡¥u°t¸mªÅ¶¡¦ı¤£ªì©lªÅ¶¡¤¤ ªºÀx¦s­È¡C
+    calloc(¼Æ¶q, «¬ºA¤j¤pªº°O¾ĞÅé)¡A©Ò¦³ªºªÅ¶¡­Èªì©l¬°0*/
+    //int **array = (int **)malloc(x * sizeof(void *));
+    /*int **array = (int **)calloc(x, sizeof(int *));
+    int *array_y = (int *)calloc(x * y, sizeof(int *)); */
+    int **array = (int **)calloc(x + x * y, sizeof(**array));
+    //int **array = (int **)calloc(x + x * y, sizeof(int *));
+    int *array_y = (int *)(array + x); //¹ïarray_y°µªì©l¤Æ¡A¤§«á¨C­ÓLoopªºarray_y·|ÀHµÛx¦Ó»¼¼W
+    //ÃöÁä¦b©ó array_y += y¡Aarray_y¨C¦¸ÀHµÛy¦Ó»¼¼W¡A¦p¦¹array[i]´N¯à¨ú±o¾A·íªº°O¾ĞÅé¦ì§}¤F¡C
+    for(i = 0; i != x; ++i, array_y += y)
+        array[i] = array_y;
 
-	path(array, x, y);
+    path(array, x, y);
 
-	for(i = 0; i != x; ++i)
-	{
-		for(j = 0; j != y; ++j)
-			printf("%3d ", array[i][j]);
+    for(i = 0; i != x; ++i) {
+        for(j = 0; j != y; ++j)
+            printf("%3d ", array[i][j]);
 
-		putchar('\n');
-	}
+        putchar('\n');
+    }
 
 
-	//æ­¸é‚„çµ¦è¨˜æ†¶é«”
-	//free(array[0]);
-	free(array);
+    //ÂkÁÙµ¹°O¾ĞÅé
+    //free(array[0]);
+    free(array);
 
-	return EXIT_SUCCESS;
+    return EXIT_SUCCESS;
 }

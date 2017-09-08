@@ -1,11 +1,11 @@
 /**
   ******************************************************************************
-  * @file    NVIC/NVIC_WFIMode/stm32f4xx_it.c 
+  * @file    NVIC/NVIC_WFIMode/stm32f4xx_it.c
   * @author  MCD Application Team
   * @version V1.7.0
   * @date    22-April-2016
   * @brief   Main Interrupt Service Routines.
-  *          This file provides template for all exceptions handler and 
+  *          This file provides template for all exceptions handler and
   *          peripherals interrupt service routine.
   ******************************************************************************
   * @attention
@@ -18,8 +18,8 @@
   *
   *        http://www.st.com/software_license_agreement_liberty_v2
   *
-  * Unless required by applicable law or agreed to in writing, software 
-  * distributed under the License is distributed on an "AS IS" BASIS, 
+  * Unless required by applicable law or agreed to in writing, software
+  * distributed under the License is distributed on an "AS IS" BASIS,
   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   * See the License for the specific language governing permissions and
   * limitations under the License.
@@ -37,7 +37,7 @@
 
 /** @addtogroup NVIC_WFIMode
   * @{
-  */ 
+  */
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -71,10 +71,9 @@ void NMI_Handler(void)
   */
 void HardFault_Handler(void)
 {
-  /* Go to infinite loop when Hard Fault exception occurs */
-  while (1)
-  {
-  }
+    /* Go to infinite loop when Hard Fault exception occurs */
+    while (1) {
+    }
 }
 
 /**
@@ -84,10 +83,9 @@ void HardFault_Handler(void)
   */
 void MemManage_Handler(void)
 {
-  /* Go to infinite loop when Memory Manage exception occurs */
-  while (1)
-  {
-  }
+    /* Go to infinite loop when Memory Manage exception occurs */
+    while (1) {
+    }
 }
 
 /**
@@ -97,10 +95,9 @@ void MemManage_Handler(void)
   */
 void BusFault_Handler(void)
 {
-  /* Go to infinite loop when Bus Fault exception occurs */
-  while (1)
-  {
-  }
+    /* Go to infinite loop when Bus Fault exception occurs */
+    while (1) {
+    }
 }
 
 /**
@@ -110,10 +107,9 @@ void BusFault_Handler(void)
   */
 void UsageFault_Handler(void)
 {
-  /* Go to infinite loop when Usage Fault exception occurs */
-  while (1)
-  {
-  }
+    /* Go to infinite loop when Usage Fault exception occurs */
+    while (1) {
+    }
 }
 
 /**
@@ -177,22 +173,18 @@ void SysTick_Handler(void)
   */
 void DMA2_Stream5_IRQHandler(void)
 {
-  if(DMA_GetITStatus(DMA2_Stream5, DMA_IT_TCIF5))
-  {
-    DMA_ClearITPendingBit(DMA2_Stream5, DMA_IT_TCIF5);
+    if(DMA_GetITStatus(DMA2_Stream5, DMA_IT_TCIF5)) {
+        DMA_ClearITPendingBit(DMA2_Stream5, DMA_IT_TCIF5);
 
-    /* Check the received buffer */
-    ubTestStatus = Buffercmp16(aSrcBuffer, aDstBuffer, 10);
+        /* Check the received buffer */
+        ubTestStatus = Buffercmp16(aSrcBuffer, aDstBuffer, 10);
 
-    if(ubTestStatus == 0)
-    {
-      STM_EVAL_LEDToggle(LED2);
+        if(ubTestStatus == 0) {
+            STM_EVAL_LEDToggle(LED2);
+        } else {
+            STM_EVAL_LEDToggle(LED3);
+        }
     }
-    else
-    {
-      STM_EVAL_LEDToggle(LED3);
-    }
-  }
 }
 #else
 /**
@@ -202,22 +194,18 @@ void DMA2_Stream5_IRQHandler(void)
   */
 void DMA1_Stream1_IRQHandler(void)
 {
-  if(DMA_GetITStatus(DMA1_Stream1, DMA_IT_TCIF1))
-  {
-    DMA_ClearITPendingBit(DMA1_Stream1, DMA_IT_TCIF1);
+    if(DMA_GetITStatus(DMA1_Stream1, DMA_IT_TCIF1)) {
+        DMA_ClearITPendingBit(DMA1_Stream1, DMA_IT_TCIF1);
 
-    /* Check the received buffer */
-    ubTestStatus = Buffercmp16(aSrcBuffer, aDstBuffer, 10);
+        /* Check the received buffer */
+        ubTestStatus = Buffercmp16(aSrcBuffer, aDstBuffer, 10);
 
-    if(ubTestStatus == 0)
-    {
-      STM_EVAL_LEDToggle(LED2);
+        if(ubTestStatus == 0) {
+            STM_EVAL_LEDToggle(LED2);
+        } else {
+            STM_EVAL_LEDToggle(LED3);
+        }
     }
-    else
-    {
-      STM_EVAL_LEDToggle(LED3);
-    }
-  }
 }
 #endif /* USE_STM324x9I_EVAL */
 
@@ -228,20 +216,19 @@ void DMA1_Stream1_IRQHandler(void)
   */
 void EXTI15_10_IRQHandler(void)
 {
-  if(EXTI_GetITStatus(BUTTON_EXTI_LINE) != RESET)
-  {
-    EXTI_ClearITPendingBit(BUTTON_EXTI_LINE);
-  
-    uwLowPowerMode = 1;
-  }  
+    if(EXTI_GetITStatus(BUTTON_EXTI_LINE) != RESET) {
+        EXTI_ClearITPendingBit(BUTTON_EXTI_LINE);
+
+        uwLowPowerMode = 1;
+    }
 }
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

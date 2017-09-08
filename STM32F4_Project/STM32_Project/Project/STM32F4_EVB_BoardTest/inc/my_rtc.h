@@ -3,7 +3,7 @@
 #define __MY_RTC_H
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
@@ -13,7 +13,7 @@
 
 #define RTC_CLOCK_SOURCE_LSE          /* LSE used as RTC source clock */
 /* #define RTC_CLOCK_SOURCE_LSI */    /* LSI used as RTC source clock. The RTC Clock
-                                         may varies due to LSI frequency dispersion. */ 
+                                         may varies due to LSI frequency dispersion. */
 
 /* By Include "my_rtc.c" */
 extern RTC_TimeTypeDef  RTC_TimeStructure1;

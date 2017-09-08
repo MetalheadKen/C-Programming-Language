@@ -7,12 +7,12 @@
 *
 *               All rights reserved.  Protected by international copyright laws.
 *
-*               uC/CPU is provided in source form to registered licensees ONLY.  It is 
-*               illegal to distribute this source code to any third party unless you receive 
-*               written permission by an authorized Micrium representative.  Knowledge of 
+*               uC/CPU is provided in source form to registered licensees ONLY.  It is
+*               illegal to distribute this source code to any third party unless you receive
+*               written permission by an authorized Micrium representative.  Knowledge of
 *               the source code may NOT be used to develop a similar product.
 *
-*               Please help us continue to provide the Embedded community with the finest 
+*               Please help us continue to provide the Embedded community with the finest
 *               software available.  Your honesty is greatly appreciated.
 *
 *               You can contact us at www.micrium.com.
@@ -39,7 +39,7 @@
 *********************************************************************************************************
 *                                               MODULE
 *
-* Note(s) : (1) This CPU header file is protected from multiple pre-processor inclusion through use of 
+* Note(s) : (1) This CPU header file is protected from multiple pre-processor inclusion through use of
 *               the  CPU module present pre-processor macro definition.
 *********************************************************************************************************
 */
@@ -72,11 +72,11 @@
 *               (b) (1) '\<CPU-Compiler Directory>\'                  directory         See Note #1b1
 *                   (2) '\<CPU-Compiler Directory>\<cpu>\<compiler>\' directory         See Note #1b2
 *
-*           (3) Since NO custom library modules are included, 'cpu.h' may ONLY use configurations from 
+*           (3) Since NO custom library modules are included, 'cpu.h' may ONLY use configurations from
 *               CPU configuration file 'cpu_cfg.h' that do NOT reference any custom library definitions.
 *
-*               In other words, 'cpu.h' may use 'cpu_cfg.h' configurations that are #define'd to numeric 
-*               constants or to NULL (i.e. NULL-valued #define's); but may NOT use configurations to 
+*               In other words, 'cpu.h' may use 'cpu_cfg.h' configurations that are #define'd to numeric
+*               constants or to NULL (i.e. NULL-valued #define's); but may NOT use configurations to
 *               custom library #define's (e.g. DEF_DISABLED or DEF_ENABLED).
 *********************************************************************************************************
 */
@@ -145,7 +145,7 @@ typedef            void      (*CPU_FNCT_PTR )(void *p_obj);     /* See Note #2b.
 *********************************************************************************************************
 *                                       CPU WORD CONFIGURATION
 *
-* Note(s) : (1) Configure CPU_CFG_ADDR_SIZE, CPU_CFG_DATA_SIZE, & CPU_CFG_DATA_SIZE_MAX with CPU's &/or 
+* Note(s) : (1) Configure CPU_CFG_ADDR_SIZE, CPU_CFG_DATA_SIZE, & CPU_CFG_DATA_SIZE_MAX with CPU's &/or
 *               compiler's word sizes :
 *
 *                   CPU_WORD_SIZE_08             8-bit word size
@@ -162,7 +162,7 @@ typedef            void      (*CPU_FNCT_PTR )(void *p_obj);     /* See Note #2b.
 *********************************************************************************************************
 */
 
-                                                                /* Define  CPU         word sizes (see Note #1) :       */
+/* Define  CPU         word sizes (see Note #1) :       */
 #define  CPU_CFG_ADDR_SIZE              CPU_WORD_SIZE_32        /* Defines CPU address word size  (in octets).          */
 #define  CPU_CFG_DATA_SIZE              CPU_WORD_SIZE_32        /* Defines CPU data    word size  (in octets).          */
 #define  CPU_CFG_DATA_SIZE_MAX          CPU_WORD_SIZE_64        /* Defines CPU maximum word size  (in octets).          */
@@ -176,7 +176,7 @@ typedef            void      (*CPU_FNCT_PTR )(void *p_obj);     /* See Note #2b.
 *********************************************************************************************************
 */
 
-                                                                /* CPU address type based on address bus size.          */
+/* CPU address type based on address bus size.          */
 #if     (CPU_CFG_ADDR_SIZE == CPU_WORD_SIZE_32)
 typedef  CPU_INT32U  CPU_ADDR;
 #elif   (CPU_CFG_ADDR_SIZE == CPU_WORD_SIZE_16)
@@ -185,7 +185,7 @@ typedef  CPU_INT16U  CPU_ADDR;
 typedef  CPU_INT08U  CPU_ADDR;
 #endif
 
-                                                                /* CPU data    type based on data    bus size.          */
+/* CPU data    type based on data    bus size.          */
 #if     (CPU_CFG_DATA_SIZE == CPU_WORD_SIZE_32)
 typedef  CPU_INT32U  CPU_DATA;
 #elif   (CPU_CFG_DATA_SIZE == CPU_WORD_SIZE_16)
@@ -205,9 +205,9 @@ typedef  CPU_ADDR    CPU_SIZE_T;                                /* Defines CPU s
 *
 * Note(s) : (1) Configure CPU_CFG_STK_GROWTH in 'cpu.h' with CPU's stack growth order :
 *
-*               (a) CPU_STK_GROWTH_LO_TO_HI     CPU stack pointer increments to the next higher  stack 
+*               (a) CPU_STK_GROWTH_LO_TO_HI     CPU stack pointer increments to the next higher  stack
 *                                                   memory address after data is pushed onto the stack
-*               (b) CPU_STK_GROWTH_HI_TO_LO     CPU stack pointer decrements to the next lower   stack 
+*               (b) CPU_STK_GROWTH_HI_TO_LO     CPU stack pointer decrements to the next lower   stack
 *                                                   memory address after data is pushed onto the stack
 *********************************************************************************************************
 */
@@ -268,10 +268,10 @@ typedef  CPU_ADDR               CPU_STK_SIZE;                   /* Defines CPU s
 *                               <cpu>                       directory name for specific CPU
 *                               <compiler>                  directory name for specific compiler
 *
-*           (3) (a) To save/restore interrupt status, a local variable 'cpu_sr' of type 'CPU_SR' MAY need 
+*           (3) (a) To save/restore interrupt status, a local variable 'cpu_sr' of type 'CPU_SR' MAY need
 *                   to be declared (e.g. if 'CPU_CRITICAL_METHOD_STATUS_LOCAL' method is configured).
 *
-*                   (1) 'cpu_sr' local variable SHOULD be declared via the CPU_SR_ALLOC() macro which, if 
+*                   (1) 'cpu_sr' local variable SHOULD be declared via the CPU_SR_ALLOC() macro which, if
 *                        used, MUST be declared following ALL other local variables.
 *
 *                        Example :
@@ -286,17 +286,17 @@ typedef  CPU_ADDR               CPU_STK_SIZE;                   /* Defines CPU s
 *                                   :
 *                           }
 *
-*               (b) Configure 'CPU_SR' data type with the appropriate-sized CPU data type large enough to 
+*               (b) Configure 'CPU_SR' data type with the appropriate-sized CPU data type large enough to
 *                   completely store the CPU's/compiler's status word.
 *********************************************************************************************************
 */
 /*$PAGE*/
-                                                                /* Configure CPU critical method      (see Note #1) :   */
+/* Configure CPU critical method      (see Note #1) :   */
 #define  CPU_CFG_CRITICAL_METHOD    CPU_CRITICAL_METHOD_STATUS_LOCAL
 
 typedef  CPU_INT32U                 CPU_SR;                     /* Defines   CPU status register size (see Note #3b).   */
 
-                                                                /* Allocates CPU status register word (see Note #3a).   */
+/* Allocates CPU status register word (see Note #3a).   */
 #if     (CPU_CFG_CRITICAL_METHOD == CPU_CRITICAL_METHOD_STATUS_LOCAL)
 #define  CPU_SR_ALLOC()             CPU_SR  cpu_sr = (CPU_SR)0
 #else
@@ -311,12 +311,12 @@ typedef  CPU_INT32U                 CPU_SR;                     /* Defines   CPU
 
 
 #ifdef   CPU_CFG_INT_DIS_MEAS_EN
-                                                                        /* Disable interrupts, ...                      */
-                                                                        /* & start interrupts disabled time measurement.*/
+/* Disable interrupts, ...                      */
+/* & start interrupts disabled time measurement.*/
 #define  CPU_CRITICAL_ENTER()  do { CPU_INT_DIS();         \
                                     CPU_IntDisMeasStart(); }  while (0)
-                                                                        /* Stop & measure   interrupts disabled time,   */
-                                                                        /* ...  & re-enable interrupts.                 */
+/* Stop & measure   interrupts disabled time,   */
+/* ...  & re-enable interrupts.                 */
 #define  CPU_CRITICAL_EXIT()   do { CPU_IntDisMeasStop();  \
                                     CPU_INT_EN();          }  while (0)
 
@@ -338,7 +338,7 @@ typedef  CPU_INT32U                 CPU_SR;                     /* Defines   CPU
 CPU_SR  CPU_SR_Save            (void);
 void    CPU_SR_Restore         (CPU_SR  cpu_sr);
 
-void    CPU_CacheDataFlush     (void *addr, CPU_INT32U len);                                          
+void    CPU_CacheDataFlush     (void *addr, CPU_INT32U len);
 void    CPU_CacheDataInvalidate(void *addr, CPU_INT32U len);
 
 /*$PAGE*/

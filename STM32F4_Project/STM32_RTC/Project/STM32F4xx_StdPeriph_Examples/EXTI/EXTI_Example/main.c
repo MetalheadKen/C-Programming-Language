@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    EXTI/EXTI_Example/main.c 
+  * @file    EXTI/EXTI_Example/main.c
   * @author  MCD Application Team
   * @version V1.1.0
   * @date    18-January-2013
@@ -16,8 +16,8 @@
   *
   *        http://www.st.com/software_license_agreement_liberty_v2
   *
-  * Unless required by applicable law or agreed to in writing, software 
-  * distributed under the License is distributed on an "AS IS" BASIS, 
+  * Unless required by applicable law or agreed to in writing, software
+  * distributed under the License is distributed on an "AS IS" BASIS,
   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   * See the License for the specific language governing permissions and
   * limitations under the License.
@@ -34,7 +34,7 @@
 
 /** @addtogroup EXTI_Example
   * @{
-  */ 
+  */
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -53,30 +53,29 @@ static void EXTILine15_Config(void);
   */
 int main(void)
 {
-  /*!< At this stage the microcontroller clock setting is already configured, 
-       this is done through SystemInit() function which is called from startup
-       files (startup_stm32f40xx.s/startup_stm32f427x.s) before to branch to 
-       application main. 
-       To reconfigure the default setting of SystemInit() function, refer to
-       system_stm32f4xx.c file
-     */
+    /*!< At this stage the microcontroller clock setting is already configured,
+         this is done through SystemInit() function which is called from startup
+         files (startup_stm32f40xx.s/startup_stm32f427x.s) before to branch to
+         application main.
+         To reconfigure the default setting of SystemInit() function, refer to
+         system_stm32f4xx.c file
+       */
 
-  /* Initialize LEDs mounted on EVAL board */
-  STM_EVAL_LEDInit(LED1);
-  STM_EVAL_LEDInit(LED2);
+    /* Initialize LEDs mounted on EVAL board */
+    STM_EVAL_LEDInit(LED1);
+    STM_EVAL_LEDInit(LED2);
 
-  /* Configure EXTI Line0 (connected to PA0 pin) in interrupt mode */
-  EXTILine0_Config();
+    /* Configure EXTI Line0 (connected to PA0 pin) in interrupt mode */
+    EXTILine0_Config();
 
-  /* Configure EXTI Line15 (connected to PG15 pin) in interrupt mode */
-  EXTILine15_Config();
+    /* Configure EXTI Line15 (connected to PG15 pin) in interrupt mode */
+    EXTILine15_Config();
 
-  /* Generate software interrupt: simulate a falling edge applied on EXTI0 line */
-  EXTI_GenerateSWInterrupt(EXTI_Line0);
+    /* Generate software interrupt: simulate a falling edge applied on EXTI0 line */
+    EXTI_GenerateSWInterrupt(EXTI_Line0);
 
-  while (1)
-  {
-  }
+    while (1) {
+    }
 }
 
 /**
@@ -86,37 +85,37 @@ int main(void)
   */
 static void EXTILine0_Config(void)
 {
-  EXTI_InitTypeDef   EXTI_InitStructure;
-  GPIO_InitTypeDef   GPIO_InitStructure;
-  NVIC_InitTypeDef   NVIC_InitStructure;
+    EXTI_InitTypeDef   EXTI_InitStructure;
+    GPIO_InitTypeDef   GPIO_InitStructure;
+    NVIC_InitTypeDef   NVIC_InitStructure;
 
-  /* Enable GPIOA clock */
-  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);
-  /* Enable SYSCFG clock */
-  RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);
-  
-  /* Configure PA0 pin as input floating */
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
-  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0;
-  GPIO_Init(GPIOA, &GPIO_InitStructure);
+    /* Enable GPIOA clock */
+    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);
+    /* Enable SYSCFG clock */
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);
 
-  /* Connect EXTI Line0 to PA0 pin */
-  SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOA, EXTI_PinSource0);
+    /* Configure PA0 pin as input floating */
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
+    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0;
+    GPIO_Init(GPIOA, &GPIO_InitStructure);
 
-  /* Configure EXTI Line0 */
-  EXTI_InitStructure.EXTI_Line = EXTI_Line0;
-  EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Interrupt;
-  EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Rising;  
-  EXTI_InitStructure.EXTI_LineCmd = ENABLE;
-  EXTI_Init(&EXTI_InitStructure);
+    /* Connect EXTI Line0 to PA0 pin */
+    SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOA, EXTI_PinSource0);
 
-  /* Enable and set EXTI Line0 Interrupt to the lowest priority */
-  NVIC_InitStructure.NVIC_IRQChannel = EXTI0_IRQn;
-  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0x0F;
-  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0x0F;
-  NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-  NVIC_Init(&NVIC_InitStructure);
+    /* Configure EXTI Line0 */
+    EXTI_InitStructure.EXTI_Line = EXTI_Line0;
+    EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Interrupt;
+    EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Rising;
+    EXTI_InitStructure.EXTI_LineCmd = ENABLE;
+    EXTI_Init(&EXTI_InitStructure);
+
+    /* Enable and set EXTI Line0 Interrupt to the lowest priority */
+    NVIC_InitStructure.NVIC_IRQChannel = EXTI0_IRQn;
+    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0x0F;
+    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0x0F;
+    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+    NVIC_Init(&NVIC_InitStructure);
 }
 
 /**
@@ -126,38 +125,38 @@ static void EXTILine0_Config(void)
   */
 static void EXTILine15_Config(void)
 {
-  EXTI_InitTypeDef   EXTI_InitStructure;
-  GPIO_InitTypeDef   GPIO_InitStructure;
-  NVIC_InitTypeDef   NVIC_InitStructure;
+    EXTI_InitTypeDef   EXTI_InitStructure;
+    GPIO_InitTypeDef   GPIO_InitStructure;
+    NVIC_InitTypeDef   NVIC_InitStructure;
 
-  /* Enable GPIOG clock */
-  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOG, ENABLE);
-  /* Enable SYSCFG clock */
-  RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);
-  
-  /* Configure PG15 pin as input floating */
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
-  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_15;
-  GPIO_Init(GPIOG, &GPIO_InitStructure);
+    /* Enable GPIOG clock */
+    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOG, ENABLE);
+    /* Enable SYSCFG clock */
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);
 
-  /* Connect EXTI Line15 to PG15 pin */
-  SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOG, EXTI_PinSource15);
+    /* Configure PG15 pin as input floating */
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
+    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_15;
+    GPIO_Init(GPIOG, &GPIO_InitStructure);
 
-  /* Configure EXTI Line15 */
-  EXTI_InitStructure.EXTI_Line = EXTI_Line15;
-  EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Interrupt;
-  EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Falling;
-  EXTI_InitStructure.EXTI_LineCmd = ENABLE;
-  EXTI_Init(&EXTI_InitStructure);
+    /* Connect EXTI Line15 to PG15 pin */
+    SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOG, EXTI_PinSource15);
 
-  /* Enable and set EXTI15_10 Interrupt to the lowest priority */
-  NVIC_InitStructure.NVIC_IRQChannel = EXTI15_10_IRQn;
-  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0x0F;
-  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0x0F;
-  NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+    /* Configure EXTI Line15 */
+    EXTI_InitStructure.EXTI_Line = EXTI_Line15;
+    EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Interrupt;
+    EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Falling;
+    EXTI_InitStructure.EXTI_LineCmd = ENABLE;
+    EXTI_Init(&EXTI_InitStructure);
 
-  NVIC_Init(&NVIC_InitStructure);
+    /* Enable and set EXTI15_10 Interrupt to the lowest priority */
+    NVIC_InitStructure.NVIC_IRQChannel = EXTI15_10_IRQn;
+    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0x0F;
+    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0x0F;
+    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+
+    NVIC_Init(&NVIC_InitStructure);
 }
 
 #ifdef  USE_FULL_ASSERT
@@ -170,23 +169,22 @@ static void EXTILine15_Config(void)
   * @retval None
   */
 void assert_failed(uint8_t* file, uint32_t line)
-{ 
-  /* User can add his own implementation to report the file name and line number,
-     ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+{
+    /* User can add his own implementation to report the file name and line number,
+       ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
 
-  /* Infinite loop */
-  while (1)
-  {
-  }
+    /* Infinite loop */
+    while (1) {
+    }
 }
 #endif
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

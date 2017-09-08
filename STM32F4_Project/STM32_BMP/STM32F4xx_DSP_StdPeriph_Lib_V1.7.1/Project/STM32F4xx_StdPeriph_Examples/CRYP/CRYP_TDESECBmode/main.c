@@ -16,8 +16,8 @@
   *
   *        http://www.st.com/software_license_agreement_liberty_v2
   *
-  * Unless required by applicable law or agreed to in writing, software 
-  * distributed under the License is distributed on an "AS IS" BASIS, 
+  * Unless required by applicable law or agreed to in writing, software
+  * distributed under the License is distributed on an "AS IS" BASIS,
   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   * See the License for the specific language governing permissions and
   * limitations under the License.
@@ -34,7 +34,7 @@
 
 /** @addtogroup CRYP_TDESECBmode
   * @{
-  */ 
+  */
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -42,15 +42,17 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* 192 bit key */
-__IO uint32_t TDESkey[6]={0x40414243,0x44454647,  /* K1 */
-                          0x48494A4B,0x4C4D4E4F,  /* K2 */
-                          0x50515253,0x54555657}; /* K3 */
+__IO uint32_t TDESkey[6]= {0x40414243,0x44454647, /* K1 */
+                           0x48494A4B,0x4C4D4E4F,  /* K2 */
+                           0x50515253,0x54555657
+                          }; /* K3 */
 
-__IO uint32_t PlainData[DATA_SIZE]={0x20212223,0x24252627,  /* Block 0 */
-                                    0x28292a2b,0x2c2d2e2f,  /* Block 1 */
-                                    0xFFEEDDCC,0xBBAA9988,  /* Block 2 */
-                                    0x77665544,0x33221100,  /* Block 3 */
-                                    0x10000000,0x20000000 };/* Block 4 */
+__IO uint32_t PlainData[DATA_SIZE]= {0x20212223,0x24252627, /* Block 0 */
+                                     0x28292a2b,0x2c2d2e2f,  /* Block 1 */
+                                     0xFFEEDDCC,0xBBAA9988,  /* Block 2 */
+                                     0x77665544,0x33221100,  /* Block 3 */
+                                     0x10000000,0x20000000
+                                    };/* Block 4 */
 
 __IO uint32_t EncryptedData[DATA_SIZE];
 __IO uint32_t DecryptedData[DATA_SIZE];
@@ -64,11 +66,11 @@ static void Display_DecryptedData(void);
 static void USART_Config(void);
 
 #ifdef __GNUC__
-  /* With GCC/RAISONANCE, small printf (option LD Linker->Libraries->Small printf
-     set to 'Yes') calls __io_putchar() */
-  #define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
+/* With GCC/RAISONANCE, small printf (option LD Linker->Libraries->Small printf
+   set to 'Yes') calls __io_putchar() */
+#define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
 #else
-  #define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
+#define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
 #endif /* __GNUC__ */
 
 /* Private functions ---------------------------------------------------------*/
@@ -80,338 +82,332 @@ static void USART_Config(void);
   */
 int main(void)
 {
-  /*!< At this stage the microcontroller clock setting is already configured, 
-       this is done through SystemInit() function which is called from startup
-       files (startup_stm32f40_41xxx.s/startup_stm32f427_437xx.s/startup_stm32f429_439xx.s)
-       before to branch to application main.
-     */     
-       
-  /* USARTx configured as follows:
-        - BaudRate = 115200 baud  
-        - Word Length = 8 Bits
-        - One Stop Bit
-        - No parity
-        - Hardware flow control disabled (RTS and CTS signals)
-        - Receive and transmit enabled
-  */
-  /* USART Configuration */
-  USART_Config();
+    /*!< At this stage the microcontroller clock setting is already configured,
+         this is done through SystemInit() function which is called from startup
+         files (startup_stm32f40_41xxx.s/startup_stm32f427_437xx.s/startup_stm32f429_439xx.s)
+         before to branch to application main.
+       */
 
-  /* Display Plain Data */
-  Display_PlainData();
+    /* USARTx configured as follows:
+          - BaudRate = 115200 baud
+          - Word Length = 8 Bits
+          - One Stop Bit
+          - No parity
+          - Hardware flow control disabled (RTS and CTS signals)
+          - Receive and transmit enabled
+    */
+    /* USART Configuration */
+    USART_Config();
 
-/*=====================================================
-    Encryption
-======================================================*/
+    /* Display Plain Data */
+    Display_PlainData();
 
-  /* Encrypt */
-  TDES_Encrypt_DMA();
+    /*=====================================================
+        Encryption
+    ======================================================*/
 
-  /* Display encrypted Data */
-  Display_EncryptedData();
+    /* Encrypt */
+    TDES_Encrypt_DMA();
 
-/*=====================================================
-    Decryption
-======================================================*/
+    /* Display encrypted Data */
+    Display_EncryptedData();
 
-  /* Decrypt */
-  TDES_Decrypt_DMA();
+    /*=====================================================
+        Decryption
+    ======================================================*/
 
-  /* Display decrypted Data */
-  Display_DecryptedData();
+    /* Decrypt */
+    TDES_Decrypt_DMA();
 
-  while(1);
+    /* Display decrypted Data */
+    Display_DecryptedData();
+
+    while(1);
 }
 
 /**
-  * @brief  Encrypts Data using TDES 
+  * @brief  Encrypts Data using TDES
   * @note   DATA transfer is done by DMA
-  * @note   DMA2 stream6 channel2 is used to transfer data from memory (the 
-  *         PlainData Tab) to CRYP Peripheral (the INPUT data register). 
+  * @note   DMA2 stream6 channel2 is used to transfer data from memory (the
+  *         PlainData Tab) to CRYP Peripheral (the INPUT data register).
   * @note   DMA2 stream5 channel2 is used to transfer data from CRYP Peripheral
-  *        (the OUTPUT data register to memory (the EncryptedData Tab). 
+  *        (the OUTPUT data register to memory (the EncryptedData Tab).
   * @param  None
   * @retval None
   */
 static void TDES_Encrypt_DMA(void)
-{ 
-  CRYP_InitTypeDef CRYP_InitStructure;
-  CRYP_KeyInitTypeDef CRYP_KeyInitStructure;
-  DMA_InitTypeDef DMA_InitStructure;
+{
+    CRYP_InitTypeDef CRYP_InitStructure;
+    CRYP_KeyInitTypeDef CRYP_KeyInitStructure;
+    DMA_InitTypeDef DMA_InitStructure;
 
-  /* Enable CRYP clock */
-  RCC_AHB2PeriphClockCmd(RCC_AHB2Periph_CRYP, ENABLE);
+    /* Enable CRYP clock */
+    RCC_AHB2PeriphClockCmd(RCC_AHB2Periph_CRYP, ENABLE);
 
-  /* Enable DMA2 clock */
-  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_DMA2, ENABLE);
-  
-  /* Configure crypto as encoder TDES *****************************************/
-  /* Crypto Init for Encryption process */
-  CRYP_InitStructure.CRYP_AlgoDir  = CRYP_AlgoDir_Encrypt;
-  CRYP_InitStructure.CRYP_AlgoMode = CRYP_AlgoMode_TDES_ECB;
-  CRYP_InitStructure.CRYP_DataType = CRYP_DataType_32b;
+    /* Enable DMA2 clock */
+    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_DMA2, ENABLE);
 
-  CRYP_FIFOFlush();
-  CRYP_Init(&CRYP_InitStructure);
+    /* Configure crypto as encoder TDES *****************************************/
+    /* Crypto Init for Encryption process */
+    CRYP_InitStructure.CRYP_AlgoDir  = CRYP_AlgoDir_Encrypt;
+    CRYP_InitStructure.CRYP_AlgoMode = CRYP_AlgoMode_TDES_ECB;
+    CRYP_InitStructure.CRYP_DataType = CRYP_DataType_32b;
 
-  /* Key Initialisation */
-  CRYP_KeyInitStructure.CRYP_Key1Left = TDESkey[0];
-  CRYP_KeyInitStructure.CRYP_Key1Right= TDESkey[1];
-  CRYP_KeyInitStructure.CRYP_Key2Left = TDESkey[2];
-  CRYP_KeyInitStructure.CRYP_Key2Right= TDESkey[3];
-  CRYP_KeyInitStructure.CRYP_Key3Left = TDESkey[4];
-  CRYP_KeyInitStructure.CRYP_Key3Right= TDESkey[5];
-  CRYP_KeyInit(&CRYP_KeyInitStructure);
+    CRYP_FIFOFlush();
+    CRYP_Init(&CRYP_InitStructure);
 
-  /* Enable Crypto processor */
-  CRYP_Cmd(ENABLE);
+    /* Key Initialisation */
+    CRYP_KeyInitStructure.CRYP_Key1Left = TDESkey[0];
+    CRYP_KeyInitStructure.CRYP_Key1Right= TDESkey[1];
+    CRYP_KeyInitStructure.CRYP_Key2Left = TDESkey[2];
+    CRYP_KeyInitStructure.CRYP_Key2Right= TDESkey[3];
+    CRYP_KeyInitStructure.CRYP_Key3Left = TDESkey[4];
+    CRYP_KeyInitStructure.CRYP_Key3Right= TDESkey[5];
+    CRYP_KeyInit(&CRYP_KeyInitStructure);
 
-  CRYP_DMACmd(CRYP_DMAReq_DataOUT, ENABLE);
-  CRYP_DMACmd(CRYP_DMAReq_DataIN, ENABLE);
+    /* Enable Crypto processor */
+    CRYP_Cmd(ENABLE);
 
-  /* DMA Configuration*********************************************************/
-  /* Set commun  DMA parameters for Stream 5 and 6 */
-  DMA_DeInit(DMA2_Stream5);
-  DMA_DeInit(DMA2_Stream6);
-  DMA_InitStructure.DMA_Channel = DMA_Channel_2;
-  DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_Word;
-  DMA_InitStructure.DMA_MemoryDataSize = DMA_MemoryDataSize_Word;
-  DMA_InitStructure.DMA_Mode = DMA_Mode_Normal;
-  DMA_InitStructure.DMA_Priority = DMA_Priority_High;
-  DMA_InitStructure.DMA_FIFOMode = DMA_FIFOMode_Disable;
-  DMA_InitStructure.DMA_FIFOThreshold = DMA_FIFOThreshold_Full;
-  DMA_InitStructure.DMA_MemoryBurst = DMA_MemoryBurst_Single;
-  DMA_InitStructure.DMA_PeripheralBurst = DMA_PeripheralBurst_Single;
-  DMA_InitStructure.DMA_PeripheralInc = DMA_PeripheralInc_Disable;
-  DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Enable;
-  DMA_InitStructure.DMA_BufferSize = DATA_SIZE;
+    CRYP_DMACmd(CRYP_DMAReq_DataOUT, ENABLE);
+    CRYP_DMACmd(CRYP_DMAReq_DataIN, ENABLE);
 
-  /* Set the parameters to be configured specific to stream 6 */
-  DMA_InitStructure.DMA_PeripheralBaseAddr = CRYP_DIN_REG_ADDR;
-  DMA_InitStructure.DMA_Memory0BaseAddr = (uint32_t)PlainData;
-  DMA_InitStructure.DMA_DIR = DMA_DIR_MemoryToPeripheral;
+    /* DMA Configuration*********************************************************/
+    /* Set commun  DMA parameters for Stream 5 and 6 */
+    DMA_DeInit(DMA2_Stream5);
+    DMA_DeInit(DMA2_Stream6);
+    DMA_InitStructure.DMA_Channel = DMA_Channel_2;
+    DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_Word;
+    DMA_InitStructure.DMA_MemoryDataSize = DMA_MemoryDataSize_Word;
+    DMA_InitStructure.DMA_Mode = DMA_Mode_Normal;
+    DMA_InitStructure.DMA_Priority = DMA_Priority_High;
+    DMA_InitStructure.DMA_FIFOMode = DMA_FIFOMode_Disable;
+    DMA_InitStructure.DMA_FIFOThreshold = DMA_FIFOThreshold_Full;
+    DMA_InitStructure.DMA_MemoryBurst = DMA_MemoryBurst_Single;
+    DMA_InitStructure.DMA_PeripheralBurst = DMA_PeripheralBurst_Single;
+    DMA_InitStructure.DMA_PeripheralInc = DMA_PeripheralInc_Disable;
+    DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Enable;
+    DMA_InitStructure.DMA_BufferSize = DATA_SIZE;
 
-  /* Configure the DMA Stream 6 */
-  DMA_Init(DMA2_Stream6, &DMA_InitStructure);
+    /* Set the parameters to be configured specific to stream 6 */
+    DMA_InitStructure.DMA_PeripheralBaseAddr = CRYP_DIN_REG_ADDR;
+    DMA_InitStructure.DMA_Memory0BaseAddr = (uint32_t)PlainData;
+    DMA_InitStructure.DMA_DIR = DMA_DIR_MemoryToPeripheral;
 
-  /* Set the parameters to be configured specific to stream 5 */
-  DMA_InitStructure.DMA_PeripheralBaseAddr = CRYP_DOUT_REG_ADDR;
-  DMA_InitStructure.DMA_Memory0BaseAddr = (uint32_t)EncryptedData;
-  DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralToMemory;
+    /* Configure the DMA Stream 6 */
+    DMA_Init(DMA2_Stream6, &DMA_InitStructure);
 
-  /* Configure the DMA Stream 5 */
-  DMA_Init(DMA2_Stream5, &DMA_InitStructure);
+    /* Set the parameters to be configured specific to stream 5 */
+    DMA_InitStructure.DMA_PeripheralBaseAddr = CRYP_DOUT_REG_ADDR;
+    DMA_InitStructure.DMA_Memory0BaseAddr = (uint32_t)EncryptedData;
+    DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralToMemory;
 
-  /* Enable DMA streams*/
-  DMA_Cmd(DMA2_Stream6, ENABLE);
-  DMA_Cmd(DMA2_Stream5, ENABLE);
+    /* Configure the DMA Stream 5 */
+    DMA_Init(DMA2_Stream5, &DMA_InitStructure);
 
-  /* Wait until the last transfer from OUT FIFO :
-     all encrypted Data are transfered from crypt processor */
-  while (DMA_GetFlagStatus(DMA2_Stream6, DMA_FLAG_TCIF5) == RESET);
+    /* Enable DMA streams*/
+    DMA_Cmd(DMA2_Stream6, ENABLE);
+    DMA_Cmd(DMA2_Stream5, ENABLE);
 
-  /* Disable Crypto and DMA ***************************************************/
-  CRYP_Cmd(DISABLE);
-  CRYP_DMACmd(CRYP_DMAReq_DataOUT, DISABLE);
-  CRYP_DMACmd(CRYP_DMAReq_DataIN, DISABLE);
-  DMA_Cmd(DMA2_Stream5, DISABLE);
-  DMA_Cmd(DMA2_Stream6, DISABLE);
+    /* Wait until the last transfer from OUT FIFO :
+       all encrypted Data are transfered from crypt processor */
+    while (DMA_GetFlagStatus(DMA2_Stream6, DMA_FLAG_TCIF5) == RESET);
+
+    /* Disable Crypto and DMA ***************************************************/
+    CRYP_Cmd(DISABLE);
+    CRYP_DMACmd(CRYP_DMAReq_DataOUT, DISABLE);
+    CRYP_DMACmd(CRYP_DMAReq_DataIN, DISABLE);
+    DMA_Cmd(DMA2_Stream5, DISABLE);
+    DMA_Cmd(DMA2_Stream6, DISABLE);
 }
 
 /**
-  * @brief  Decrypts Data using TDES 
+  * @brief  Decrypts Data using TDES
   * @note   DATA transfer is done by DMA
-  * @note   DMA2 stream6 channel2 is used to transfer data from memory (the 
-  *         EncryptedData Tab) to CRYP Peripheral (the INPUT data register). 
+  * @note   DMA2 stream6 channel2 is used to transfer data from memory (the
+  *         EncryptedData Tab) to CRYP Peripheral (the INPUT data register).
   * @note   DMA2 stream5 channel2 is used to transfer data from CRYP Peripheral
-  *         (the OUTPUT data register to memory (the DecryptedData Tab). 
+  *         (the OUTPUT data register to memory (the DecryptedData Tab).
   * @param  None
   * @retval None
   */
 static void TDES_Decrypt_DMA(void)
 {
-  CRYP_InitTypeDef CRYP_InitStructure;
-  CRYP_KeyInitTypeDef CRYP_KeyInitStructure;
-  DMA_InitTypeDef DMA_InitStructure;
+    CRYP_InitTypeDef CRYP_InitStructure;
+    CRYP_KeyInitTypeDef CRYP_KeyInitStructure;
+    DMA_InitTypeDef DMA_InitStructure;
 
-  /* Enable CRYP clock */
-  RCC_AHB2PeriphClockCmd(RCC_AHB2Periph_CRYP, ENABLE);
+    /* Enable CRYP clock */
+    RCC_AHB2PeriphClockCmd(RCC_AHB2Periph_CRYP, ENABLE);
 
-  /* Enable DMA2 clock */
-  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_DMA2, ENABLE);
-  
-  /* configure crypto as Decoder TDES *****************************************/
-  CRYP_FIFOFlush();
-  /* Crypto Init for Decryption process */ 
-  CRYP_InitStructure.CRYP_AlgoDir = CRYP_AlgoDir_Decrypt;
-  CRYP_InitStructure.CRYP_AlgoMode = CRYP_AlgoMode_TDES_ECB;
-  CRYP_InitStructure.CRYP_DataType = CRYP_DataType_32b;
-  CRYP_Init(&CRYP_InitStructure);
+    /* Enable DMA2 clock */
+    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_DMA2, ENABLE);
 
-  /* Key Initialisation */
-  CRYP_KeyInitStructure.CRYP_Key1Left = TDESkey[0];
-  CRYP_KeyInitStructure.CRYP_Key1Right= TDESkey[1];
-  CRYP_KeyInitStructure.CRYP_Key2Left = TDESkey[2];
-  CRYP_KeyInitStructure.CRYP_Key2Right= TDESkey[3];
-  CRYP_KeyInitStructure.CRYP_Key3Left = TDESkey[4];
-  CRYP_KeyInitStructure.CRYP_Key3Right= TDESkey[5];
-  CRYP_KeyInit(&CRYP_KeyInitStructure);
+    /* configure crypto as Decoder TDES *****************************************/
+    CRYP_FIFOFlush();
+    /* Crypto Init for Decryption process */
+    CRYP_InitStructure.CRYP_AlgoDir = CRYP_AlgoDir_Decrypt;
+    CRYP_InitStructure.CRYP_AlgoMode = CRYP_AlgoMode_TDES_ECB;
+    CRYP_InitStructure.CRYP_DataType = CRYP_DataType_32b;
+    CRYP_Init(&CRYP_InitStructure);
 
-  CRYP_Cmd(ENABLE);
+    /* Key Initialisation */
+    CRYP_KeyInitStructure.CRYP_Key1Left = TDESkey[0];
+    CRYP_KeyInitStructure.CRYP_Key1Right= TDESkey[1];
+    CRYP_KeyInitStructure.CRYP_Key2Left = TDESkey[2];
+    CRYP_KeyInitStructure.CRYP_Key2Right= TDESkey[3];
+    CRYP_KeyInitStructure.CRYP_Key3Left = TDESkey[4];
+    CRYP_KeyInitStructure.CRYP_Key3Right= TDESkey[5];
+    CRYP_KeyInit(&CRYP_KeyInitStructure);
 
-  CRYP_DMACmd(CRYP_DMAReq_DataOUT, ENABLE);
-  CRYP_DMACmd(CRYP_DMAReq_DataIN, ENABLE);
+    CRYP_Cmd(ENABLE);
 
-  /* DMA Configuration ********************************************************/
-  /* Set commun  DMA parameters for Stream 5 and 6 */
-  DMA_DeInit(DMA2_Stream5);
-  DMA_DeInit(DMA2_Stream6);
-  DMA_InitStructure.DMA_Channel = DMA_Channel_2;
-  DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_Word;
-  DMA_InitStructure.DMA_MemoryDataSize = DMA_MemoryDataSize_Word;
-  DMA_InitStructure.DMA_Mode = DMA_Mode_Normal;
-  DMA_InitStructure.DMA_Priority = DMA_Priority_High;
-  DMA_InitStructure.DMA_FIFOMode = DMA_FIFOMode_Disable;
-  DMA_InitStructure.DMA_FIFOThreshold = DMA_FIFOThreshold_Full;
-  DMA_InitStructure.DMA_MemoryBurst = DMA_MemoryBurst_Single;
-  DMA_InitStructure.DMA_PeripheralBurst = DMA_PeripheralBurst_Single;
-  DMA_InitStructure.DMA_PeripheralInc = DMA_PeripheralInc_Disable;
-  DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Enable;
-  DMA_InitStructure.DMA_BufferSize = DATA_SIZE;
+    CRYP_DMACmd(CRYP_DMAReq_DataOUT, ENABLE);
+    CRYP_DMACmd(CRYP_DMAReq_DataIN, ENABLE);
 
-  /* Set the parameters to be configured specific to stream 6 */
-  DMA_InitStructure.DMA_PeripheralBaseAddr = CRYP_DIN_REG_ADDR; 
-  DMA_InitStructure.DMA_Memory0BaseAddr = (uint32_t)EncryptedData;
-  DMA_InitStructure.DMA_DIR = DMA_DIR_MemoryToPeripheral;
+    /* DMA Configuration ********************************************************/
+    /* Set commun  DMA parameters for Stream 5 and 6 */
+    DMA_DeInit(DMA2_Stream5);
+    DMA_DeInit(DMA2_Stream6);
+    DMA_InitStructure.DMA_Channel = DMA_Channel_2;
+    DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_Word;
+    DMA_InitStructure.DMA_MemoryDataSize = DMA_MemoryDataSize_Word;
+    DMA_InitStructure.DMA_Mode = DMA_Mode_Normal;
+    DMA_InitStructure.DMA_Priority = DMA_Priority_High;
+    DMA_InitStructure.DMA_FIFOMode = DMA_FIFOMode_Disable;
+    DMA_InitStructure.DMA_FIFOThreshold = DMA_FIFOThreshold_Full;
+    DMA_InitStructure.DMA_MemoryBurst = DMA_MemoryBurst_Single;
+    DMA_InitStructure.DMA_PeripheralBurst = DMA_PeripheralBurst_Single;
+    DMA_InitStructure.DMA_PeripheralInc = DMA_PeripheralInc_Disable;
+    DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Enable;
+    DMA_InitStructure.DMA_BufferSize = DATA_SIZE;
 
-  /* Configure the DMA Stream 6 */
-  DMA_Init(DMA2_Stream6, &DMA_InitStructure);
+    /* Set the parameters to be configured specific to stream 6 */
+    DMA_InitStructure.DMA_PeripheralBaseAddr = CRYP_DIN_REG_ADDR;
+    DMA_InitStructure.DMA_Memory0BaseAddr = (uint32_t)EncryptedData;
+    DMA_InitStructure.DMA_DIR = DMA_DIR_MemoryToPeripheral;
 
-  /* Set the parameters to be configured specific to stream 5 */
-  DMA_InitStructure.DMA_PeripheralBaseAddr = CRYP_DOUT_REG_ADDR;
-  DMA_InitStructure.DMA_Memory0BaseAddr = (uint32_t)DecryptedData;
-  DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralToMemory;
+    /* Configure the DMA Stream 6 */
+    DMA_Init(DMA2_Stream6, &DMA_InitStructure);
 
-  /* Configure the DMA Stream 5 */
-  DMA_Init(DMA2_Stream5, &DMA_InitStructure);
+    /* Set the parameters to be configured specific to stream 5 */
+    DMA_InitStructure.DMA_PeripheralBaseAddr = CRYP_DOUT_REG_ADDR;
+    DMA_InitStructure.DMA_Memory0BaseAddr = (uint32_t)DecryptedData;
+    DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralToMemory;
 
-  /* Enable DMA streams */
-  DMA_Cmd(DMA2_Stream6, ENABLE);
-  DMA_Cmd(DMA2_Stream5, ENABLE);
+    /* Configure the DMA Stream 5 */
+    DMA_Init(DMA2_Stream5, &DMA_InitStructure);
 
-  /* Wait until the last transfer from OUT FIFO :
-     all encrypted Data are transfered from crypt processor */
-  while (DMA_GetFlagStatus(DMA2_Stream6, DMA_FLAG_TCIF5) == RESET);
+    /* Enable DMA streams */
+    DMA_Cmd(DMA2_Stream6, ENABLE);
+    DMA_Cmd(DMA2_Stream5, ENABLE);
 
-  /* Disable Crypto and DMA ***************************************************/
-  CRYP_Cmd(DISABLE);
-  CRYP_DMACmd(CRYP_DMAReq_DataOUT, DISABLE);
-  CRYP_DMACmd(CRYP_DMAReq_DataIN, DISABLE);
-  DMA_Cmd(DMA2_Stream5, DISABLE);
-  DMA_Cmd(DMA2_Stream6, DISABLE); 
+    /* Wait until the last transfer from OUT FIFO :
+       all encrypted Data are transfered from crypt processor */
+    while (DMA_GetFlagStatus(DMA2_Stream6, DMA_FLAG_TCIF5) == RESET);
+
+    /* Disable Crypto and DMA ***************************************************/
+    CRYP_Cmd(DISABLE);
+    CRYP_DMACmd(CRYP_DMAReq_DataOUT, DISABLE);
+    CRYP_DMACmd(CRYP_DMAReq_DataIN, DISABLE);
+    DMA_Cmd(DMA2_Stream5, DISABLE);
+    DMA_Cmd(DMA2_Stream6, DISABLE);
 }
 
 /**
-  * @brief  Displays Plain Data 
+  * @brief  Displays Plain Data
   * @param  None
   * @retval None
   */
 static void Display_PlainData(void)
 {
-  uint32_t BufferCounter = 0;
-  uint8_t count = 0;
-  printf("\n\r ======================================\n\r");
-  printf(" ==== CRYP TDES Using DMA Example  ====\n\r");
-  printf(" ======================================\n\r");
+    uint32_t BufferCounter = 0;
+    uint8_t count = 0;
+    printf("\n\r ======================================\n\r");
+    printf(" ==== CRYP TDES Using DMA Example  ====\n\r");
+    printf(" ======================================\n\r");
 
-  printf(" ---------------------------------------\n\r");
-  printf(" Plain Data:\n\r");
-  printf(" ---------------------------------------\n\r");
+    printf(" ---------------------------------------\n\r");
+    printf(" Plain Data:\n\r");
+    printf(" ---------------------------------------\n\r");
 
-  for(BufferCounter=0; BufferCounter<DATA_SIZE; BufferCounter++)
-  {
-    printf("[0x%8x]", PlainData[BufferCounter]);
-    count++;
+    for(BufferCounter=0; BufferCounter<DATA_SIZE; BufferCounter++) {
+        printf("[0x%8x]", PlainData[BufferCounter]);
+        count++;
 
-    if(count == 2)
-    { 
-      count = 0;
-      printf("  Block %d\n\r", BufferCounter/2);
+        if(count == 2) {
+            count = 0;
+            printf("  Block %d\n\r", BufferCounter/2);
+        }
     }
-  }     
 }
 
 /**
-  * @brief  Displays Encrypted Data 
+  * @brief  Displays Encrypted Data
   * @param  None
   * @retval None
   */
 static void Display_EncryptedData(void)
 {
-  uint32_t BufferCounter = 0;
-  uint8_t count=0;
+    uint32_t BufferCounter = 0;
+    uint8_t count=0;
 
-  printf("\n\r ---------------------------------------\n\r");
-  printf("  TDES Encrypted Data:\n\r");
-  printf(" ---------------------------------------\n\r");
+    printf("\n\r ---------------------------------------\n\r");
+    printf("  TDES Encrypted Data:\n\r");
+    printf(" ---------------------------------------\n\r");
 
-  for(BufferCounter = 0; BufferCounter<DATA_SIZE; BufferCounter++)
-  {
-    printf("[0x%8x]", EncryptedData[BufferCounter]);
-    count++;
+    for(BufferCounter = 0; BufferCounter<DATA_SIZE; BufferCounter++) {
+        printf("[0x%8x]", EncryptedData[BufferCounter]);
+        count++;
 
-    if(count == 2)
-    { 
-      count = 0;
-      printf("  Block %d\n\r", BufferCounter/2);
+        if(count == 2) {
+            count = 0;
+            printf("  Block %d\n\r", BufferCounter/2);
+        }
     }
-  }
 }
 
 /**
-  * @brief  Displays Decrypted Data 
+  * @brief  Displays Decrypted Data
   * @param  None
   * @retval None
   */
 static void Display_DecryptedData(void)
 {
-  uint32_t BufferCounter = 0;
-  uint8_t count = 0;
+    uint32_t BufferCounter = 0;
+    uint8_t count = 0;
 
-  printf("\n\r ---------------------------------------\n\r");
-  printf("  TDES Decrypted Data:\n\r");
-  printf(" ---------------------------------------\n\r");
+    printf("\n\r ---------------------------------------\n\r");
+    printf("  TDES Decrypted Data:\n\r");
+    printf(" ---------------------------------------\n\r");
 
-  for(BufferCounter = 0; BufferCounter<DATA_SIZE; BufferCounter++)
-  {
-    printf("[0x%8x]", DecryptedData[BufferCounter]);
-    count++;
+    for(BufferCounter = 0; BufferCounter<DATA_SIZE; BufferCounter++) {
+        printf("[0x%8x]", DecryptedData[BufferCounter]);
+        count++;
 
-    if(count == 2)
-    { 
-      count = 0;
-      printf("  Block %d\n\r", BufferCounter/2);
+        if(count == 2) {
+            count = 0;
+            printf("  Block %d\n\r", BufferCounter/2);
+        }
     }
-  }
 }
 
 /**
-  * @brief  USART configuration 
+  * @brief  USART configuration
   * @param  None
   * @retval None
   */
 static void USART_Config(void)
 {
-  USART_InitTypeDef USART_InitStructure;
+    USART_InitTypeDef USART_InitStructure;
 
-  USART_InitStructure.USART_BaudRate = 115200;
-  USART_InitStructure.USART_WordLength = USART_WordLength_8b;
-  USART_InitStructure.USART_StopBits = USART_StopBits_1;
-  USART_InitStructure.USART_Parity = USART_Parity_No;
-  USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
-  USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
+    USART_InitStructure.USART_BaudRate = 115200;
+    USART_InitStructure.USART_WordLength = USART_WordLength_8b;
+    USART_InitStructure.USART_StopBits = USART_StopBits_1;
+    USART_InitStructure.USART_Parity = USART_Parity_No;
+    USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
+    USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
 
-  STM_EVAL_COMInit(COM1, &USART_InitStructure);
+    STM_EVAL_COMInit(COM1, &USART_InitStructure);
 }
 
 /**
@@ -419,17 +415,16 @@ static void USART_Config(void)
   * @param  None
   * @retval None
   */
-PUTCHAR_PROTOTYPE
-{
-  /* Place your implementation of fputc here */
-  /* e.g. write a character to the USART */
-  USART_SendData(EVAL_COM1, (uint8_t) ch);
+PUTCHAR_PROTOTYPE {
+    /* Place your implementation of fputc here */
+    /* e.g. write a character to the USART */
+    USART_SendData(EVAL_COM1, (uint8_t) ch);
 
-  /* Loop until the end of transmission */
-  while (USART_GetFlagStatus(EVAL_COM1, USART_FLAG_TC) == RESET)
-  {}
+    /* Loop until the end of transmission */
+    while (USART_GetFlagStatus(EVAL_COM1, USART_FLAG_TC) == RESET)
+    {}
 
-  return ch;
+    return ch;
 }
 
 #ifdef  USE_FULL_ASSERT
@@ -442,23 +437,22 @@ PUTCHAR_PROTOTYPE
   * @retval None
   */
 void assert_failed(uint8_t* file, uint32_t line)
-{ 
-  /* User can add his own implementation to report the file name and line number,
-     ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+{
+    /* User can add his own implementation to report the file name and line number,
+       ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
 
-  /* Infinite loop */
-  while (1)
-  {
-  }
+    /* Infinite loop */
+    while (1) {
+    }
 }
 #endif
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

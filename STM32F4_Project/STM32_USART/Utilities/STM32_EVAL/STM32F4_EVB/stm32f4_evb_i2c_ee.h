@@ -31,7 +31,7 @@
 #define __STM32F4_EVB_I2C_EE_H
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
@@ -77,7 +77,7 @@
 /* #define sEE_M24C08*/  /* Support the device: M24C08. */
 /* note: Could support: M24C01, M24C02, M24C04 and M24C16 if the blocks and
    HW address are correctly defined*/
-	#define sEE_M24C64_32  /* Support the devices: M24C32 and M24C64 */
+#define sEE_M24C64_32  /* Support the devices: M24C32 and M24C64 */
 #endif
 
 #ifdef sEE_M24C64_32
@@ -85,15 +85,15 @@
   address selection (ne need for additional address lines). According to the
   Harware connection on the board (on STM324xG-EVAL board E0 = E1 = E2 = 0) */
 
-	#define sEE_HW_ADDRESS		0xA0   /* E0 = E1 = E2 = 0 */
+#define sEE_HW_ADDRESS		0xA0   /* E0 = E1 = E2 = 0 */
 
 #elif defined (sEE_M24C08)
 /* The M24C08W contains 4 blocks (128byte each) with the adresses below: E2 = 0
    EEPROM Addresses defines */
-	#define sEE_Block0_ADDRESS	0xA0   /* E2 = 0 */
- /*#define sEE_Block1_ADDRESS     0xA2*/ /* E2 = 0 */
- /*#define sEE_Block2_ADDRESS     0xA4*/ /* E2 = 0 */
- /*#define sEE_Block3_ADDRESS     0xA6*/ /* E2 = 0 */
+#define sEE_Block0_ADDRESS	0xA0   /* E2 = 0 */
+/*#define sEE_Block1_ADDRESS     0xA2*/ /* E2 = 0 */
+/*#define sEE_Block2_ADDRESS     0xA4*/ /* E2 = 0 */
+/*#define sEE_Block3_ADDRESS     0xA6*/ /* E2 = 0 */
 
 #endif /* sEE_M24C64_32 */
 
@@ -102,15 +102,15 @@
    Make sure that this define is not already declared in other files (ie.
   stm324xg_eval.h file). It can be used in parallel by other modules. */
 #ifndef I2C_SPEED
-	#define I2C_SPEED			100000
+#define I2C_SPEED			100000
 #endif /* I2C_SPEED */
 
 #define I2C_SLAVE_ADDRESS7		0xA0
 
 #if defined (sEE_M24C08)
-	#define sEE_PAGESIZE		16
+#define sEE_PAGESIZE		16
 #elif defined (sEE_M24C64_32)
-	#define sEE_PAGESIZE		32
+#define sEE_PAGESIZE		32
 #endif
 
 /* Maximum Timeout values for flags and events waiting loops. These timeouts are

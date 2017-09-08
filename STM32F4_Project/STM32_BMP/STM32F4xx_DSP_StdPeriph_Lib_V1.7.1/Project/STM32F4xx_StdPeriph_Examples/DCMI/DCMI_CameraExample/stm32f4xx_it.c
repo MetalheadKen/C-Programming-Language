@@ -1,11 +1,11 @@
 /**
   ******************************************************************************
-  * @file    DCMI/DCMI_CameraExample/stm32f4xx_it.c 
+  * @file    DCMI/DCMI_CameraExample/stm32f4xx_it.c
   * @author  MCD Application Team
   * @version V1.7.0
   * @date    22-April-2016
   * @brief   Main Interrupt Service Routines.
-  *          This file provides template for all exceptions handler and 
+  *          This file provides template for all exceptions handler and
   *          peripherals interrupt service routine.
   ******************************************************************************
   * @attention
@@ -18,8 +18,8 @@
   *
   *        http://www.st.com/software_license_agreement_liberty_v2
   *
-  * Unless required by applicable law or agreed to in writing, software 
-  * distributed under the License is distributed on an "AS IS" BASIS, 
+  * Unless required by applicable law or agreed to in writing, software
+  * distributed under the License is distributed on an "AS IS" BASIS,
   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   * See the License for the specific language governing permissions and
   * limitations under the License.
@@ -36,7 +36,7 @@
 
 /** @addtogroup DCMI_CameraExample
   * @{
-  */ 
+  */
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -67,10 +67,9 @@ void NMI_Handler(void)
   */
 void HardFault_Handler(void)
 {
-  /* Go to infinite loop when Hard Fault exception occurs */
-  while (1)
-  {
-  }
+    /* Go to infinite loop when Hard Fault exception occurs */
+    while (1) {
+    }
 }
 
 /**
@@ -80,10 +79,9 @@ void HardFault_Handler(void)
   */
 void MemManage_Handler(void)
 {
-  /* Go to infinite loop when Memory Manage exception occurs */
-  while (1)
-  {
-  }
+    /* Go to infinite loop when Memory Manage exception occurs */
+    while (1) {
+    }
 }
 
 /**
@@ -93,10 +91,9 @@ void MemManage_Handler(void)
   */
 void BusFault_Handler(void)
 {
-  /* Go to infinite loop when Bus Fault exception occurs */
-  while (1)
-  {
-  }
+    /* Go to infinite loop when Bus Fault exception occurs */
+    while (1) {
+    }
 }
 
 /**
@@ -106,10 +103,9 @@ void BusFault_Handler(void)
   */
 void UsageFault_Handler(void)
 {
-  /* Go to infinite loop when Usage Fault exception occurs */
-  while (1)
-  {
-  }
+    /* Go to infinite loop when Usage Fault exception occurs */
+    while (1) {
+    }
 }
 
 /**
@@ -146,7 +142,7 @@ void PendSV_Handler(void)
   */
 void SysTick_Handler(void)
 {
-  TimingDelay_Decrement();
+    TimingDelay_Decrement();
 }
 
 /******************************************************************************/
@@ -163,68 +159,59 @@ void SysTick_Handler(void)
   */
 void EXTI2_IRQHandler(void)
 {
-  static JOY_State_TypeDef JoyState = JOY_NONE;
+    static JOY_State_TypeDef JoyState = JOY_NONE;
 
-  if(EXTI_GetITStatus(IOE_IT_EXTI_LINE) != RESET)
-  {
-    if(IOE_GetGITStatus(IOE_2_ADDR, IOE_GIT_GPIO))
-    {
-      /* Get the Joystick State */
-      JoyState = IOE_JoyStickGetState();
-      
-      switch (JoyState)
-      {
-        case JOY_NONE:
-        break;
-        
-        case JOY_UP:
-        {
-          PressedKey =  UP;     
-          break;        
-        } 
-        case JOY_DOWN:
-        {
-          PressedKey =  DOWN;
-          break;    
+    if(EXTI_GetITStatus(IOE_IT_EXTI_LINE) != RESET) {
+        if(IOE_GetGITStatus(IOE_2_ADDR, IOE_GIT_GPIO)) {
+            /* Get the Joystick State */
+            JoyState = IOE_JoyStickGetState();
+
+            switch (JoyState) {
+                case JOY_NONE:
+                    break;
+
+                case JOY_UP: {
+                    PressedKey =  UP;
+                    break;
+                }
+                case JOY_DOWN: {
+                    PressedKey =  DOWN;
+                    break;
+                }
+                case JOY_RIGHT : {
+                    PressedKey =  JOY_NONE;
+                    break;
+                }
+                case JOY_LEFT: {
+                    PressedKey =  JOY_NONE;
+                    break;
+                }
+                case JOY_CENTER: {
+                    PressedKey =  SEL;
+                    break;
+                }
+                default: {
+                    PressedKey =  JOY_NONE;
+                    LCD_DisplayStringLine(LINE(17), (uint8_t*)"     JOY  ERROR     ");
+                    break;
+                }
+            }
         }
-        case JOY_RIGHT :
-        {
-          PressedKey =  JOY_NONE;
-          break;    
-        }
-        case JOY_LEFT:
-        {
-          PressedKey =  JOY_NONE;
-          break;    
-        }         
-        case JOY_CENTER:
-        {
-          PressedKey =  SEL;
-          break;    
-        }
-        default:
-        {
-          PressedKey =  JOY_NONE; 
-          LCD_DisplayStringLine(LINE(17), (uint8_t*)"     JOY  ERROR     ");
-          break;           
-        }
-      } 
+        /* Clear the interrupt pending bits */
+        IOE_ClearGITPending(IOE_2_ADDR, IOE_GIT_GPIO);
+        IOE_ClearIOITPending(IOE_2_ADDR, IOE_JOY_IT);
     }
-    /* Clear the interrupt pending bits */    
-    IOE_ClearGITPending(IOE_2_ADDR, IOE_GIT_GPIO);
-    IOE_ClearIOITPending(IOE_2_ADDR, IOE_JOY_IT);  
-  }
-  /* Clear interrupt pending bit */
-  EXTI_ClearITPendingBit(IOE_IT_EXTI_LINE);
+    /* Clear interrupt pending bit */
+    EXTI_ClearITPendingBit(IOE_IT_EXTI_LINE);
 }
 
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

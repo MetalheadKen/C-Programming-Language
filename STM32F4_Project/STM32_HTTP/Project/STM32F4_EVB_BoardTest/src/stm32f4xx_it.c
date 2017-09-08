@@ -34,18 +34,18 @@
 #include "usbd_core.h"
 
 #if defined (USE_STM322xG_EVAL)
-	#include "stm322xg_eval.h"
-	#include "stm322xg_eval_ioe.h"
+#include "stm322xg_eval.h"
+#include "stm322xg_eval_ioe.h"
 #elif defined(USE_STM324xG_EVAL)
-	#include "stm324xg_eval.h"
-	#include "stm324xg_eval_ioe.h"
+#include "stm324xg_eval.h"
+#include "stm324xg_eval_ioe.h"
 #elif defined (USE_STM3210C_EVAL)
-	#include "stm3210c_eval.h"
-	#include "stm3210c_eval_ioe.h"
+#include "stm3210c_eval.h"
+#include "stm3210c_eval_ioe.h"
 #elif defined (USE_STM32F4_EVB)
-	#include "stm32f4_evb.h"
+#include "stm32f4_evb.h"
 #else
-	#error "Missing define: Evaluation board (ie. USE_STM322xG_EVAL)"
+#error "Missing define: Evaluation board (ie. USE_STM322xG_EVAL)"
 #endif
 #include "usbd_cdc_core.h"
 #include "lcd_log.h"
@@ -91,10 +91,9 @@ void NMI_Handler(void)
   */
 void HardFault_Handler(void)
 {
-  /* Go to infinite loop when Hard Fault exception occurs */
-	while (1)
-	{
-	}
+    /* Go to infinite loop when Hard Fault exception occurs */
+    while (1) {
+    }
 }
 
 /**
@@ -104,10 +103,9 @@ void HardFault_Handler(void)
   */
 void MemManage_Handler(void)
 {
-  /* Go to infinite loop when Memory Manage exception occurs */
-	while (1)
-	{
-	}
+    /* Go to infinite loop when Memory Manage exception occurs */
+    while (1) {
+    }
 }
 
 /**
@@ -117,10 +115,9 @@ void MemManage_Handler(void)
   */
 void BusFault_Handler(void)
 {
-  /* Go to infinite loop when Bus Fault exception occurs */
-	while (1)
-	{
-	}
+    /* Go to infinite loop when Bus Fault exception occurs */
+    while (1) {
+    }
 }
 
 /**
@@ -130,10 +127,9 @@ void BusFault_Handler(void)
   */
 void UsageFault_Handler(void)
 {
-  /* Go to infinite loop when Usage Fault exception occurs */
-	while (1)
-	{
-	}
+    /* Go to infinite loop when Usage Fault exception occurs */
+    while (1) {
+    }
 }
 
 /**
@@ -170,20 +166,19 @@ void PendSV_Handler(void)
   */
 void SysTick_Handler(void)
 {
-	TimingDelay_Decrement();
-	/* Update the LocalTime by adding SYSTEMTICK_PERIOD_MS each SysTick interrupt */
-	Time_Update();
+    TimingDelay_Decrement();
+    /* Update the LocalTime by adding SYSTEMTICK_PERIOD_MS each SysTick interrupt */
+    Time_Update();
 }
 #ifdef USE_USB_OTG_FS
 void OTG_FS_WKUP_IRQHandler(void)
 {
-  if(USB_OTG_dev.cfg.low_power)
-  {
-    *(uint32_t *)(0xE000ED10) &= 0xFFFFFFF9 ;
-    SystemInit();
-    USB_OTG_UngateClock(&USB_OTG_dev);
-  }
-  EXTI_ClearITPendingBit(EXTI_Line18);
+    if(USB_OTG_dev.cfg.low_power) {
+        *(uint32_t *)(0xE000ED10) &= 0xFFFFFFF9 ;
+        SystemInit();
+        USB_OTG_UngateClock(&USB_OTG_dev);
+    }
+    EXTI_ClearITPendingBit(EXTI_Line18);
 }
 #endif
 
@@ -195,13 +190,12 @@ void OTG_FS_WKUP_IRQHandler(void)
 #ifdef USE_USB_OTG_HS
 void OTG_HS_WKUP_IRQHandler(void)
 {
-	if (USB_OTG_dev.cfg.low_power)
-	{
-		*(uint32_t *)(0xE000ED10) &= 0xFFFFFFF9 ;
-		SystemInit();
-		USB_OTG_UngateClock(&USB_OTG_dev);
-	}
-	EXTI_ClearITPendingBit(EXTI_Line20);
+    if (USB_OTG_dev.cfg.low_power) {
+        *(uint32_t *)(0xE000ED10) &= 0xFFFFFFF9 ;
+        SystemInit();
+        USB_OTG_UngateClock(&USB_OTG_dev);
+    }
+    EXTI_ClearITPendingBit(EXTI_Line20);
 }
 #endif
 
@@ -216,7 +210,7 @@ void OTG_HS_IRQHandler(void)
 void OTG_FS_IRQHandler(void)
 #endif
 {
-	USBD_OTG_ISR_Handler(&USB_OTG_dev);
+    USBD_OTG_ISR_Handler(&USB_OTG_dev);
 }
 
 #ifdef USB_OTG_HS_DEDICATED_EP1_ENABLED
@@ -227,7 +221,7 @@ void OTG_FS_IRQHandler(void)
   */
 void OTG_HS_EP1_IN_IRQHandler(void)
 {
-	USBD_OTG_EP1IN_ISR_Handler(&USB_OTG_dev);
+    USBD_OTG_EP1IN_ISR_Handler(&USB_OTG_dev);
 }
 
 /**
@@ -237,16 +231,16 @@ void OTG_HS_EP1_IN_IRQHandler(void)
   */
 void OTG_HS_EP1_OUT_IRQHandler(void)
 {
-	USBD_OTG_EP1OUT_ISR_Handler(&USB_OTG_dev);
+    USBD_OTG_EP1OUT_ISR_Handler(&USB_OTG_dev);
 }
 #endif
 
 void USART1_IRQHandler(void)
 {
-	uint8_t RxByte;
+    uint8_t RxByte;
 
-	RxByte = (USART_ReceiveData(EVAL_COM1) & 0x7F);
-	USART_SendData(EVAL_COM1, RxByte);
+    RxByte = (USART_ReceiveData(EVAL_COM1) & 0x7F);
+    USART_SendData(EVAL_COM1, RxByte);
 }
 
 /**
@@ -257,27 +251,24 @@ void USART1_IRQHandler(void)
 void EXTI2_IRQHandler(void)
 {
     EXTI_ClearITPendingBit(EXTI_Line2);
-	STM_EVAL_LEDToggle(LED2);
+    STM_EVAL_LEDToggle(LED2);
 }
 
-void EXTI15_10_IRQHandler(void) 
+void EXTI15_10_IRQHandler(void)
 {
-	if (EXTI_GetITStatus(EXTI_Line15) != RESET)
-	{
-		if (EthLinkStatus == 0)
-		{
-			/*connect to tcp server */ 
-			tcp_echoclient_connect();
-		}
-		/* Clear the EXTI line  pending bit */
-		EXTI_ClearITPendingBit(KEY_BUTTON_EXTI_LINE);
-	}
-	if (EXTI_GetITStatus(ETH_LINK_EXTI_LINE) != RESET)
-	{
-		Eth_Link_ITHandler(DP83848_PHY_ADDRESS);
-		/* Clear interrupt pending bit */
-		EXTI_ClearITPendingBit(ETH_LINK_EXTI_LINE);
-	}
+    if (EXTI_GetITStatus(EXTI_Line15) != RESET) {
+        if (EthLinkStatus == 0) {
+            /*connect to tcp server */
+            tcp_echoclient_connect();
+        }
+        /* Clear the EXTI line  pending bit */
+        EXTI_ClearITPendingBit(KEY_BUTTON_EXTI_LINE);
+    }
+    if (EXTI_GetITStatus(ETH_LINK_EXTI_LINE) != RESET) {
+        Eth_Link_ITHandler(DP83848_PHY_ADDRESS);
+        /* Clear interrupt pending bit */
+        EXTI_ClearITPendingBit(ETH_LINK_EXTI_LINE);
+    }
 }
 
 /******************************************************************************/

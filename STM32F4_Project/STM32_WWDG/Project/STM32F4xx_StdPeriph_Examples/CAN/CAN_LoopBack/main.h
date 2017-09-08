@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    CAN/CAN_LoopBack/main.h 
+  * @file    CAN/CAN_LoopBack/main.h
   * @author  MCD Application Team
   * @version V1.1.0
   * @date    18-January-2013
@@ -16,8 +16,8 @@
   *
   *        http://www.st.com/software_license_agreement_liberty_v2
   *
-  * Unless required by applicable law or agreed to in writing, software 
-  * distributed under the License is distributed on an "AS IS" BASIS, 
+  * Unless required by applicable law or agreed to in writing, software
+  * distributed under the License is distributed on an "AS IS" BASIS,
   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   * See the License for the specific language governing permissions and
   * limitations under the License.
@@ -33,13 +33,13 @@
 #include "stm32f4xx.h"
 
 #if defined (USE_STM324xG_EVAL)
-  #include "stm324xg_eval.h"
+#include "stm324xg_eval.h"
 
-#elif defined (USE_STM324x7I_EVAL) 
-  #include "stm324x7i_eval.h"
+#elif defined (USE_STM324x7I_EVAL)
+#include "stm324x7i_eval.h"
 
 #else
- #error "Please select first the Evaluation board used in your application (in Project Options)"
+#error "Please select first the Evaluation board used in your application (in Project Options)"
 #endif
 
 /* Exported types ------------------------------------------------------------*/
@@ -48,11 +48,11 @@
 /* #define USE_CAN2 */
 
 #ifdef  USE_CAN1
-  #define CANx                       CAN1
-  #define CAN_CLK                    RCC_APB1Periph_CAN1      
+#define CANx                       CAN1
+#define CAN_CLK                    RCC_APB1Periph_CAN1
 #else /*USE_CAN2*/
-  #define CANx                       CAN2
-  #define CAN_CLK                    (RCC_APB1Periph_CAN1 | RCC_APB1Periph_CAN2)   
+#define CANx                       CAN2
+#define CAN_CLK                    (RCC_APB1Periph_CAN1 | RCC_APB1Periph_CAN2)
 #endif  /* USE_CAN1 */
 
 /* Exported macro ------------------------------------------------------------*/

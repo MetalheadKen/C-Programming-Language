@@ -17,8 +17,8 @@
   *
   *        http://www.st.com/software_license_agreement_liberty_v2
   *
-  * Unless required by applicable law or agreed to in writing, software 
-  * distributed under the License is distributed on an "AS IS" BASIS, 
+  * Unless required by applicable law or agreed to in writing, software
+  * distributed under the License is distributed on an "AS IS" BASIS,
   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   * See the License for the specific language governing permissions and
   * limitations under the License.
@@ -68,10 +68,9 @@ FATFS fs;
 FILINFO fno;
 DIR dir;
 FIL F;
-const uint8_t SlidesCheck[2] =
-  {
+const uint8_t SlidesCheck[2] = {
     0x42, 0x4D
-  };
+};
 uint32_t BytesRead = 0;
 
 /**
@@ -97,14 +96,13 @@ uint32_t BytesRead = 0;
   */
 uint32_t Storage_Init(void)
 {
-  SD_Init();
-  
-  /****************** FatFs Volume Access ******************************/
-  if (f_mount(0, &fs))
-  {
-    return 1;
-  }
-  return 0;
+    SD_Init();
+
+    /****************** FatFs Volume Access ******************************/
+    if (f_mount(0, &fs)) {
+        return 1;
+    }
+    return 0;
 }
 
 /**
@@ -117,55 +115,49 @@ uint32_t Storage_Init(void)
   */
 uint32_t Storage_OpenReadFile(uint32_t Address, const char* BmpName)
 {
-  uint32_t index = 0, size = 0, i1 = 0;
-  uint32_t BmpAddress;
-  FIL F1;
+    uint32_t index = 0, size = 0, i1 = 0;
+    uint32_t BmpAddress;
+    FIL F1;
 
-  f_open (&F1, BmpName, FA_READ);
-  f_read (&F1, sector, 30, &BytesRead);
+    f_open (&F1, BmpName, FA_READ);
+    f_read (&F1, sector, 30, &BytesRead);
 
-  BmpAddress = (uint32_t)sector;
-
-  /* Read bitmap size */
-  size = *(uint16_t *) (BmpAddress + 2);
-  size |= (*(uint16_t *) (BmpAddress + 4)) << 16;  
- 
-  /* Get bitmap data address offset */
-  index = *(uint16_t *) (BmpAddress + 10);
-  index |= (*(uint16_t *) (BmpAddress + 12)) << 16;  
-  
-  f_close (&F1);
-  
-  f_open (&F1, BmpName, FA_READ);
-
-  do
-  {
-    if (size < 256*2)
-    {
-      i1 = size;
-    }
-    else
-    {
-      i1 = 256*2;
-    }
-    size -= i1;
-    f_read (&F1, sector, i1, &BytesRead);
-
-    for (index = 0; index < i1; index++)
-    {
-      *(__IO uint8_t*) (Address) = *(__IO uint8_t *)BmpAddress;
-      
-      BmpAddress++;  
-      Address++;
-    }  
-    
     BmpAddress = (uint32_t)sector;
-  }
-  while (size > 0);
 
-  f_close (&F1);
-  
-  return 1;
+    /* Read bitmap size */
+    size = *(uint16_t *) (BmpAddress + 2);
+    size |= (*(uint16_t *) (BmpAddress + 4)) << 16;
+
+    /* Get bitmap data address offset */
+    index = *(uint16_t *) (BmpAddress + 10);
+    index |= (*(uint16_t *) (BmpAddress + 12)) << 16;
+
+    f_close (&F1);
+
+    f_open (&F1, BmpName, FA_READ);
+
+    do {
+        if (size < 256*2) {
+            i1 = size;
+        } else {
+            i1 = 256*2;
+        }
+        size -= i1;
+        f_read (&F1, sector, i1, &BytesRead);
+
+        for (index = 0; index < i1; index++) {
+            *(__IO uint8_t*) (Address) = *(__IO uint8_t *)BmpAddress;
+
+            BmpAddress++;
+            Address++;
+        }
+
+        BmpAddress = (uint32_t)sector;
+    } while (size > 0);
+
+    f_close (&F1);
+
+    return 1;
 }
 
 /**
@@ -179,22 +171,19 @@ uint32_t Storage_OpenReadFile(uint32_t Address, const char* BmpName)
 uint32_t Storage_CheckBitmapFile(const char* BmpName, uint32_t *FileLen)
 {
 
-  if (f_mount(0, &fs))
-  {
-    return 1;
-  }
-  if (f_open (&F, BmpName, FA_READ))
-  {
-    return 2;
-  }
+    if (f_mount(0, &fs)) {
+        return 1;
+    }
+    if (f_open (&F, BmpName, FA_READ)) {
+        return 2;
+    }
 
-  f_read (&F, sector, 6, &BytesRead);
+    f_read (&F, sector, 6, &BytesRead);
 
-  if (Buffercmp((uint8_t *)SlidesCheck, (uint8_t *) sector, 2) != 0)
-  {
-    return 3;
-  }
-  return 0;
+    if (Buffercmp((uint8_t *)SlidesCheck, (uint8_t *) sector, 2) != 0) {
+        return 3;
+    }
+    return 0;
 }
 
 /**
@@ -204,55 +193,47 @@ uint32_t Storage_CheckBitmapFile(const char* BmpName, uint32_t *FileLen)
   */
 uint32_t Storage_GetDirectoryBitmapFiles (const char* DirName, char* Files[])
 {
-  
-  FATFS fs;
-  FILINFO fno;
-  DIR dir;
-  uint32_t counter = 0, index = 0;
-  FRESULT res;
 
-  /* Open filesystem */
-  if (f_mount(0, &fs) != FR_OK)
-  {
-    return 0;
-  }
+    FATFS fs;
+    FILINFO fno;
+    DIR dir;
+    uint32_t counter = 0, index = 0;
+    FRESULT res;
 
-  /* Open directory */
-  res = f_opendir(&dir, DirName);
-  
-  if (res == FR_OK)
-  {
-    for (;;)
-    {
-      res = f_readdir(&dir, &fno);
-      if (res != FR_OK || fno.fname[0] == 0)
-        break;
-      if (fno.fname[0] == '.')
-        continue;
-
-      if (!(fno.fattrib & AM_DIR))
-      {
-        do
-        {
-          counter++;
-        }
-        while (fno.fname[counter] != 0x2E); /* . */
-
-
-        if (index < MAX_BMP_FILES)
-        {
-          if ((fno.fname[counter + 1] == 'B') && (fno.fname[counter + 2] == 'M') && (fno.fname[counter + 3] == 'P'))
-          {
-            sprintf (Files[index], "%0s", fno.fname);
-            index++;
-          }
-        }
-        counter = 0;
-      }
+    /* Open filesystem */
+    if (f_mount(0, &fs) != FR_OK) {
+        return 0;
     }
-  }
-  f_mount (0, NULL);
-  return index;
+
+    /* Open directory */
+    res = f_opendir(&dir, DirName);
+
+    if (res == FR_OK) {
+        for (;;) {
+            res = f_readdir(&dir, &fno);
+            if (res != FR_OK || fno.fname[0] == 0)
+                break;
+            if (fno.fname[0] == '.')
+                continue;
+
+            if (!(fno.fattrib & AM_DIR)) {
+                do {
+                    counter++;
+                } while (fno.fname[counter] != 0x2E); /* . */
+
+
+                if (index < MAX_BMP_FILES) {
+                    if ((fno.fname[counter + 1] == 'B') && (fno.fname[counter + 2] == 'M') && (fno.fname[counter + 3] == 'P')) {
+                        sprintf (Files[index], "%0s", fno.fname);
+                        index++;
+                    }
+                }
+                counter = 0;
+            }
+        }
+    }
+    f_mount (0, NULL);
+    return index;
 }
 
 /**
@@ -264,18 +245,16 @@ uint32_t Storage_GetDirectoryBitmapFiles (const char* DirName, char* Files[])
   */
 uint8_t Buffercmp(uint8_t* pBuffer1, uint8_t* pBuffer2, uint16_t BufferLength)
 {
-  while (BufferLength--)
-  {
-    if (*pBuffer1 != *pBuffer2)
-    {
-      return 1;
+    while (BufferLength--) {
+        if (*pBuffer1 != *pBuffer2) {
+            return 1;
+        }
+
+        pBuffer1++;
+        pBuffer2++;
     }
 
-    pBuffer1++;
-    pBuffer2++;
-  }
-
-  return 0;
+    return 0;
 }
 
 /**

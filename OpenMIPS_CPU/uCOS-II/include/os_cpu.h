@@ -6,7 +6,7 @@
 *                            (c) Copyright 2010, Micrium, Inc., Weston, FL
 *                                         All Rights Reserved
 *
-*                                              MIPS14K 
+*                                              MIPS14K
 *							                  MicroMips
 * File    : os_cpu.h
 * Version : v2.90
@@ -41,8 +41,8 @@ typedef double                      FP64;
 
 typedef unsigned  int               OS_STK;       /* Each stack entry is 32 bits wide                  */
 typedef unsigned  int  volatile     OS_CPU_SR;    /* The CPU Status Word is 32-bits wide. This variable*/
-                                                  /* MUST be volatile for proper operation.  Refer to  */
-                                                  /* os_cpu_a.s for more details.                      */
+/* MUST be volatile for proper operation.  Refer to  */
+/* os_cpu_a.s for more details.                      */
 
 /*
 *********************************************************************************************************
@@ -51,13 +51,13 @@ typedef unsigned  int  volatile     OS_CPU_SR;    /* The CPU Status Word is 32-b
 * Method #1: Disable/Enable interrupts using simple instructions.  After a critical section, interrupts
 *            will be enabled even if they were disabled before entering the critical section.
 *
-* Method #2: Disable/Enable interrupts and preserve the state of interrupts.  In other words, if 
+* Method #2: Disable/Enable interrupts and preserve the state of interrupts.  In other words, if
 *            interrupts were disabled before entering the critical section, they will be disabled when
 *            leaving the critical section.
 *
 * Method #3: Disable/Enable interrupts and preserve the state of interrupts.  Generally speaking, you
 *            would store the state of the interrupt disable flag in the local variable 'cpu_sr' and then
-*            disable interrupts.  'cpu_sr' is allocated in all of uC/OS-II's functions that need to 
+*            disable interrupts.  'cpu_sr' is allocated in all of uC/OS-II's functions that need to
 *            disable interrupts.  You would restore the interrupt disable state by copying back 'cpu_sr'
 *            into the CPU's status register.
 *********************************************************************************************************
@@ -69,14 +69,14 @@ typedef unsigned  int  volatile     OS_CPU_SR;    /* The CPU Status Word is 32-b
 #define  OS_EXIT_CRITICAL()    OS_CPU_SR_Restore(cpu_sr);
 
 /*
-********************************************************************************************************* 
+*********************************************************************************************************
 *                                                 M14K
 *********************************************************************************************************
 */
 
 #define  OS_STK_GROWTH    1                       /* Stack grows from HIGH to LOW memory               */
 #define  OS_TASK_SW()     asm("\tsyscall\n");
-					
+
 
 
 /*

@@ -1,11 +1,11 @@
 /**
   ******************************************************************************
-  * @file    USART/USART_TwoBoards/USART_DataExchangeInterrupt/stm32f4xx_it.c 
+  * @file    USART/USART_TwoBoards/USART_DataExchangeInterrupt/stm32f4xx_it.c
   * @author  MCD Application Team
   * @version V1.7.0
   * @date    22-April-2016
   * @brief   Main Interrupt Service Routines.
-  *          This file provides template for all exceptions handler and 
+  *          This file provides template for all exceptions handler and
   *          peripherals interrupt service routine.
   ******************************************************************************
   * @attention
@@ -18,8 +18,8 @@
   *
   *        http://www.st.com/software_license_agreement_liberty_v2
   *
-  * Unless required by applicable law or agreed to in writing, software 
-  * distributed under the License is distributed on an "AS IS" BASIS, 
+  * Unless required by applicable law or agreed to in writing, software
+  * distributed under the License is distributed on an "AS IS" BASIS,
   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   * See the License for the specific language governing permissions and
   * limitations under the License.
@@ -78,10 +78,9 @@ void NMI_Handler(void)
   */
 void HardFault_Handler(void)
 {
-  /* Go to infinite loop when Hard Fault exception occurs */
-  while (1)
-  {
-  }
+    /* Go to infinite loop when Hard Fault exception occurs */
+    while (1) {
+    }
 }
 
 /**
@@ -91,10 +90,9 @@ void HardFault_Handler(void)
   */
 void MemManage_Handler(void)
 {
-  /* Go to infinite loop when Memory Manage exception occurs */
-  while (1)
-  {
-  }
+    /* Go to infinite loop when Memory Manage exception occurs */
+    while (1) {
+    }
 }
 
 /**
@@ -104,10 +102,9 @@ void MemManage_Handler(void)
   */
 void BusFault_Handler(void)
 {
-  /* Go to infinite loop when Bus Fault exception occurs */
-  while (1)
-  {
-  }
+    /* Go to infinite loop when Bus Fault exception occurs */
+    while (1) {
+    }
 }
 
 /**
@@ -117,10 +114,9 @@ void BusFault_Handler(void)
   */
 void UsageFault_Handler(void)
 {
-  /* Go to infinite loop when Usage Fault exception occurs */
-  while (1)
-  {
-  }
+    /* Go to infinite loop when Usage Fault exception occurs */
+    while (1) {
+    }
 }
 
 /**
@@ -157,21 +153,17 @@ void PendSV_Handler(void)
   */
 void SysTick_Handler(void)
 {
-  /* Decrement the timeout value */
-  if (TimeOut != 0x0)
-  {
-    TimeOut--;
-  }
-  
-  if (ubCounter < 10)
-  {
-    ubCounter++;
-  }
-  else
-  {
-    ubCounter = 0x00;
-    STM_EVAL_LEDToggle(LED1);
-  }
+    /* Decrement the timeout value */
+    if (TimeOut != 0x0) {
+        TimeOut--;
+    }
+
+    if (ubCounter < 10) {
+        ubCounter++;
+    } else {
+        ubCounter = 0x00;
+        STM_EVAL_LEDToggle(LED1);
+    }
 }
 
 /******************************************************************************/
@@ -188,43 +180,35 @@ void SysTick_Handler(void)
 */
 void USARTx_IRQHandler(void)
 {
-  /* USART in Receiver mode */
-  if (USART_GetITStatus(USARTx, USART_IT_RXNE) == SET)
-  {
-    if (ubRxIndex < BUFFERSIZE)
-    {
-      /* Receive Transaction data */
-      aRxBuffer[ubRxIndex++] = USART_ReceiveData(USARTx);
+    /* USART in Receiver mode */
+    if (USART_GetITStatus(USARTx, USART_IT_RXNE) == SET) {
+        if (ubRxIndex < BUFFERSIZE) {
+            /* Receive Transaction data */
+            aRxBuffer[ubRxIndex++] = USART_ReceiveData(USARTx);
+        } else {
+            /* Disable the Rx buffer not empty interrupt */
+            USART_ITConfig(USARTx, USART_IT_RXNE, DISABLE);
+        }
     }
-    else
-    {
-      /* Disable the Rx buffer not empty interrupt */
-      USART_ITConfig(USARTx, USART_IT_RXNE, DISABLE);
+    /* USART in Transmitter mode */
+    if (USART_GetITStatus(USARTx, USART_IT_TXE) == SET) {
+        if (ubTxIndex < BUFFERSIZE) {
+            /* Send Transaction data */
+            USART_SendData(USARTx, aTxBuffer[ubTxIndex++]);
+        } else {
+            /* Disable the Tx buffer empty interrupt */
+            USART_ITConfig(USARTx, USART_IT_TXE, DISABLE);
+        }
     }
-  }
-  /* USART in Transmitter mode */
-  if (USART_GetITStatus(USARTx, USART_IT_TXE) == SET)
-  {
-    if (ubTxIndex < BUFFERSIZE)
-    {
-      /* Send Transaction data */
-      USART_SendData(USARTx, aTxBuffer[ubTxIndex++]);
-    }
-    else
-    {
-      /* Disable the Tx buffer empty interrupt */
-      USART_ITConfig(USARTx, USART_IT_TXE, DISABLE);
-    }
-  }
 }
 
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

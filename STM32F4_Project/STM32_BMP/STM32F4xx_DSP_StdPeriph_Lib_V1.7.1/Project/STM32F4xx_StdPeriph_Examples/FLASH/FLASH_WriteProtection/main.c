@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    FLASH/FLASH_WriteProtection/main.c 
+  * @file    FLASH/FLASH_WriteProtection/main.c
   * @author  MCD Application Team
   * @version V1.7.0
   * @date    22-April-2016
@@ -16,8 +16,8 @@
   *
   *        http://www.st.com/software_license_agreement_liberty_v2
   *
-  * Unless required by applicable law or agreed to in writing, software 
-  * distributed under the License is distributed on an "AS IS" BASIS, 
+  * Unless required by applicable law or agreed to in writing, software
+  * distributed under the License is distributed on an "AS IS" BASIS,
   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   * See the License for the specific language governing permissions and
   * limitations under the License.
@@ -34,7 +34,7 @@
 
 /** @addtogroup FLASH_WriteProtection
   * @{
-  */ 
+  */
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -54,111 +54,97 @@ __IO uint32_t SectorsWRPStatus = 0xFFF;
   */
 int main(void)
 {
-  /*!< At this stage the microcontroller clock setting is already configured, 
-       this is done through SystemInit() function which is called from startup
-       file (startup_stm32f40xx.s/startup_stm32f427x.s/startup_stm32f429x.s)  
-       before to branch to application main.
-       To reconfigure the default setting of SystemInit() function, refer to
-       system_stm32f4xx.c file
-     */     
+    /*!< At this stage the microcontroller clock setting is already configured,
+         this is done through SystemInit() function which is called from startup
+         file (startup_stm32f40xx.s/startup_stm32f427x.s/startup_stm32f429x.s)
+         before to branch to application main.
+         To reconfigure the default setting of SystemInit() function, refer to
+         system_stm32f4xx.c file
+       */
 
-  /* Initialize LEDs mounted on EVAL board */
-  STM_EVAL_LEDInit(LED1);
-  STM_EVAL_LEDInit(LED2);
-  STM_EVAL_LEDInit(LED3);
-  STM_EVAL_LEDInit(LED4);
+    /* Initialize LEDs mounted on EVAL board */
+    STM_EVAL_LEDInit(LED1);
+    STM_EVAL_LEDInit(LED2);
+    STM_EVAL_LEDInit(LED3);
+    STM_EVAL_LEDInit(LED4);
 
-  /* Initialize Key Button mounted on EVAL board */
-  STM_EVAL_PBInit(BUTTON_KEY, BUTTON_MODE_GPIO);
+    /* Initialize Key Button mounted on EVAL board */
+    STM_EVAL_PBInit(BUTTON_KEY, BUTTON_MODE_GPIO);
 
-  /* Test if Key push-button on EVAL board is pressed */
-  if (STM_EVAL_PBGetState(BUTTON_KEY) == 0x00)
-  {
-    /* Get FLASH_WRP_SECTORS write protection status */
-    SectorsWRPStatus = FLASH_OB_GetWRP() & FLASH_WRP_SECTORS;
+    /* Test if Key push-button on EVAL board is pressed */
+    if (STM_EVAL_PBGetState(BUTTON_KEY) == 0x00) {
+        /* Get FLASH_WRP_SECTORS write protection status */
+        SectorsWRPStatus = FLASH_OB_GetWRP() & FLASH_WRP_SECTORS;
 
-    if (SectorsWRPStatus == 0x00)
-    {
-     /* If FLASH_WRP_SECTORS are write protected, disable the write protection */
+        if (SectorsWRPStatus == 0x00) {
+            /* If FLASH_WRP_SECTORS are write protected, disable the write protection */
 
-      /* Enable the Flash option control register access */
-      FLASH_OB_Unlock();
+            /* Enable the Flash option control register access */
+            FLASH_OB_Unlock();
 
-      /* Disable FLASH_WRP_SECTORS write protection */
-      FLASH_OB_WRPConfig(FLASH_WRP_SECTORS, DISABLE); 
+            /* Disable FLASH_WRP_SECTORS write protection */
+            FLASH_OB_WRPConfig(FLASH_WRP_SECTORS, DISABLE);
 
-      /* Start the Option Bytes programming process */  
-      if (FLASH_OB_Launch() != FLASH_COMPLETE)
-      {
-        /* User can add here some code to deal with this error */
-        while (1)
-        {
+            /* Start the Option Bytes programming process */
+            if (FLASH_OB_Launch() != FLASH_COMPLETE) {
+                /* User can add here some code to deal with this error */
+                while (1) {
+                }
+            }
+            /* Disable the Flash option control register access (recommended to protect
+               the option Bytes against possible unwanted operations) */
+            FLASH_OB_Lock();
+
+            /* Get FLASH_WRP_SECTORS write protection status */
+            SectorsWRPStatus = FLASH_OB_GetWRP() & FLASH_WRP_SECTORS;
+
+            /* Check if FLASH_WRP_SECTORS write protection is disabled */
+            if (SectorsWRPStatus == FLASH_WRP_SECTORS) {
+                /* OK, turn ON LED1 */
+                STM_EVAL_LEDOn(LED1);
+            } else {
+                /* KO, turn ON LED3 */
+                STM_EVAL_LEDOn(LED3);
+            }
+        } else {
+            /* If FLASH_WRP_SECTORS are not write protected, enable the write protection */
+
+            /* Enable the Flash option control register access */
+            FLASH_OB_Unlock();
+
+            /* Enable FLASH_WRP_SECTORS write protection */
+            FLASH_OB_WRPConfig(FLASH_WRP_SECTORS, ENABLE);
+
+            /* Start the Option Bytes programming process */
+            if (FLASH_OB_Launch() != FLASH_COMPLETE) {
+                /* User can add here some code to deal with this error */
+                while (1) {
+                }
+            }
+
+            /* Disable the Flash option control register access (recommended to protect
+               the option Bytes against possible unwanted operations) */
+            FLASH_OB_Lock();
+
+            /* Get FLASH_WRP_SECTORS write protection status */
+            SectorsWRPStatus = FLASH_OB_GetWRP() & FLASH_WRP_SECTORS;
+
+            /* Check if FLASH_WRP_SECTORS are write protected */
+            if (SectorsWRPStatus == 0x00) {
+                /* OK, turn ON LED4 */
+                STM_EVAL_LEDOn(LED4);
+            } else {
+                /* KO, turn ON LED3 */
+                STM_EVAL_LEDOn(LED3);
+            }
         }
-      }
-      /* Disable the Flash option control register access (recommended to protect 
-         the option Bytes against possible unwanted operations) */
-      FLASH_OB_Lock();
-
-      /* Get FLASH_WRP_SECTORS write protection status */
-      SectorsWRPStatus = FLASH_OB_GetWRP() & FLASH_WRP_SECTORS;
-  
-      /* Check if FLASH_WRP_SECTORS write protection is disabled */
-      if (SectorsWRPStatus == FLASH_WRP_SECTORS)
-      {
-        /* OK, turn ON LED1 */
-        STM_EVAL_LEDOn(LED1); 
-      }
-      else
-      {
-        /* KO, turn ON LED3 */
-        STM_EVAL_LEDOn(LED3); 
-      }
     }
-    else
-    { /* If FLASH_WRP_SECTORS are not write protected, enable the write protection */
 
-      /* Enable the Flash option control register access */
-      FLASH_OB_Unlock();
+    /* Turn ON LED2 */
+    STM_EVAL_LEDOn(LED2);
 
-      /* Enable FLASH_WRP_SECTORS write protection */
-      FLASH_OB_WRPConfig(FLASH_WRP_SECTORS, ENABLE); 
-
-      /* Start the Option Bytes programming process */  
-      if (FLASH_OB_Launch() != FLASH_COMPLETE)
-      {
-        /* User can add here some code to deal with this error */
-        while (1)
-        {
-        }
-      }
-
-      /* Disable the Flash option control register access (recommended to protect 
-         the option Bytes against possible unwanted operations) */
-      FLASH_OB_Lock();
-
-      /* Get FLASH_WRP_SECTORS write protection status */
-      SectorsWRPStatus = FLASH_OB_GetWRP() & FLASH_WRP_SECTORS;
-
-      /* Check if FLASH_WRP_SECTORS are write protected */
-      if (SectorsWRPStatus == 0x00)
-      {
-        /* OK, turn ON LED4 */
-        STM_EVAL_LEDOn(LED4); 
-      }
-      else
-      {
-        /* KO, turn ON LED3 */
-        STM_EVAL_LEDOn(LED3); 
-      }
+    while (1) {
     }
-  }
-
-  /* Turn ON LED2 */
-  STM_EVAL_LEDOn(LED2); 
-
-  while (1)
-  {
-  }
 }
 
 
@@ -172,23 +158,22 @@ int main(void)
   * @retval None
   */
 void assert_failed(uint8_t* file, uint32_t line)
-{ 
-  /* User can add his own implementation to report the file name and line number,
-     ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+{
+    /* User can add his own implementation to report the file name and line number,
+       ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
 
-  /* Infinite loop */
-  while (1)
-  {
-  }
+    /* Infinite loop */
+    while (1) {
+    }
 }
 #endif
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2001-2004 Swedish Institute of Computer Science.
- * All rights reserved. 
- * 
- * Redistribution and use in source and binary forms, with or without modification, 
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
  *
  * 1. Redistributions of source code must retain the above copyright notice,
@@ -11,21 +11,21 @@
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
  * 3. The name of the author may not be used to endorse or promote products
- *    derived from this software without specific prior written permission. 
+ *    derived from this software without specific prior written permission.
  *
- * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED 
- * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF 
- * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT 
- * SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT 
- * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING 
- * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY 
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT
+ * SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT
+ * OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
+ * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
  * OF SUCH DAMAGE.
  *
  * This file is part of the lwIP TCP/IP stack.
- * 
+ *
  * Author: Adam Dunkels <adam@sics.se>
  *
  */
@@ -157,14 +157,14 @@ err_t            tcp_process_refused_data(struct tcp_pcb *pcb);
 #endif
 PACK_STRUCT_BEGIN
 struct tcp_hdr {
-  PACK_STRUCT_FIELD(u16_t src);
-  PACK_STRUCT_FIELD(u16_t dest);
-  PACK_STRUCT_FIELD(u32_t seqno);
-  PACK_STRUCT_FIELD(u32_t ackno);
-  PACK_STRUCT_FIELD(u16_t _hdrlen_rsvd_flags);
-  PACK_STRUCT_FIELD(u16_t wnd);
-  PACK_STRUCT_FIELD(u16_t chksum);
-  PACK_STRUCT_FIELD(u16_t urgp);
+    PACK_STRUCT_FIELD(u16_t src);
+    PACK_STRUCT_FIELD(u16_t dest);
+    PACK_STRUCT_FIELD(u32_t seqno);
+    PACK_STRUCT_FIELD(u32_t ackno);
+    PACK_STRUCT_FIELD(u16_t _hdrlen_rsvd_flags);
+    PACK_STRUCT_FIELD(u16_t wnd);
+    PACK_STRUCT_FIELD(u16_t chksum);
+    PACK_STRUCT_FIELD(u16_t urgp);
 } PACK_STRUCT_STRUCT;
 PACK_STRUCT_END
 #ifdef PACK_STRUCT_USE_INCLUDES
@@ -275,24 +275,24 @@ PACK_STRUCT_END
 
 /* This structure represents a TCP segment on the unsent, unacked and ooseq queues */
 struct tcp_seg {
-  struct tcp_seg *next;    /* used when putting segements on a queue */
-  struct pbuf *p;          /* buffer containing data + TCP header */
-  u16_t len;               /* the TCP length of this segment */
+    struct tcp_seg *next;    /* used when putting segements on a queue */
+    struct pbuf *p;          /* buffer containing data + TCP header */
+    u16_t len;               /* the TCP length of this segment */
 #if TCP_OVERSIZE_DBGCHECK
-  u16_t oversize_left;     /* Extra bytes available at the end of the last
+    u16_t oversize_left;     /* Extra bytes available at the end of the last
                               pbuf in unsent (used for asserting vs.
                               tcp_pcb.unsent_oversized only) */
-#endif /* TCP_OVERSIZE_DBGCHECK */ 
+#endif /* TCP_OVERSIZE_DBGCHECK */
 #if TCP_CHECKSUM_ON_COPY
-  u16_t chksum;
-  u8_t  chksum_swapped;
+    u16_t chksum;
+    u8_t  chksum_swapped;
 #endif /* TCP_CHECKSUM_ON_COPY */
-  u8_t  flags;
+    u8_t  flags;
 #define TF_SEG_OPTS_MSS         (u8_t)0x01U /* Include MSS option. */
 #define TF_SEG_OPTS_TS          (u8_t)0x02U /* Include timestamp option. */
 #define TF_SEG_DATA_CHECKSUMMED (u8_t)0x04U /* ALL data (not the header) is
                                                checksummed into 'chksum' */
-  struct tcp_hdr *tcphdr;  /* the TCP header */
+    struct tcp_hdr *tcphdr;  /* the TCP header */
 };
 
 #define LWIP_TCP_OPT_LENGTH(flags)              \
@@ -309,8 +309,8 @@ extern u8_t tcp_active_pcbs_changed;
 
 /* The TCP PCB lists. */
 union tcp_listen_pcbs_t { /* List of all TCP PCBs in LISTEN state. */
-  struct tcp_pcb_listen *listen_pcbs; 
-  struct tcp_pcb *pcbs;
+    struct tcp_pcb_listen *listen_pcbs;
+    struct tcp_pcb *pcbs;
 };
 extern struct tcp_pcb *tcp_bound_pcbs;
 extern union tcp_listen_pcbs_t tcp_listen_pcbs;
@@ -321,7 +321,7 @@ extern struct tcp_pcb *tcp_tw_pcbs;      /* List of all TCP PCBs in TIME-WAIT. *
 
 extern struct tcp_pcb *tcp_tmp_pcb;      /* Only used for temporary storage. */
 
-/* Axioms about the above lists:   
+/* Axioms about the above lists:
    1) Every TCP PCB that is not CLOSED is in one of the lists.
    2) A PCB is only in one of the lists.
    3) All PCBs in the tcp_listen_pcbs list is in LISTEN state.
@@ -442,8 +442,8 @@ err_t tcp_enqueue_flags(struct tcp_pcb *pcb, u8_t flags);
 void tcp_rexmit_seg(struct tcp_pcb *pcb, struct tcp_seg *seg);
 
 void tcp_rst(u32_t seqno, u32_t ackno,
-       ip_addr_t *local_ip, ip_addr_t *remote_ip,
-       u16_t local_port, u16_t remote_port);
+             ip_addr_t *local_ip, ip_addr_t *remote_ip,
+             u16_t local_port, u16_t remote_port);
 
 u32_t tcp_next_iss(void);
 

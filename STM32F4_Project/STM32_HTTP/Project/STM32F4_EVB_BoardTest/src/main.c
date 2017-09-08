@@ -42,41 +42,39 @@ void LCD_LED_Init(void);
   */
 int main(void)
 {
-  /*!< At this stage the microcontroller clock setting is already configured to 
-       168 MHz, this is done through SystemInit() function which is called from
-       startup file (startup_stm32f4xx.s) before to branch to application main.
-       To reconfigure the default setting of SystemInit() function, refer to
-       system_stm32f4xx.c file
-     */
-  NVIC_PriorityGroupConfig(NVIC_PriorityGroup_4);
+    /*!< At this stage the microcontroller clock setting is already configured to
+         168 MHz, this is done through SystemInit() function which is called from
+         startup file (startup_stm32f4xx.s) before to branch to application main.
+         To reconfigure the default setting of SystemInit() function, refer to
+         system_stm32f4xx.c file
+       */
+    NVIC_PriorityGroupConfig(NVIC_PriorityGroup_4);
 
 #ifdef SERIAL_DEBUG
-  DebugComPort_Init();
+    DebugComPort_Init();
 #endif
 
-  /* 初始化 LCD 和 LED	*/ 
-  LCD_LED_Init();
+    /* 初始化 LCD 和 LED	*/
+    LCD_LED_Init();
 
-  /* 建立 Ethernet (GPIOs, clocks, MAC, DMA) */
-  ETH_BSP_Config();
- 
-  /* 初始化 the LwIP stack */
-  LwIP_Init();
-  
-  /* Http webserver Init */
-  httpd_init();
+    /* 建立 Ethernet (GPIOs, clocks, MAC, DMA) */
+    ETH_BSP_Config();
 
-  while (1)
-  {  
-    /* 檢查封包是否已傳送 */
-    if (ETH_CheckFrameReceived())
-    { 
-      /* 接收乙太網路的封包 */
-      LwIP_Pkt_Handle();
+    /* 初始化 the LwIP stack */
+    LwIP_Init();
+
+    /* Http webserver Init */
+    httpd_init();
+
+    while (1) {
+        /* 檢查封包是否已傳送 */
+        if (ETH_CheckFrameReceived()) {
+            /* 接收乙太網路的封包 */
+            LwIP_Pkt_Handle();
+        }
+        /* handle periodic timers for LwIP */
+        LwIP_Periodic_Handle(LocalTime);
     }
-    /* handle periodic timers for LwIP */
-    LwIP_Periodic_Handle(LocalTime);
-  } 
 }
 
 /**
@@ -86,13 +84,12 @@ int main(void)
   */
 void Delay(uint32_t nCount)
 {
-  /* Capture the current local time */
-  timingdelay = LocalTime + nCount;  
+    /* Capture the current local time */
+    timingdelay = LocalTime + nCount;
 
-  /* wait until the desired delay finish */
-  while(timingdelay > LocalTime)
-  {     
-  }
+    /* wait until the desired delay finish */
+    while(timingdelay > LocalTime) {
+    }
 }
 
 /**
@@ -103,39 +100,38 @@ void Delay(uint32_t nCount)
 void LCD_LED_Init(void)
 {
 #ifdef USE_LCD
-  /* Initialize the STM324xG-EVAL's LCD */
-  STM324xG_LCD_Init();
+    /* Initialize the STM324xG-EVAL's LCD */
+    STM324xG_LCD_Init();
 #endif
 
-  /* Initialize STM324xG-EVAL's LEDs */
-  STM_EVAL_LEDInit(LED1);
-  STM_EVAL_LEDInit(LED2);
-  STM_EVAL_LEDInit(LED3);
-  STM_EVAL_LEDInit(LED4);
-  
+    /* Initialize STM324xG-EVAL's LEDs */
+    STM_EVAL_LEDInit(LED1);
+    STM_EVAL_LEDInit(LED2);
+    STM_EVAL_LEDInit(LED3);
+    STM_EVAL_LEDInit(LED4);
+
 #ifdef USE_LCD
-  /* Clear the LCD */
-  LCD_Clear(Black);
+    /* Clear the LCD */
+    LCD_Clear(Black);
 
-  /* Set the LCD Back Color */
-  LCD_SetBackColor(Black);
+    /* Set the LCD Back Color */
+    LCD_SetBackColor(Black);
 
-  /* Set the LCD Text Color */
-  LCD_SetTextColor(White);
+    /* Set the LCD Text Color */
+    LCD_SetTextColor(White);
 
-  /* Display message on the LCD*/
-  LCD_DisplayStringLine(Line0, (uint8_t*)MESSAGE1);
-  LCD_DisplayStringLine(Line1, (uint8_t*)MESSAGE2);
-  LCD_DisplayStringLine(Line2, (uint8_t*)MESSAGE3);
-  LCD_DisplayStringLine(Line3, (uint8_t*)MESSAGE4);  
+    /* Display message on the LCD*/
+    LCD_DisplayStringLine(Line0, (uint8_t*)MESSAGE1);
+    LCD_DisplayStringLine(Line1, (uint8_t*)MESSAGE2);
+    LCD_DisplayStringLine(Line2, (uint8_t*)MESSAGE3);
+    LCD_DisplayStringLine(Line3, (uint8_t*)MESSAGE4);
 #endif
 }
 void TimingDelay_Decrement(void)
 {
-	if (uwTimingDelay != 0x00)
-	{
-		uwTimingDelay--;
-	}
+    if (uwTimingDelay != 0x00) {
+        uwTimingDelay--;
+    }
 }
 
 /**
@@ -145,7 +141,7 @@ void TimingDelay_Decrement(void)
   */
 void Time_Update(void)
 {
-	LocalTime += SYSTEMTICK_PERIOD_MS;
+    LocalTime += SYSTEMTICK_PERIOD_MS;
 }
 
 
@@ -168,12 +164,12 @@ void Time_Update(void)
   */
 void EVAL_AUDIO_TransferComplete_CallBack(uint32_t pBuffer, uint32_t Size)
 {
-#ifdef AUDIO_MAL_MODE_NORMAL  
-	/* Replay from the beginning */
-	EVAL_AUDIO_Play((uint16_t*)(AUDIO_SAMPLE + AUIDO_START_ADDRESS), (AUDIO_FILE_SZE - AUIDO_START_ADDRESS));
+#ifdef AUDIO_MAL_MODE_NORMAL
+    /* Replay from the beginning */
+    EVAL_AUDIO_Play((uint16_t*)(AUDIO_SAMPLE + AUIDO_START_ADDRESS), (AUDIO_FILE_SZE - AUIDO_START_ADDRESS));
 #else /* #ifdef AUDIO_MAL_MODE_CIRCULAR */
-	/* Display message on the LCD screen */
-	LCD_DisplayStringLine(Line8, " All Buffer Reached ");   
+    /* Display message on the LCD screen */
+    LCD_DisplayStringLine(Line8, " All Buffer Reached ");
 #endif /* AUDIO_MAL_MODE_CIRCULAR */
 }
 
@@ -183,10 +179,10 @@ void EVAL_AUDIO_TransferComplete_CallBack(uint32_t pBuffer, uint32_t Size)
   * @retval None
   */
 void EVAL_AUDIO_HalfTransfer_CallBack(uint32_t pBuffer, uint32_t Size)
-{  
+{
 #ifdef AUDIO_MAL_MODE_CIRCULAR
-	/* Display message on the LCD screen */
-	LCD_DisplayStringLine(Line8, " 1/2 Buffer Reached "); 
+    /* Display message on the LCD screen */
+    LCD_DisplayStringLine(Line8, " 1/2 Buffer Reached ");
 #endif /* AUDIO_MAL_MODE_CIRCULAR */
 }
 
@@ -197,11 +193,11 @@ void EVAL_AUDIO_HalfTransfer_CallBack(uint32_t pBuffer, uint32_t Size)
   */
 void EVAL_AUDIO_Error_CallBack(void* pData)
 {
-	/* Display message on the LCD screen */
-	LCD_SetBackColor(Red);
-	LCD_DisplayStringLine(Line8, (uint8_t *)"     DMA  ERROR     ");
-	/* Stop the program with an infinite loop */
-	while (1) {};
+    /* Display message on the LCD screen */
+    LCD_SetBackColor(Red);
+    LCD_DisplayStringLine(Line8, (uint8_t *)"     DMA  ERROR     ");
+    /* Stop the program with an infinite loop */
+    while (1) {};
 }
 
 /**
@@ -211,11 +207,11 @@ void EVAL_AUDIO_Error_CallBack(void* pData)
   */
 uint32_t Codec_TIMEOUT_UserCallback(void)
 {
-	/* Display message on the LCD screen */
-	LCD_DisplayStringLine(Line8, (uint8_t *)"  CODEC I2C  ERROR  ");  
+    /* Display message on the LCD screen */
+    LCD_DisplayStringLine(Line8, (uint8_t *)"  CODEC I2C  ERROR  ");
 
-	/* Block communication and all processes */
-	while (1) {};
+    /* Block communication and all processes */
+    while (1) {};
 }
 
 #ifdef USE_FULL_ASSERT
@@ -229,13 +225,12 @@ uint32_t Codec_TIMEOUT_UserCallback(void)
   */
 void assert_failed(uint8_t* file, uint32_t line)
 {
-  /* User can add his own implementation to report the file name and line number,
-     ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+    /* User can add his own implementation to report the file name and line number,
+       ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
 
-	/* Infinite loop */
-	while (1)
-	{
-	}
+    /* Infinite loop */
+    while (1) {
+    }
 }
 #endif
 

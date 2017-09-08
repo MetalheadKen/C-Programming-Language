@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    PWR/PWR_PVD/main.c 
+  * @file    PWR/PWR_PVD/main.c
   * @author  MCD Application Team
   * @version V1.1.0
   * @date    18-January-2013
@@ -16,8 +16,8 @@
   *
   *        http://www.st.com/software_license_agreement_liberty_v2
   *
-  * Unless required by applicable law or agreed to in writing, software 
-  * distributed under the License is distributed on an "AS IS" BASIS, 
+  * Unless required by applicable law or agreed to in writing, software
+  * distributed under the License is distributed on an "AS IS" BASIS,
   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   * See the License for the specific language governing permissions and
   * limitations under the License.
@@ -34,7 +34,7 @@
 
 /** @addtogroup PWR_PVD
   * @{
-  */ 
+  */
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -54,29 +54,28 @@ void PVD_Config(void);
   */
 int main(void)
 {
-  /*!< At this stage the microcontroller clock setting is already configured, 
-       this is done through SystemInit() function which is called from startup
-       file (startup_stm32f40xx.s/startup_stm32f427x.s) before to branch to 
-       application main.
-       To reconfigure the default setting of SystemInit() function, refer to
-       system_stm32f4xx.c file
-     */     
-       
-  /* Initialize LEDs on EVAL board */
-  STM_EVAL_LEDInit(LED1);
-  STM_EVAL_LEDInit(LED2);
-  
-  /* Configure the PVD */
-  PVD_Config();
-  
-  while (1)
-  {
-    /* Toggle The LED2 */
-    STM_EVAL_LEDToggle(LED2);
+    /*!< At this stage the microcontroller clock setting is already configured,
+         this is done through SystemInit() function which is called from startup
+         file (startup_stm32f40xx.s/startup_stm32f427x.s) before to branch to
+         application main.
+         To reconfigure the default setting of SystemInit() function, refer to
+         system_stm32f4xx.c file
+       */
 
-    /* Inserted Delay */
-    for(uwCounter = 0; uwCounter < 0x5FFFF; uwCounter++);
-  }
+    /* Initialize LEDs on EVAL board */
+    STM_EVAL_LEDInit(LED1);
+    STM_EVAL_LEDInit(LED2);
+
+    /* Configure the PVD */
+    PVD_Config();
+
+    while (1) {
+        /* Toggle The LED2 */
+        STM_EVAL_LEDToggle(LED2);
+
+        /* Inserted Delay */
+        for(uwCounter = 0; uwCounter < 0x5FFFF; uwCounter++);
+    }
 }
 
 /**
@@ -86,37 +85,37 @@ int main(void)
   */
 void PVD_Config(void)
 {
-  NVIC_InitTypeDef NVIC_InitStructure;
-  EXTI_InitTypeDef EXTI_InitStructure;
+    NVIC_InitTypeDef NVIC_InitStructure;
+    EXTI_InitTypeDef EXTI_InitStructure;
 
-  /* Enable PWR clock */
-  RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE);
+    /* Enable PWR clock */
+    RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE);
 
-  /* Configure one bit for preemption priority */
-  NVIC_PriorityGroupConfig(NVIC_PriorityGroup_1);
-  
-  /* Enable the PVD Interrupt */
-  NVIC_InitStructure.NVIC_IRQChannel = PVD_IRQn;
-  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
-  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
-  NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-  NVIC_Init(&NVIC_InitStructure);
-      
-  /* Configure EXTI Line16(PVD Output) to generate an interrupt on rising and
-     falling edges */
-  EXTI_ClearITPendingBit(EXTI_Line16);
-  EXTI_InitStructure.EXTI_Line = EXTI_Line16;
-  EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Interrupt;
-  EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Rising_Falling;
-  EXTI_InitStructure.EXTI_LineCmd = ENABLE;
-  EXTI_Init(&EXTI_InitStructure);
+    /* Configure one bit for preemption priority */
+    NVIC_PriorityGroupConfig(NVIC_PriorityGroup_1);
 
-  /* Configure the PVD Level to 3 (PVD detection level set to 2.5V, refer to the
-      electrical characteristics of you device datasheet for more details) */
-  PWR_PVDLevelConfig(PWR_PVDLevel_3);
+    /* Enable the PVD Interrupt */
+    NVIC_InitStructure.NVIC_IRQChannel = PVD_IRQn;
+    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
+    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
+    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+    NVIC_Init(&NVIC_InitStructure);
 
-  /* Enable the PVD Output */
-  PWR_PVDCmd(ENABLE);
+    /* Configure EXTI Line16(PVD Output) to generate an interrupt on rising and
+       falling edges */
+    EXTI_ClearITPendingBit(EXTI_Line16);
+    EXTI_InitStructure.EXTI_Line = EXTI_Line16;
+    EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Interrupt;
+    EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Rising_Falling;
+    EXTI_InitStructure.EXTI_LineCmd = ENABLE;
+    EXTI_Init(&EXTI_InitStructure);
+
+    /* Configure the PVD Level to 3 (PVD detection level set to 2.5V, refer to the
+        electrical characteristics of you device datasheet for more details) */
+    PWR_PVDLevelConfig(PWR_PVDLevel_3);
+
+    /* Enable the PVD Output */
+    PWR_PVDCmd(ENABLE);
 }
 
 #ifdef  USE_FULL_ASSERT
@@ -129,23 +128,22 @@ void PVD_Config(void)
   * @retval None
   */
 void assert_failed(uint8_t* file, uint32_t line)
-{ 
-  /* User can add his own implementation to report the file name and line number,
-     ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+{
+    /* User can add his own implementation to report the file name and line number,
+       ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
 
-  /* Infinite loop */
-  while (1)
-  {
-  }
+    /* Infinite loop */
+    while (1) {
+    }
 }
 #endif
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

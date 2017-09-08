@@ -31,7 +31,7 @@
 #define __STM32F4_EVB_LCD_H
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
@@ -80,10 +80,10 @@
 
 #ifdef USE_Delay
 #include "main.h"
-  #define _delay_     Delay  /* !< User can provide more timing precise _delay_ function
+#define _delay_     Delay  /* !< User can provide more timing precise _delay_ function
                                    (with 10ms time base), using SysTick for example */
 #else
-  #define _delay_     delay      /* !< Default _delay_ function with less precise timing */
+#define _delay_     delay      /* !< Default _delay_ function with less precise timing */
 #endif
 
 /**

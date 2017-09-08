@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    TIM/TIM_InputCapture/stm32f4xx_it.c 
+  * @file    TIM/TIM_InputCapture/stm32f4xx_it.c
   * @author  MCD Application Team
   * @version V1.1.0
   * @date    18-January-2013
@@ -18,8 +18,8 @@
   *
   *        http://www.st.com/software_license_agreement_liberty_v2
   *
-  * Unless required by applicable law or agreed to in writing, software 
-  * distributed under the License is distributed on an "AS IS" BASIS, 
+  * Unless required by applicable law or agreed to in writing, software
+  * distributed under the License is distributed on an "AS IS" BASIS,
   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   * See the License for the specific language governing permissions and
   * limitations under the License.
@@ -36,7 +36,7 @@
 
 /** @addtogroup TIM_InputCapture
   * @{
-  */ 
+  */
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -70,9 +70,9 @@ void NMI_Handler(void)
   */
 void HardFault_Handler(void)
 {
-  /* Go to infinite loop when Hard Fault exception occurs */
-  while (1)
-  {}
+    /* Go to infinite loop when Hard Fault exception occurs */
+    while (1)
+    {}
 }
 
 /**
@@ -82,9 +82,9 @@ void HardFault_Handler(void)
   */
 void MemManage_Handler(void)
 {
-  /* Go to infinite loop when Memory Manage exception occurs */
-  while (1)
-  {}
+    /* Go to infinite loop when Memory Manage exception occurs */
+    while (1)
+    {}
 }
 
 /**
@@ -94,9 +94,9 @@ void MemManage_Handler(void)
   */
 void BusFault_Handler(void)
 {
-  /* Go to infinite loop when Bus Fault exception occurs */
-  while (1)
-  {}
+    /* Go to infinite loop when Bus Fault exception occurs */
+    while (1)
+    {}
 }
 
 /**
@@ -106,9 +106,9 @@ void BusFault_Handler(void)
   */
 void UsageFault_Handler(void)
 {
-  /* Go to infinite loop when Usage Fault exception occurs */
-  while (1)
-  {}
+    /* Go to infinite loop when Usage Fault exception occurs */
+    while (1)
+    {}
 }
 
 /**
@@ -153,40 +153,31 @@ void SysTick_Handler(void)
   * @retval None
   */
 void TIM1_CC_IRQHandler(void)
-{ 
-  if(TIM_GetITStatus(TIM1, TIM_IT_CC2) == SET) 
-  {
-    /* Clear TIM1 Capture compare interrupt pending bit */
-    TIM_ClearITPendingBit(TIM1, TIM_IT_CC2);
-    if(uhCaptureNumber == 0)
-    {
-      /* Get the Input Capture value */
-      uhIC3ReadValue1 = TIM_GetCapture2(TIM1);
-      uhCaptureNumber = 1;
+{
+    if(TIM_GetITStatus(TIM1, TIM_IT_CC2) == SET) {
+        /* Clear TIM1 Capture compare interrupt pending bit */
+        TIM_ClearITPendingBit(TIM1, TIM_IT_CC2);
+        if(uhCaptureNumber == 0) {
+            /* Get the Input Capture value */
+            uhIC3ReadValue1 = TIM_GetCapture2(TIM1);
+            uhCaptureNumber = 1;
+        } else if(uhCaptureNumber == 1) {
+            /* Get the Input Capture value */
+            uhIC3ReadValue2 = TIM_GetCapture2(TIM1);
+
+            /* Capture computation */
+            if (uhIC3ReadValue2 > uhIC3ReadValue1) {
+                uwCapture = (uhIC3ReadValue2 - uhIC3ReadValue1);
+            } else if (uhIC3ReadValue2 < uhIC3ReadValue1) {
+                uwCapture = ((0xFFFF - uhIC3ReadValue1) + uhIC3ReadValue2);
+            } else {
+                uwCapture = 0;
+            }
+            /* Frequency computation */
+            uwTIM1Freq = (uint32_t) SystemCoreClock / uwCapture;
+            uhCaptureNumber = 0;
+        }
     }
-    else if(uhCaptureNumber == 1)
-    {
-      /* Get the Input Capture value */
-      uhIC3ReadValue2 = TIM_GetCapture2(TIM1); 
-      
-      /* Capture computation */
-      if (uhIC3ReadValue2 > uhIC3ReadValue1)
-      {
-        uwCapture = (uhIC3ReadValue2 - uhIC3ReadValue1); 
-      }
-      else if (uhIC3ReadValue2 < uhIC3ReadValue1)
-      {
-        uwCapture = ((0xFFFF - uhIC3ReadValue1) + uhIC3ReadValue2); 
-      }
-      else
-      {
-        uwCapture = 0;
-      }
-      /* Frequency computation */ 
-      uwTIM1Freq = (uint32_t) SystemCoreClock / uwCapture;
-      uhCaptureNumber = 0;
-    }
-  }
 }
 
 /******************************************************************************/
@@ -207,10 +198,10 @@ void TIM1_CC_IRQHandler(void)
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

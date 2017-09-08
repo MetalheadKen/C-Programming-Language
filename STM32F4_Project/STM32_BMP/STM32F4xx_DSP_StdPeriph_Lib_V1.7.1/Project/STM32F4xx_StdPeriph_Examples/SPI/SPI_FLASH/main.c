@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    SPI/SPI_FLASH/main.c 
+  * @file    SPI/SPI_FLASH/main.c
   * @author  MCD Application Team
   * @version V1.7.0
   * @date    22-April-2016
@@ -16,8 +16,8 @@
   *
   *        http://www.st.com/software_license_agreement_liberty_v2
   *
-  * Unless required by applicable law or agreed to in writing, software 
-  * distributed under the License is distributed on an "AS IS" BASIS, 
+  * Unless required by applicable law or agreed to in writing, software
+  * distributed under the License is distributed on an "AS IS" BASIS,
   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   * See the License for the specific language governing permissions and
   * limitations under the License.
@@ -27,13 +27,13 @@
 
 /* Includes ------------------------------------------------------------------*/
 #if defined (USE_STM324xG_EVAL)
-  #include "stm324xg_eval.h"
+#include "stm324xg_eval.h"
 
-#elif defined (USE_STM324x7I_EVAL) 
-  #include "stm324x7i_eval.h"
-   
+#elif defined (USE_STM324x7I_EVAL)
+#include "stm324x7i_eval.h"
+
 #else
- #error "Please select first the Evaluation board used in your application (in Project Options)"
+#error "Please select first the Evaluation board used in your application (in Project Options)"
 #endif
 
 #include "spi_flash.h"
@@ -44,7 +44,7 @@
 
 /** @addtogroup SPI_FLASH
   * @{
-  */ 
+  */
 
 /* Private typedef -----------------------------------------------------------*/
 typedef enum {FAILED = 0, PASSED = !FAILED} TestStatus;
@@ -76,71 +76,66 @@ TestStatus Buffercmp(uint8_t* pBuffer1, uint8_t* pBuffer2, uint16_t BufferLength
   */
 int main(void)
 {
-  /*!< At this stage the microcontroller clock setting is already configured, 
-       this is done through SystemInit() function which is called from startup
-       files (startup_stm32f40_41xxx.s/startup_stm32f427_437xx.s/startup_stm32f429_439xx.s)
-       before to branch to application main.
-     */     
-       
-  /* Initialize LEDs mounted on EVAL board */
-  STM_EVAL_LEDInit(LED1);
-  STM_EVAL_LEDInit(LED2);
+    /*!< At this stage the microcontroller clock setting is already configured,
+         this is done through SystemInit() function which is called from startup
+         files (startup_stm32f40_41xxx.s/startup_stm32f427_437xx.s/startup_stm32f429_439xx.s)
+         before to branch to application main.
+       */
 
-  /* Initialize the SPI FLASH driver */
-  sFLASH_Init();
+    /* Initialize LEDs mounted on EVAL board */
+    STM_EVAL_LEDInit(LED1);
+    STM_EVAL_LEDInit(LED2);
 
-  /* Get SPI Flash ID */
-  FlashID = sFLASH_ReadID();
-  
-  /* Check the SPI Flash ID */
-  if (FlashID == sFLASH_M25P64_ID)
-  {
-    /* OK: Turn on LD1 */
-    STM_EVAL_LEDOn(LED1);
+    /* Initialize the SPI FLASH driver */
+    sFLASH_Init();
 
-    /* Perform a write in the Flash followed by a read of the written data */
-    /* Erase SPI FLASH Sector to write on */
-    sFLASH_EraseSector(FLASH_SECTOR_TO_ERASE);
+    /* Get SPI Flash ID */
+    FlashID = sFLASH_ReadID();
 
-    /* Write Tx_Buffer data to SPI FLASH memory */
-    sFLASH_WriteBuffer(Tx_Buffer, FLASH_WRITE_ADDRESS, BufferSize);
+    /* Check the SPI Flash ID */
+    if (FlashID == sFLASH_M25P64_ID) {
+        /* OK: Turn on LD1 */
+        STM_EVAL_LEDOn(LED1);
 
-    /* Read data from SPI FLASH memory */
-    sFLASH_ReadBuffer(Rx_Buffer, FLASH_READ_ADDRESS, BufferSize);
+        /* Perform a write in the Flash followed by a read of the written data */
+        /* Erase SPI FLASH Sector to write on */
+        sFLASH_EraseSector(FLASH_SECTOR_TO_ERASE);
 
-    /* Check the correctness of written dada */
-    TransferStatus1 = Buffercmp(Tx_Buffer, Rx_Buffer, BufferSize);
-    /* TransferStatus1 = PASSED, if the transmitted and received data by SPI1
-       are the same */
-    /* TransferStatus1 = FAILED, if the transmitted and received data by SPI1
-       are different */
+        /* Write Tx_Buffer data to SPI FLASH memory */
+        sFLASH_WriteBuffer(Tx_Buffer, FLASH_WRITE_ADDRESS, BufferSize);
 
-    /* Perform an erase in the Flash followed by a read of the written data */
-    /* Erase SPI FLASH Sector to write on */
-    sFLASH_EraseSector(FLASH_SECTOR_TO_ERASE);
+        /* Read data from SPI FLASH memory */
+        sFLASH_ReadBuffer(Rx_Buffer, FLASH_READ_ADDRESS, BufferSize);
 
-    /* Read data from SPI FLASH memory */
-    sFLASH_ReadBuffer(Rx_Buffer, FLASH_READ_ADDRESS, BufferSize);
+        /* Check the correctness of written dada */
+        TransferStatus1 = Buffercmp(Tx_Buffer, Rx_Buffer, BufferSize);
+        /* TransferStatus1 = PASSED, if the transmitted and received data by SPI1
+           are the same */
+        /* TransferStatus1 = FAILED, if the transmitted and received data by SPI1
+           are different */
 
-    /* Check the correctness of erasing operation dada */
-    for (Index = 0; Index < BufferSize; Index++)
-    {
-      if (Rx_Buffer[Index] != 0xFF)
-      {
-        TransferStatus2 = FAILED;
-      }
+        /* Perform an erase in the Flash followed by a read of the written data */
+        /* Erase SPI FLASH Sector to write on */
+        sFLASH_EraseSector(FLASH_SECTOR_TO_ERASE);
+
+        /* Read data from SPI FLASH memory */
+        sFLASH_ReadBuffer(Rx_Buffer, FLASH_READ_ADDRESS, BufferSize);
+
+        /* Check the correctness of erasing operation dada */
+        for (Index = 0; Index < BufferSize; Index++) {
+            if (Rx_Buffer[Index] != 0xFF) {
+                TransferStatus2 = FAILED;
+            }
+        }
+        /* TransferStatus2 = PASSED, if the specified sector part is erased */
+        /* TransferStatus2 = FAILED, if the specified sector part is not well erased */
+    } else {
+        /* Error: Turn on LD2 */
+        STM_EVAL_LEDOn(LED2);
     }
-    /* TransferStatus2 = PASSED, if the specified sector part is erased */
-    /* TransferStatus2 = FAILED, if the specified sector part is not well erased */
-  }
-  else
-  {
-    /* Error: Turn on LD2 */
-    STM_EVAL_LEDOn(LED2);
-  }
-  
-  while (1)
-  {}
+
+    while (1)
+    {}
 }
 
 /**
@@ -152,18 +147,16 @@ int main(void)
   */
 TestStatus Buffercmp(uint8_t* pBuffer1, uint8_t* pBuffer2, uint16_t BufferLength)
 {
-  while (BufferLength--)
-  {
-    if (*pBuffer1 != *pBuffer2)
-    {
-      return FAILED;
+    while (BufferLength--) {
+        if (*pBuffer1 != *pBuffer2) {
+            return FAILED;
+        }
+
+        pBuffer1++;
+        pBuffer2++;
     }
 
-    pBuffer1++;
-    pBuffer2++;
-  }
-
-  return PASSED;
+    return PASSED;
 }
 
 #ifdef  USE_FULL_ASSERT
@@ -177,21 +170,21 @@ TestStatus Buffercmp(uint8_t* pBuffer1, uint8_t* pBuffer2, uint16_t BufferLength
   */
 void assert_failed(uint8_t* file, uint32_t line)
 {
-  /* User can add his own implementation to report the file name and line number,
-     ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+    /* User can add his own implementation to report the file name and line number,
+       ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
 
-  /* Infinite loop */
-  while (1)
-  {}
+    /* Infinite loop */
+    while (1)
+    {}
 }
 
 #endif
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

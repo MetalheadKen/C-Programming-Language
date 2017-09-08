@@ -67,51 +67,50 @@ char str[50];
   */
 int main(void)
 {
-	RCC_ClocksTypeDef RCC_Clocks;
-	USART_InitTypeDef USART_InitStructure;
-	int i;
+    RCC_ClocksTypeDef RCC_Clocks;
+    USART_InitTypeDef USART_InitStructure;
+    int i;
 
-	/* SysTick end of count event each 10ms */
-	RCC_GetClocksFreq(&RCC_Clocks);
-	SysTick_Config(RCC_Clocks.HCLK_Frequency / 100);
-	RCC_AHB2PeriphClockCmd(RCC_AHB2Periph_RNG, ENABLE);
-	RNG_Cmd(ENABLE);
+    /* SysTick end of count event each 10ms */
+    RCC_GetClocksFreq(&RCC_Clocks);
+    SysTick_Config(RCC_Clocks.HCLK_Frequency / 100);
+    RCC_AHB2PeriphClockCmd(RCC_AHB2Periph_RNG, ENABLE);
+    RNG_Cmd(ENABLE);
 
-	/* Initialize LEDs and Button and UART1 on EVAL board *********************/
-	STM_EVAL_LEDInit(LED1);
-	STM_EVAL_LEDInit(LED2);
-	STM_EVAL_LEDInit(LED3);
-	STM_EVAL_LEDInit(LED4);
-	STM_EVAL_PBInit(BUTTON_WAKEUP, BUTTON_MODE_GPIO);
-	STM_EVAL_PBInit(BUTTON_TAMPER, BUTTON_MODE_GPIO);
-	STM_EVAL_PBInit(BUTTON_KEY, BUTTON_MODE_GPIO);
-	USART_InitStructure.USART_BaudRate				= 115200;
-	USART_InitStructure.USART_WordLength			= USART_WordLength_8b;
-	USART_InitStructure.USART_StopBits				= USART_StopBits_1;
-	USART_InitStructure.USART_Parity				= USART_Parity_No;
-	USART_InitStructure.USART_HardwareFlowControl	= USART_HardwareFlowControl_None;
-	USART_InitStructure.USART_Mode					= USART_Mode_Rx | USART_Mode_Tx;
-	STM_EVAL_COMInit(COM1, &USART_InitStructure);
-	
-	STM324xG_LCD_Init();
-  LCD_Clear(Black);
-  LCD_SetBackColor(Black);
-  LCD_SetTextColor(White);
-  LCD_DisplayStringLine(Line0, (uint8_t*)MESSAGE1);
-	
-	/* Turn on LEDs *************************************************************/
-	STM_EVAL_LEDOn(LED1);
-	STM_EVAL_LEDOn(LED2);
-	STM_EVAL_LEDOn(LED3);
-	STM_EVAL_LEDOn(LED4);
-	
-	while (1)
-	{
-		for(i = 0; i < 5000000; i++)
-			USART_SendData(USART1, 'A');
-                                
-		LCD_DisplayStringLine(LCD_LINE_18, (uint8_t *)str);
-	}
+    /* Initialize LEDs and Button and UART1 on EVAL board *********************/
+    STM_EVAL_LEDInit(LED1);
+    STM_EVAL_LEDInit(LED2);
+    STM_EVAL_LEDInit(LED3);
+    STM_EVAL_LEDInit(LED4);
+    STM_EVAL_PBInit(BUTTON_WAKEUP, BUTTON_MODE_GPIO);
+    STM_EVAL_PBInit(BUTTON_TAMPER, BUTTON_MODE_GPIO);
+    STM_EVAL_PBInit(BUTTON_KEY, BUTTON_MODE_GPIO);
+    USART_InitStructure.USART_BaudRate				= 115200;
+    USART_InitStructure.USART_WordLength			= USART_WordLength_8b;
+    USART_InitStructure.USART_StopBits				= USART_StopBits_1;
+    USART_InitStructure.USART_Parity				= USART_Parity_No;
+    USART_InitStructure.USART_HardwareFlowControl	= USART_HardwareFlowControl_None;
+    USART_InitStructure.USART_Mode					= USART_Mode_Rx | USART_Mode_Tx;
+    STM_EVAL_COMInit(COM1, &USART_InitStructure);
+
+    STM324xG_LCD_Init();
+    LCD_Clear(Black);
+    LCD_SetBackColor(Black);
+    LCD_SetTextColor(White);
+    LCD_DisplayStringLine(Line0, (uint8_t*)MESSAGE1);
+
+    /* Turn on LEDs *************************************************************/
+    STM_EVAL_LEDOn(LED1);
+    STM_EVAL_LEDOn(LED2);
+    STM_EVAL_LEDOn(LED3);
+    STM_EVAL_LEDOn(LED4);
+
+    while (1) {
+        for(i = 0; i < 5000000; i++)
+            USART_SendData(USART1, 'A');
+
+        LCD_DisplayStringLine(LCD_LINE_18, (uint8_t *)str);
+    }
 }
 
 /**
@@ -121,9 +120,9 @@ int main(void)
   */
 void Delay(__IO uint32_t nTime)
 {
-	uwTimingDelay = nTime;
+    uwTimingDelay = nTime;
 
-	while (uwTimingDelay != 0);
+    while (uwTimingDelay != 0);
 }
 
 /**
@@ -133,10 +132,9 @@ void Delay(__IO uint32_t nTime)
   */
 void TimingDelay_Decrement(void)
 {
-	if (uwTimingDelay != 0x00)
-	{
-		uwTimingDelay--;
-	}
+    if (uwTimingDelay != 0x00) {
+        uwTimingDelay--;
+    }
 }
 
 /**
@@ -146,7 +144,7 @@ void TimingDelay_Decrement(void)
   */
 void Time_Update(void)
 {
-	LocalTime += SYSTEMTICK_PERIOD_MS;
+    LocalTime += SYSTEMTICK_PERIOD_MS;
 }
 
 /*--------------------------------
@@ -162,12 +160,12 @@ void Time_Update(void)
   */
 void EVAL_AUDIO_TransferComplete_CallBack(uint32_t pBuffer, uint32_t Size)
 {
-#ifdef AUDIO_MAL_MODE_NORMAL  
-	/* Replay from the beginning */
-	EVAL_AUDIO_Play((uint16_t*)(AUDIO_SAMPLE + AUIDO_START_ADDRESS), (AUDIO_FILE_SZE - AUIDO_START_ADDRESS));
+#ifdef AUDIO_MAL_MODE_NORMAL
+    /* Replay from the beginning */
+    EVAL_AUDIO_Play((uint16_t*)(AUDIO_SAMPLE + AUIDO_START_ADDRESS), (AUDIO_FILE_SZE - AUIDO_START_ADDRESS));
 #else /* #ifdef AUDIO_MAL_MODE_CIRCULAR */
-	/* Display message on the LCD screen */
-	LCD_DisplayStringLine(Line8, " All Buffer Reached ");   
+    /* Display message on the LCD screen */
+    LCD_DisplayStringLine(Line8, " All Buffer Reached ");
 #endif /* AUDIO_MAL_MODE_CIRCULAR */
 }
 
@@ -177,10 +175,10 @@ void EVAL_AUDIO_TransferComplete_CallBack(uint32_t pBuffer, uint32_t Size)
   * @retval None
   */
 void EVAL_AUDIO_HalfTransfer_CallBack(uint32_t pBuffer, uint32_t Size)
-{  
+{
 #ifdef AUDIO_MAL_MODE_CIRCULAR
-	/* Display message on the LCD screen */
-	LCD_DisplayStringLine(Line8, " 1/2 Buffer Reached "); 
+    /* Display message on the LCD screen */
+    LCD_DisplayStringLine(Line8, " 1/2 Buffer Reached ");
 #endif /* AUDIO_MAL_MODE_CIRCULAR */
 }
 
@@ -191,11 +189,11 @@ void EVAL_AUDIO_HalfTransfer_CallBack(uint32_t pBuffer, uint32_t Size)
   */
 void EVAL_AUDIO_Error_CallBack(void* pData)
 {
-	/* Display message on the LCD screen */
-	LCD_SetBackColor(Red);
-	LCD_DisplayStringLine(Line8, (uint8_t *)"     DMA  ERROR     ");
-	/* Stop the program with an infinite loop */
-	while (1) {};
+    /* Display message on the LCD screen */
+    LCD_SetBackColor(Red);
+    LCD_DisplayStringLine(Line8, (uint8_t *)"     DMA  ERROR     ");
+    /* Stop the program with an infinite loop */
+    while (1) {};
 }
 
 /**
@@ -205,11 +203,11 @@ void EVAL_AUDIO_Error_CallBack(void* pData)
   */
 uint32_t Codec_TIMEOUT_UserCallback(void)
 {
-	/* Display message on the LCD screen */
-	LCD_DisplayStringLine(Line8, (uint8_t *)"  CODEC I2C  ERROR  ");  
+    /* Display message on the LCD screen */
+    LCD_DisplayStringLine(Line8, (uint8_t *)"  CODEC I2C  ERROR  ");
 
-	/* Block communication and all processes */
-	while (1) {};
+    /* Block communication and all processes */
+    while (1) {};
 }
 
 #ifdef USE_FULL_ASSERT
@@ -223,13 +221,12 @@ uint32_t Codec_TIMEOUT_UserCallback(void)
   */
 void assert_failed(uint8_t* file, uint32_t line)
 {
-  /* User can add his own implementation to report the file name and line number,
-     ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+    /* User can add his own implementation to report the file name and line number,
+       ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
 
-	/* Infinite loop */
-	while (1)
-	{
-	}
+    /* Infinite loop */
+    while (1) {
+    }
 }
 #endif
 

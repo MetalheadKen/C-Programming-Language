@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    USART/USART_SmartCard/smartcard.h 
+  * @file    USART/USART_SmartCard/smartcard.h
   * @author  MCD Application Team
   * @version V1.7.0
   * @date    22-April-2016
@@ -17,8 +17,8 @@
   *
   *        http://www.st.com/software_license_agreement_liberty_v2
   *
-  * Unless required by applicable law or agreed to in writing, software 
-  * distributed under the License is distributed on an "AS IS" BASIS, 
+  * Unless required by applicable law or agreed to in writing, software
+  * distributed under the License is distributed on an "AS IS" BASIS,
   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   * See the License for the specific language governing permissions and
   * limitations under the License.
@@ -63,7 +63,7 @@
 #define SC_UPDATE_RECORD   0xDC
 #define SC_READ_RECORD     0xB2
 
-/*-------------------------- Administrative Commands -------------------------*/ 
+/*-------------------------- Administrative Commands -------------------------*/
 #define SC_CREATE_FILE     0xE0
 
 /*-------------------------- Safety Management Commands ----------------------*/
@@ -75,7 +75,7 @@
 #define SC_EXTERNAL_AUTH   0x82
 #define SC_GET_CHALLENGE   0x84
 
-/*-------------------------- Answer to reset Commands ------------------------*/ 
+/*-------------------------- Answer to reset Commands ------------------------*/
 #define SC_GET_A2R         0x00
 
 /* SC STATUS: Status Code ----------------------------------------------------*/
@@ -88,57 +88,51 @@
 #define SC_VOLTAGE_3V      1
 
 /* Exported types ------------------------------------------------------------*/
-typedef enum
-{
-  SC_POWER_ON = 0x00,
-  SC_RESET_LOW = 0x01,
-  SC_RESET_HIGH = 0x02,
-  SC_ACTIVE = 0x03,	 
-  SC_ACTIVE_ON_T0 = 0x04,
-  SC_POWER_OFF = 0x05
+typedef enum {
+    SC_POWER_ON = 0x00,
+    SC_RESET_LOW = 0x01,
+    SC_RESET_HIGH = 0x02,
+    SC_ACTIVE = 0x03,
+    SC_ACTIVE_ON_T0 = 0x04,
+    SC_POWER_OFF = 0x05
 } SC_State;
 
 /* ATR structure - Answer To Reset -------------------------------------------*/
-typedef struct
-{
-  uint8_t TS;               /* Bit Convention */
-  uint8_t T0;               /* High nibble = Number of setup byte; low nibble = Number of historical byte */
-  uint8_t T[SETUP_LENGTH];  /* Setup array */
-  uint8_t H[HIST_LENGTH];   /* Historical array */
-  uint8_t Tlength;          /* Setup array dimension */
-  uint8_t Hlength;          /* Historical array dimension */
+typedef struct {
+    uint8_t TS;               /* Bit Convention */
+    uint8_t T0;               /* High nibble = Number of setup byte; low nibble = Number of historical byte */
+    uint8_t T[SETUP_LENGTH];  /* Setup array */
+    uint8_t H[HIST_LENGTH];   /* Historical array */
+    uint8_t Tlength;          /* Setup array dimension */
+    uint8_t Hlength;          /* Historical array dimension */
 } SC_ATR;
 
 /* ADPU-Header command structure ---------------------------------------------*/
-typedef struct
-{
-  uint8_t CLA;  /* Command class */
-  uint8_t INS;  /* Operation code */
-  uint8_t P1;   /* Selection Mode */
-  uint8_t P2;   /* Selection Option */
+typedef struct {
+    uint8_t CLA;  /* Command class */
+    uint8_t INS;  /* Operation code */
+    uint8_t P1;   /* Selection Mode */
+    uint8_t P2;   /* Selection Option */
 } SC_Header;
 
 /* ADPU-Body command structure -----------------------------------------------*/
-typedef struct 
-{
-  uint8_t LC;           /* Data field length */
-  uint8_t Data[LC_MAX];  /* Command parameters */
-  uint8_t LE;           /* Expected length of data to be returned */
+typedef struct {
+    uint8_t LC;           /* Data field length */
+    uint8_t Data[LC_MAX];  /* Command parameters */
+    uint8_t LE;           /* Expected length of data to be returned */
 } SC_Body;
 
 /* ADPU Command structure ----------------------------------------------------*/
-typedef struct
-{
-  SC_Header Header;
-  SC_Body Body;
+typedef struct {
+    SC_Header Header;
+    SC_Body Body;
 } SC_ADPU_Commands;
 
 /* SC response structure -----------------------------------------------------*/
-typedef struct
-{
-  uint8_t Data[LC_MAX];  /* Data returned from the card */
-  uint8_t SW1;          /* Command Processing status */
-  uint8_t SW2;          /* Command Processing qualification */
+typedef struct {
+    uint8_t Data[LC_MAX];  /* Data returned from the card */
+    uint8_t SW1;          /* Command Processing status */
+    uint8_t SW2;          /* Command Processing qualification */
 } SC_ADPU_Responce;
 
 /* Exported macro ------------------------------------------------------------*/

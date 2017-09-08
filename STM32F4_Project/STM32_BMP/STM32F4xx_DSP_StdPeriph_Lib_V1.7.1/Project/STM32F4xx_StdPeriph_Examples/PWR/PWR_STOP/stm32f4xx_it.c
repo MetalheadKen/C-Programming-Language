@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    PWR/PWR_STOP/stm32f4xx_it.c 
+  * @file    PWR/PWR_STOP/stm32f4xx_it.c
   * @author  MCD Application Team
   * @version V1.7.0
   * @date    22-April-2016
@@ -18,8 +18,8 @@
   *
   *        http://www.st.com/software_license_agreement_liberty_v2
   *
-  * Unless required by applicable law or agreed to in writing, software 
-  * distributed under the License is distributed on an "AS IS" BASIS, 
+  * Unless required by applicable law or agreed to in writing, software
+  * distributed under the License is distributed on an "AS IS" BASIS,
   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   * See the License for the specific language governing permissions and
   * limitations under the License.
@@ -67,10 +67,9 @@ void NMI_Handler(void)
   */
 void HardFault_Handler(void)
 {
-  /* Go to infinite loop when Hard Fault exception occurs */
-  while (1)
-  {
-  }
+    /* Go to infinite loop when Hard Fault exception occurs */
+    while (1) {
+    }
 }
 
 /**
@@ -80,10 +79,9 @@ void HardFault_Handler(void)
   */
 void MemManage_Handler(void)
 {
-  /* Go to infinite loop when Memory Manage exception occurs */
-  while (1)
-  {
-  }
+    /* Go to infinite loop when Memory Manage exception occurs */
+    while (1) {
+    }
 }
 
 /**
@@ -93,10 +91,9 @@ void MemManage_Handler(void)
   */
 void BusFault_Handler(void)
 {
-  /* Go to infinite loop when Bus Fault exception occurs */
-  while (1)
-  {
-  }
+    /* Go to infinite loop when Bus Fault exception occurs */
+    while (1) {
+    }
 }
 
 /**
@@ -106,10 +103,9 @@ void BusFault_Handler(void)
   */
 void UsageFault_Handler(void)
 {
-  /* Go to infinite loop when Usage Fault exception occurs */
-  while (1)
-  {
-  }
+    /* Go to infinite loop when Usage Fault exception occurs */
+    while (1) {
+    }
 }
 
 /**
@@ -146,16 +142,16 @@ void PendSV_Handler(void)
   */
 void SysTick_Handler(void)
 {
-  uwTimingDelay--;
-  /* Toggle LED2 */
-  STM_EVAL_LEDToggle(LED2);
+    uwTimingDelay--;
+    /* Toggle LED2 */
+    STM_EVAL_LEDToggle(LED2);
 }
 
 /******************************************************************************/
 /*                 STM32F4xx Peripherals Interrupt Handlers                   */
 /*  Add here the Interrupt Handler for the used peripheral(s) (PPP), for the  */
 /*  available peripheral interrupt handler's name please refer to the startup */
-/*  file (startup_stm32f40xx.s/startup_stm32f427x.s/startup_stm32f429x.s)     */ 
+/*  file (startup_stm32f40xx.s/startup_stm32f427x.s/startup_stm32f429x.s)     */
 /******************************************************************************/
 
 /**
@@ -165,13 +161,12 @@ void SysTick_Handler(void)
   */
 void RTC_WKUP_IRQHandler(void)
 {
-  if(RTC_GetITStatus(RTC_IT_WUT) != RESET)
-  {
-    /* Toggle LED1 */
-    STM_EVAL_LEDToggle(LED1);
-    RTC_ClearITPendingBit(RTC_IT_WUT);
-    EXTI_ClearITPendingBit(EXTI_Line22);
-  } 
+    if(RTC_GetITStatus(RTC_IT_WUT) != RESET) {
+        /* Toggle LED1 */
+        STM_EVAL_LEDToggle(LED1);
+        RTC_ClearITPendingBit(RTC_IT_WUT);
+        EXTI_ClearITPendingBit(EXTI_Line22);
+    }
 }
 
 /**
@@ -181,22 +176,21 @@ void RTC_WKUP_IRQHandler(void)
   */
 void EXTI15_10_IRQHandler(void)
 {
-  if(EXTI_GetITStatus(KEY_BUTTON_EXTI_LINE) != RESET)
-  { 
-    /* Clear the Key Button EXTI line pending bit */
-    EXTI_ClearITPendingBit(KEY_BUTTON_EXTI_LINE);
+    if(EXTI_GetITStatus(KEY_BUTTON_EXTI_LINE) != RESET) {
+        /* Clear the Key Button EXTI line pending bit */
+        EXTI_ClearITPendingBit(KEY_BUTTON_EXTI_LINE);
 
-    /* Toggle LED4 */
-    STM_EVAL_LEDToggle(LED4);
-  }
+        /* Toggle LED4 */
+        STM_EVAL_LEDToggle(LED4);
+    }
 }
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

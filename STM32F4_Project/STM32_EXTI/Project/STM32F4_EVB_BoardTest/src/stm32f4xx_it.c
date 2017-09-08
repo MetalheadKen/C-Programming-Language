@@ -1,11 +1,11 @@
 /**
   ******************************************************************************
-  * @file    USART/USART_Printf/stm32f4xx_it.c 
+  * @file    USART/USART_Printf/stm32f4xx_it.c
   * @author  MCD Application Team
   * @version V1.1.0
   * @date    18-January-2013
   * @brief   Main Interrupt Service Routines.
-  *          This file provides template for all exceptions handler and 
+  *          This file provides template for all exceptions handler and
   *          peripherals interrupt service routine.
   ******************************************************************************
   * @attention
@@ -18,8 +18,8 @@
   *
   *        http://www.st.com/software_license_agreement_liberty_v2
   *
-  * Unless required by applicable law or agreed to in writing, software 
-  * distributed under the License is distributed on an "AS IS" BASIS, 
+  * Unless required by applicable law or agreed to in writing, software
+  * distributed under the License is distributed on an "AS IS" BASIS,
   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   * See the License for the specific language governing permissions and
   * limitations under the License.
@@ -36,7 +36,7 @@
 
 /** @addtogroup USART_Printf
   * @{
-  */ 
+  */
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -51,35 +51,31 @@
 
 void EXTI0_IRQHandler(void)
 {
-	if(EXTI_GetITStatus(EXTI_Line0) != RESET)
-	{
-		for(uint16_t i = 0; i < 0xFFFF; i++);
-		
-		if(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_0))
-		{
-			STM_EVAL_LEDToggle(LED1);
-		}
-		
-		/* 睲埃单じ */
-		EXTI_ClearITPendingBit(EXTI_Line0);
-	}	
+    if(EXTI_GetITStatus(EXTI_Line0) != RESET) {
+        for(uint16_t i = 0; i < 0xFFFF; i++);
+
+        if(GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_0)) {
+            STM_EVAL_LEDToggle(LED1);
+        }
+
+        /* 睲埃单じ */
+        EXTI_ClearITPendingBit(EXTI_Line0);
+    }
 }
 
 void EXTI9_5_IRQHandler(void)
-{	
-	if(EXTI_GetITStatus(EXTI_Line8) != RESET)
-	{
-		for(uint16_t i = 0; i < 0xFFFF; i++);
-		
-		if(GPIO_ReadInputDataBit(GPIOI, GPIO_Pin_8))
-		{
-				STM_EVAL_LEDToggle(LED1);
-				STM_EVAL_LEDToggle(LED2);
-		}
-		
-		/* 睲埃单じ */
-		EXTI_ClearITPendingBit(EXTI_Line8);
-	}	
+{
+    if(EXTI_GetITStatus(EXTI_Line8) != RESET) {
+        for(uint16_t i = 0; i < 0xFFFF; i++);
+
+        if(GPIO_ReadInputDataBit(GPIOI, GPIO_Pin_8)) {
+            STM_EVAL_LEDToggle(LED1);
+            STM_EVAL_LEDToggle(LED2);
+        }
+
+        /* 睲埃单じ */
+        EXTI_ClearITPendingBit(EXTI_Line8);
+    }
 }
 
 /**
@@ -98,10 +94,9 @@ void NMI_Handler(void)
   */
 void HardFault_Handler(void)
 {
-  /* Go to infinite loop when Hard Fault exception occurs */
-  while (1)
-  {
-  }
+    /* Go to infinite loop when Hard Fault exception occurs */
+    while (1) {
+    }
 }
 
 /**
@@ -111,10 +106,9 @@ void HardFault_Handler(void)
   */
 void MemManage_Handler(void)
 {
-  /* Go to infinite loop when Memory Manage exception occurs */
-  while (1)
-  {
-  }
+    /* Go to infinite loop when Memory Manage exception occurs */
+    while (1) {
+    }
 }
 
 /**
@@ -124,10 +118,9 @@ void MemManage_Handler(void)
   */
 void BusFault_Handler(void)
 {
-  /* Go to infinite loop when Bus Fault exception occurs */
-  while (1)
-  {
-  }
+    /* Go to infinite loop when Bus Fault exception occurs */
+    while (1) {
+    }
 }
 
 /**
@@ -137,10 +130,9 @@ void BusFault_Handler(void)
   */
 void UsageFault_Handler(void)
 {
-  /* Go to infinite loop when Usage Fault exception occurs */
-  while (1)
-  {
-  }
+    /* Go to infinite loop when Usage Fault exception occurs */
+    while (1) {
+    }
 }
 
 /**
@@ -197,10 +189,10 @@ void SysTick_Handler(void)
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

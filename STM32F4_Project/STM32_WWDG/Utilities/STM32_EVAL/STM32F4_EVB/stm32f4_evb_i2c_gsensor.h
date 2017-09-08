@@ -32,7 +32,7 @@
 #define __STM32F4_EVB_GSENSOR_H
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
@@ -210,10 +210,10 @@
 #ifdef USE_Delay
 #include "main.h"
 
-  #define _delay_     Delay  /* !< User can provide more timing precise _delay_ function
+#define _delay_     Delay  /* !< User can provide more timing precise _delay_ function
                                    (with 10ms time base), using SysTick for example */
 #else
-  #define _delay_     delay      /* !< Default _delay_ function with less precise timing */
+#define _delay_     delay      /* !< Default _delay_ function with less precise timing */
 #endif
 
 /*------------------------------------------------------------------------------
@@ -241,7 +241,7 @@
    Make sure that this define is not already declared in other files (ie.
   STM32F4_EVB.h file). It can be used in parallel by other modules. */
 #ifndef I2C_SPEED
-	#define I2C_SPEED					100000
+#define I2C_SPEED					100000
 #endif /* I2C_SPEED */
 
 /**

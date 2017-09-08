@@ -16,8 +16,8 @@
   *
   *        http://www.st.com/software_license_agreement_liberty_v2
   *
-  * Unless required by applicable law or agreed to in writing, software 
-  * distributed under the License is distributed on an "AS IS" BASIS, 
+  * Unless required by applicable law or agreed to in writing, software
+  * distributed under the License is distributed on an "AS IS" BASIS,
   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   * See the License for the specific language governing permissions and
   * limitations under the License.
@@ -38,8 +38,8 @@
    evaluation board (U3)
   */
 #if !defined(QSPI_FLASH_MICRON) && !defined(QSPI_FLASH_SPANSION)
-  /* #define QSPI_FLASH_SPANSION */  /*!< QSPI FLASH Spansion */
-   #define QSPI_FLASH_MICRON     /*!<  QSPI FLASH Micron */
+/* #define QSPI_FLASH_SPANSION */  /*!< QSPI FLASH Spansion */
+#define QSPI_FLASH_MICRON     /*!<  QSPI FLASH Micron */
 #endif
 
 /*GPIO Pins and Clocks Definition*/
@@ -220,7 +220,7 @@
 /* End address of the QSPI memory */
 #define QSPI_END_ADDR              (1 << QSPI_FLASH_SIZE)
 #define QSPI_END_EXT_ADDR          0x93FFFFFF
-#define QSPI_START_EXT_ADDR        0x90000000 
+#define QSPI_START_EXT_ADDR        0x90000000
 /* Size of buffers */
 #define BUFFERSIZE                 (COUNTOF(aTxBuffer) - 1)
 

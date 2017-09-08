@@ -3,7 +3,7 @@
 #define __MY_FATFS_H
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
@@ -11,7 +11,7 @@
 #include "stdio.h"
 #include "stdlib.h"
 #include "string.h"
-#include "lcd_log.h"	 
+#include "lcd_log.h"
 #include "stm32f4xx.h"
 #include "stm32f4_evb_sdio_sd.h"
 
@@ -21,7 +21,7 @@ extern FIL			file;
 extern char 		write_in[];
 extern char 		write_out[];
 extern uint32_t ret_length;
-	 
+
 /* By Inlcude "my_uart.c" */
 extern uint8_t 	in_out_enable;
 

@@ -1,10 +1,10 @@
 ////////////////////////////////////////////////////////////////////////////////
-//   ____  ____  
-//  /   /\/   /  
-// /___/  \  /   
-// \   \   \/    
+//   ____  ____
+//  /   /\/   /
+// /___/  \  /
+// \   \   \/
 //  \   \        Copyright (c) 2003-2004 Xilinx, Inc.
-//  /   /        All Right Reserved. 
+//  /   /        All Right Reserved.
 // /___/   /\   
 // \   \  /  \  
 //  \___\/\___\ 
@@ -23,8 +23,9 @@
 #include "xsim.h"
 #endif
 
-class workMglbl : public HSim__s5{
-public: 
+class workMglbl : public HSim__s5
+{
+public:
     workMglbl(const char *instname);
     ~workMglbl();
     void setDefparam();

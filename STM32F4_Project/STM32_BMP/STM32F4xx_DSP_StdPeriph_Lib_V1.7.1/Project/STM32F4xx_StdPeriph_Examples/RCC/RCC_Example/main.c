@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    RCC/RCC_Example/main.c 
+  * @file    RCC/RCC_Example/main.c
   * @author  MCD Application Team
   * @version V1.7.0
   * @date    22-April-2016
@@ -16,8 +16,8 @@
   *
   *        http://www.st.com/software_license_agreement_liberty_v2
   *
-  * Unless required by applicable law or agreed to in writing, software 
-  * distributed under the License is distributed on an "AS IS" BASIS, 
+  * Unless required by applicable law or agreed to in writing, software
+  * distributed under the License is distributed on an "AS IS" BASIS,
   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   * See the License for the specific language governing permissions and
   * limitations under the License.
@@ -34,12 +34,12 @@
 
 /** @addtogroup RCC_Example
   * @{
-  */ 
+  */
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
-/* Private variables ---------------------------------------------------------*/ 
+/* Private variables ---------------------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/
 static void Delay (uint32_t nCount);
 
@@ -52,76 +52,75 @@ static void Delay (uint32_t nCount);
   */
 int main(void)
 {
-  GPIO_InitTypeDef GPIO_InitStructure;
-  NVIC_InitTypeDef NVIC_InitStructure;
-  RCC_ClocksTypeDef RCC_ClockFreq;
+    GPIO_InitTypeDef GPIO_InitStructure;
+    NVIC_InitTypeDef NVIC_InitStructure;
+    RCC_ClocksTypeDef RCC_ClockFreq;
 
-  /*!< At this stage the microcontroller clock setting is already configured, 
-       this is done through SystemInit() function which is called from startup
-       files (startup_stm32f40_41xxx.s/startup_stm32f427_437xx.s/startup_stm32f429_439xx.s)
-       before to branch to application main. 
-       To reconfigure the default setting of SystemInit() function, refer to
-       system_stm32f4xx.c file
-     */      
+    /*!< At this stage the microcontroller clock setting is already configured,
+         this is done through SystemInit() function which is called from startup
+         files (startup_stm32f40_41xxx.s/startup_stm32f427_437xx.s/startup_stm32f429_439xx.s)
+         before to branch to application main.
+         To reconfigure the default setting of SystemInit() function, refer to
+         system_stm32f4xx.c file
+       */
 
-  /* Initialize LEDs mounted on EVAL board */
-  STM_EVAL_LEDInit(LED1);
-  STM_EVAL_LEDInit(LED2);
-  STM_EVAL_LEDInit(LED3);
-  STM_EVAL_LEDInit(LED4);
+    /* Initialize LEDs mounted on EVAL board */
+    STM_EVAL_LEDInit(LED1);
+    STM_EVAL_LEDInit(LED2);
+    STM_EVAL_LEDInit(LED3);
+    STM_EVAL_LEDInit(LED4);
 
-  /* Turn on LED1 and LED3 */
-  STM_EVAL_LEDOn(LED1);
-  STM_EVAL_LEDOn(LED3);
-  
-  /* This function fills the RCC_ClockFreq structure with the current
-     frequencies of different on chip clocks (for debug purpose) **************/
-  RCC_GetClocksFreq(&RCC_ClockFreq);
-  
-  /* Enable Clock Security System(CSS): this will generate an NMI exception
-     when HSE clock fails *****************************************************/
-  RCC_ClockSecuritySystemCmd(ENABLE);
- 
-  /* Enable and configure RCC global IRQ channel, will be used to manage HSE ready 
-     and PLL ready interrupts. 
-     These interrupts are enabled in stm32f4xx_it.c file **********************/
-  NVIC_InitStructure.NVIC_IRQChannel = RCC_IRQn;
-  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
-  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;  
-  NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-  NVIC_Init(&NVIC_InitStructure);
+    /* Turn on LED1 and LED3 */
+    STM_EVAL_LEDOn(LED1);
+    STM_EVAL_LEDOn(LED3);
 
-  /* Output HSE clock on MCO1 pin(PA8) ****************************************/ 
-  /* Enable the GPIOA peripheral */ 
-  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);
-  
-  /* Configure MCO1 pin(PA8) in alternate function */
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_8;
-  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
-  GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;  
-  GPIO_Init(GPIOA, &GPIO_InitStructure);
-    
-  /* HSE clock selected to output on MCO1 pin(PA8)*/
-  RCC_MCO1Config(RCC_MCO1Source_HSE, RCC_MCO1Div_1);
+    /* This function fills the RCC_ClockFreq structure with the current
+       frequencies of different on chip clocks (for debug purpose) **************/
+    RCC_GetClocksFreq(&RCC_ClockFreq);
 
-  while (1)
-  {
-    /* Toggle LED2 and LED4 */
-    STM_EVAL_LEDToggle(LED2);
-    STM_EVAL_LEDToggle(LED4);
+    /* Enable Clock Security System(CSS): this will generate an NMI exception
+       when HSE clock fails *****************************************************/
+    RCC_ClockSecuritySystemCmd(ENABLE);
 
-    /* Insert a delay */
-    Delay(0x7FFFF);
+    /* Enable and configure RCC global IRQ channel, will be used to manage HSE ready
+       and PLL ready interrupts.
+       These interrupts are enabled in stm32f4xx_it.c file **********************/
+    NVIC_InitStructure.NVIC_IRQChannel = RCC_IRQn;
+    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
+    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
+    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+    NVIC_Init(&NVIC_InitStructure);
 
-    /* Toggle LED1 and LED3 */
-    STM_EVAL_LEDToggle(LED1);
-    STM_EVAL_LEDToggle(LED3);
+    /* Output HSE clock on MCO1 pin(PA8) ****************************************/
+    /* Enable the GPIOA peripheral */
+    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);
 
-    /* Insert a delay */
-    Delay(0x7FFFF);    
-  }
+    /* Configure MCO1 pin(PA8) in alternate function */
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_8;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
+    GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
+    GPIO_Init(GPIOA, &GPIO_InitStructure);
+
+    /* HSE clock selected to output on MCO1 pin(PA8)*/
+    RCC_MCO1Config(RCC_MCO1Source_HSE, RCC_MCO1Div_1);
+
+    while (1) {
+        /* Toggle LED2 and LED4 */
+        STM_EVAL_LEDToggle(LED2);
+        STM_EVAL_LEDToggle(LED4);
+
+        /* Insert a delay */
+        Delay(0x7FFFF);
+
+        /* Toggle LED1 and LED3 */
+        STM_EVAL_LEDToggle(LED1);
+        STM_EVAL_LEDToggle(LED3);
+
+        /* Insert a delay */
+        Delay(0x7FFFF);
+    }
 }
 
 /**
@@ -131,11 +130,10 @@ int main(void)
   */
 static void Delay(__IO uint32_t nCount)
 {
-  /* Decrement nCount value */
-  while (nCount != 0)
-  {
-    nCount--;
-  }
+    /* Decrement nCount value */
+    while (nCount != 0) {
+        nCount--;
+    }
 }
 
 #ifdef  USE_FULL_ASSERT
@@ -148,23 +146,22 @@ static void Delay(__IO uint32_t nCount)
   * @retval None
   */
 void assert_failed(uint8_t* file, uint32_t line)
-{ 
-  /* User can add his own implementation to report the file name and line number,
-     ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+{
+    /* User can add his own implementation to report the file name and line number,
+       ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
 
-  /* Infinite loop */
-  while (1)
-  {
-  }
+    /* Infinite loop */
+    while (1) {
+    }
 }
 #endif
 
 /**
   * @}
-  */ 
+  */
 
 /**
   * @}
-  */ 
+  */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

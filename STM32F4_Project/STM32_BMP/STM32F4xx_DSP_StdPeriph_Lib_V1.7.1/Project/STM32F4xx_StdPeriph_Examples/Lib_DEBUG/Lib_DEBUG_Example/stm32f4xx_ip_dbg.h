@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    Lib_DEBUG/Lib_DEBUG_Example/stm32f4xx_ip_dbg.h 
+  * @file    Lib_DEBUG/Lib_DEBUG_Example/stm32f4xx_ip_dbg.h
   * @author  MCD Application Team
   * @version V1.7.0
   * @date    22-April-2016
@@ -16,8 +16,8 @@
   *
   *        http://www.st.com/software_license_agreement_liberty_v2
   *
-  * Unless required by applicable law or agreed to in writing, software 
-  * distributed under the License is distributed on an "AS IS" BASIS, 
+  * Unless required by applicable law or agreed to in writing, software
+  * distributed under the License is distributed on an "AS IS" BASIS,
   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   * See the License for the specific language governing permissions and
   * limitations under the License.
@@ -38,7 +38,7 @@
 /* Exported functions ------------------------------------------------------- */
 
 void IP_Debug(void);
- 
+
 #endif /* __STM32F4XX_IP_DBG_H */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

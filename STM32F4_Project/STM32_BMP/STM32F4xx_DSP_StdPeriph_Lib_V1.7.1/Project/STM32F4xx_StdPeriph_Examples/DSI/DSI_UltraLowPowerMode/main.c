@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file DSI_UltraLowPowerMode/main.c 
+  * @file DSI_UltraLowPowerMode/main.c
   * @author MCD Application Team
   * @version V1.7.0
   * @date    22-April-2016
@@ -16,8 +16,8 @@
   *
   *        http://www.st.com/software_license_agreement_liberty_v2
   *
-  * Unless required by applicable law or agreed to in writing, software 
-  * distributed under the License is distributed on an "AS IS" BASIS, 
+  * Unless required by applicable law or agreed to in writing, software
+  * distributed under the License is distributed on an "AS IS" BASIS,
   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   * See the License for the specific language governing permissions and
   * limitations under the License.
@@ -35,11 +35,11 @@
 
 /** @addtogroup DSI_UltraLowPowerMode_Project
   * @{
-  */ 
+  */
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
-/* Comment this line to use LCD Hardware Backlight on MB1166 Rev.A board 
+/* Comment this line to use LCD Hardware Backlight on MB1166 Rev.A board
    Note: In addition, a hardware update should be done to have this feature fully working:
          Remove R1 resistor connected on MB1166 REVA board
  */
@@ -90,159 +90,158 @@ static void OTM8009Setup(DSI_TypeDef* DSIx, uint8_t format);
   */
 int main(void)
 {
- /*!< At this stage the microcontroller clock setting is already configured, 
-       this is done through SystemInit() function which is called from startup
-       files (startup_stm32f40_41xxx.s/startup_stm32f427_437xx.s/startup_stm32f429_439xx.s/startup_stm32f469_479xx.s)
-       before to branch to application main.
-     */
-  
-  /* SysTick end of count event each 1ms */
-  SysTick_Config(SystemCoreClock/ 1000);
-  
-  /* Toggle Hardware Reset of the DSI LCD using
-  its XRES signal (active low) */
-  LCD_Reset();
-  
-  /* DSI configuration */
-  DSI_Config();
-  
-  /* Initialize the DSI */
-  DSI_DeInit(DSI);
-  PLLInitStructure.PLLNDIV = 100;
-  PLLInitStructure.PLLIDF = DSI_PLL_IN_DIV5;
-  PLLInitStructure.PLLODF = DSI_PLL_OUT_DIV1;
-  
-  DSI_InitStructure.NumberOfLanes = DSI_TWO_DATA_LANES;
-  DSI_InitStructure.TXEscapeCkdiv = 0x4;
-  DSI_Init(DSI,&DSI_InitStructure, &PLLInitStructure);
-    
-  /* Configure the DSI for Command mode */
-  CmdCfgStructure.VirtualChannelID      = 0;
-  CmdCfgStructure.HSPolarity            = DSI_HSYNC_ACTIVE_HIGH;
-  CmdCfgStructure.VSPolarity            = DSI_VSYNC_ACTIVE_HIGH;
-  CmdCfgStructure.DEPolarity            = DSI_DATA_ENABLE_ACTIVE_HIGH;
-  CmdCfgStructure.ColorCoding           = DSI_RGB888;
-  CmdCfgStructure.CommandSize           = HACT;
-  CmdCfgStructure.TearingEffectSource   = DSI_TE_EXTERNAL;
-  CmdCfgStructure.TearingEffectPolarity = DSI_TE_RISING_EDGE;
-  CmdCfgStructure.VSyncPol              = DSI_VSYNC_FALLING;
-  CmdCfgStructure.AutomaticRefresh      = DSI_AR_DISABLE;
-  CmdCfgStructure.TEAcknowledgeRequest  = DSI_TE_ACKNOWLEDGE_ENABLE;
-  DSI_ConfigAdaptedCommandMode(DSI, &CmdCfgStructure);
-  
-  LPCmdStructure.LPGenShortWriteNoP    = DSI_LP_GSW0P_ENABLE;
-  LPCmdStructure.LPGenShortWriteOneP   = DSI_LP_GSW1P_ENABLE;
-  LPCmdStructure.LPGenShortWriteTwoP   = DSI_LP_GSW2P_ENABLE;
-  LPCmdStructure.LPGenShortReadNoP     = DSI_LP_GSR0P_ENABLE;
-  LPCmdStructure.LPGenShortReadOneP    = DSI_LP_GSR1P_ENABLE;
-  LPCmdStructure.LPGenShortReadTwoP    = DSI_LP_GSR2P_ENABLE;
-  LPCmdStructure.LPGenLongWrite        = DSI_LP_GLW_ENABLE;
-  LPCmdStructure.LPDcsShortWriteNoP    = DSI_LP_DSW0P_ENABLE;
-  LPCmdStructure.LPDcsShortWriteOneP   = DSI_LP_DSW1P_ENABLE;
-  LPCmdStructure.LPDcsShortReadNoP     = DSI_LP_DSR0P_ENABLE;
-  LPCmdStructure.LPDcsLongWrite        = DSI_LP_DLW_ENABLE;
-  DSI_ConfigCommand(DSI, &LPCmdStructure);
- 	
-  /* Configure and enable the LTDC */
-  LCD_Config();
-  
-  /* Enable Layer 1 */
-  LTDC_LayerCmd(LTDC_Layer1, ENABLE);
-  
-  /* Reload configuration of Layer 1 */
-  LTDC_ReloadConfig(LTDC_IMReload);
-  
-  /* Enable The LCD */
-  LTDC_Cmd(ENABLE);
+    /*!< At this stage the microcontroller clock setting is already configured,
+          this is done through SystemInit() function which is called from startup
+          files (startup_stm32f40_41xxx.s/startup_stm32f427_437xx.s/startup_stm32f429_439xx.s/startup_stm32f469_479xx.s)
+          before to branch to application main.
+        */
 
-  /* Enable the DSI host and wrapper */
-  DSI_Start(DSI);
-  
-  /* Drive the display */
-  OTM8009Setup(DSI, IMAGEFORMAT_RGB888);
-  
-  /* Send image in High Speed */
-  LPCmdStructure.LPDcsLongWrite = DSI_LP_DLW_DISABLE;
-  DSI_ConfigCommand(DSI, &LPCmdStructure);
-  
-  /* Enable the Bus Turn Around feature to retrieve TE information via the DSI link */
-  DSI_ConfigFlowControl(DSI, DSI_FLOW_CONTROL_BTA);
+    /* SysTick end of count event each 1ms */
+    SysTick_Config(SystemCoreClock/ 1000);
 
-  /* Enable the LTDC in DSI Wrapper by software */
-  DSI_Refresh(DSI);
-  
-  /* Infinite loop */
-  while(1)
-  {
-    /* LTDC in Run Mode Time: 3ms */
-    Delay(3000);
-    
-    /* Step1: Display off */
-    DSI_ShortWrite(DSI, 0, DSI_DCS_SHORT_PKT_WRITE_P1, DSI_SET_DISPLAY_OFF, 0x00);
-    
-    /* Step2: LCD Disable */
-    /* Step2.1: LTDC disable */
-    LTDC_Cmd(DISABLE);
-    
-    /* Step2.2: Disable Layer 1 */
-    LTDC_LayerCmd(LTDC_Layer1, DISABLE);
-    
-    /* Step2.3: Disable the LTDC clock */
-    RCC_APB2PeriphClockCmd(RCC_APB2Periph_LTDC, DISABLE);
-    
-    /* Step3: Enter ultra low power mode (data lanes only) */
-    DSI_EnterULPMData(DSI);
-    
-    /* LTDC in Ultra Low Power Mode Time: 3ms */
-    Delay(3000);
-    
-    /* Exit ultra low power mode (data lanes only) */
-    DSI_ExitULPMData(DSI);
-    
-    /* LTDC Enable */
-    /* Enable the LTDC clock */
-    RCC_APB2PeriphClockCmd(RCC_APB2Periph_LTDC, ENABLE);
-    
+    /* Toggle Hardware Reset of the DSI LCD using
+    its XRES signal (active low) */
+    LCD_Reset();
+
+    /* DSI configuration */
+    DSI_Config();
+
+    /* Initialize the DSI */
+    DSI_DeInit(DSI);
+    PLLInitStructure.PLLNDIV = 100;
+    PLLInitStructure.PLLIDF = DSI_PLL_IN_DIV5;
+    PLLInitStructure.PLLODF = DSI_PLL_OUT_DIV1;
+
+    DSI_InitStructure.NumberOfLanes = DSI_TWO_DATA_LANES;
+    DSI_InitStructure.TXEscapeCkdiv = 0x4;
+    DSI_Init(DSI,&DSI_InitStructure, &PLLInitStructure);
+
+    /* Configure the DSI for Command mode */
+    CmdCfgStructure.VirtualChannelID      = 0;
+    CmdCfgStructure.HSPolarity            = DSI_HSYNC_ACTIVE_HIGH;
+    CmdCfgStructure.VSPolarity            = DSI_VSYNC_ACTIVE_HIGH;
+    CmdCfgStructure.DEPolarity            = DSI_DATA_ENABLE_ACTIVE_HIGH;
+    CmdCfgStructure.ColorCoding           = DSI_RGB888;
+    CmdCfgStructure.CommandSize           = HACT;
+    CmdCfgStructure.TearingEffectSource   = DSI_TE_EXTERNAL;
+    CmdCfgStructure.TearingEffectPolarity = DSI_TE_RISING_EDGE;
+    CmdCfgStructure.VSyncPol              = DSI_VSYNC_FALLING;
+    CmdCfgStructure.AutomaticRefresh      = DSI_AR_DISABLE;
+    CmdCfgStructure.TEAcknowledgeRequest  = DSI_TE_ACKNOWLEDGE_ENABLE;
+    DSI_ConfigAdaptedCommandMode(DSI, &CmdCfgStructure);
+
+    LPCmdStructure.LPGenShortWriteNoP    = DSI_LP_GSW0P_ENABLE;
+    LPCmdStructure.LPGenShortWriteOneP   = DSI_LP_GSW1P_ENABLE;
+    LPCmdStructure.LPGenShortWriteTwoP   = DSI_LP_GSW2P_ENABLE;
+    LPCmdStructure.LPGenShortReadNoP     = DSI_LP_GSR0P_ENABLE;
+    LPCmdStructure.LPGenShortReadOneP    = DSI_LP_GSR1P_ENABLE;
+    LPCmdStructure.LPGenShortReadTwoP    = DSI_LP_GSR2P_ENABLE;
+    LPCmdStructure.LPGenLongWrite        = DSI_LP_GLW_ENABLE;
+    LPCmdStructure.LPDcsShortWriteNoP    = DSI_LP_DSW0P_ENABLE;
+    LPCmdStructure.LPDcsShortWriteOneP   = DSI_LP_DSW1P_ENABLE;
+    LPCmdStructure.LPDcsShortReadNoP     = DSI_LP_DSR0P_ENABLE;
+    LPCmdStructure.LPDcsLongWrite        = DSI_LP_DLW_ENABLE;
+    DSI_ConfigCommand(DSI, &LPCmdStructure);
+
+    /* Configure and enable the LTDC */
+    LCD_Config();
+
     /* Enable Layer 1 */
     LTDC_LayerCmd(LTDC_Layer1, ENABLE);
-    
-    /* Enable The LTDC */
+
+    /* Reload configuration of Layer 1 */
+    LTDC_ReloadConfig(LTDC_IMReload);
+
+    /* Enable The LCD */
     LTDC_Cmd(ENABLE);
-    
-    /* Display on */
-    DSI_ShortWrite(DSI, 0, DSI_DCS_SHORT_PKT_WRITE_P1, DSI_SET_DISPLAY_ON, 0x00);
-  }
+
+    /* Enable the DSI host and wrapper */
+    DSI_Start(DSI);
+
+    /* Drive the display */
+    OTM8009Setup(DSI, IMAGEFORMAT_RGB888);
+
+    /* Send image in High Speed */
+    LPCmdStructure.LPDcsLongWrite = DSI_LP_DLW_DISABLE;
+    DSI_ConfigCommand(DSI, &LPCmdStructure);
+
+    /* Enable the Bus Turn Around feature to retrieve TE information via the DSI link */
+    DSI_ConfigFlowControl(DSI, DSI_FLOW_CONTROL_BTA);
+
+    /* Enable the LTDC in DSI Wrapper by software */
+    DSI_Refresh(DSI);
+
+    /* Infinite loop */
+    while(1) {
+        /* LTDC in Run Mode Time: 3ms */
+        Delay(3000);
+
+        /* Step1: Display off */
+        DSI_ShortWrite(DSI, 0, DSI_DCS_SHORT_PKT_WRITE_P1, DSI_SET_DISPLAY_OFF, 0x00);
+
+        /* Step2: LCD Disable */
+        /* Step2.1: LTDC disable */
+        LTDC_Cmd(DISABLE);
+
+        /* Step2.2: Disable Layer 1 */
+        LTDC_LayerCmd(LTDC_Layer1, DISABLE);
+
+        /* Step2.3: Disable the LTDC clock */
+        RCC_APB2PeriphClockCmd(RCC_APB2Periph_LTDC, DISABLE);
+
+        /* Step3: Enter ultra low power mode (data lanes only) */
+        DSI_EnterULPMData(DSI);
+
+        /* LTDC in Ultra Low Power Mode Time: 3ms */
+        Delay(3000);
+
+        /* Exit ultra low power mode (data lanes only) */
+        DSI_ExitULPMData(DSI);
+
+        /* LTDC Enable */
+        /* Enable the LTDC clock */
+        RCC_APB2PeriphClockCmd(RCC_APB2Periph_LTDC, ENABLE);
+
+        /* Enable Layer 1 */
+        LTDC_LayerCmd(LTDC_Layer1, ENABLE);
+
+        /* Enable The LTDC */
+        LTDC_Cmd(ENABLE);
+
+        /* Display on */
+        DSI_ShortWrite(DSI, 0, DSI_DCS_SHORT_PKT_WRITE_P1, DSI_SET_DISPLAY_ON, 0x00);
+    }
 }
 
 /**
-  * @brief DSI Resources configuration (RCC, GPIO, NVIC...) 
+  * @brief DSI Resources configuration (RCC, GPIO, NVIC...)
   * @param  None
   * @retval None
   */
 static void DSI_Config(void)
 {
-  /* Peripheral Clock Enable -------------------------------------------------*/
-  /* Enable the DSI clock */
-  RCC_APB2PeriphClockCmd(RCC_APB2Periph_DSI, ENABLE);
-  
-  /* Enable the LTDC clock */
-  RCC_APB2PeriphClockCmd(RCC_APB2Periph_LTDC, ENABLE);  
-/* Reset the DSI peripheral --------------------------------------------------*/
-  DSI_DeInit(DSI);
-  
-  /* RCC Configuration -------------------------------------------------------*/
-  /* PLLSAIP and PLLSAIQ are not used and are set to there reset values */
-  RCC_PLLSAIConfig(384, 2, 4, 7);
-  
-  /* LTDC_CLK = LTDC_CLK(first level)/PLLSAIDIVR */ 
-  RCC_LTDCCLKDivConfig(RCC_PLLSAIDivR_Div2);  
-  
-  /* Enable PLLSAI Clock */
-  RCC_PLLSAICmd(ENABLE);
-  /* Wait till PLLSAI is ready */
-  while(RCC_GetFlagStatus(RCC_FLAG_PLLSAIRDY) == RESET)
-  {}
-  PixClockFreq  = 30000000;
+    /* Peripheral Clock Enable -------------------------------------------------*/
+    /* Enable the DSI clock */
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_DSI, ENABLE);
+
+    /* Enable the LTDC clock */
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_LTDC, ENABLE);
+    /* Reset the DSI peripheral --------------------------------------------------*/
+    DSI_DeInit(DSI);
+
+    /* RCC Configuration -------------------------------------------------------*/
+    /* PLLSAIP and PLLSAIQ are not used and are set to there reset values */
+    RCC_PLLSAIConfig(384, 2, 4, 7);
+
+    /* LTDC_CLK = LTDC_CLK(first level)/PLLSAIDIVR */
+    RCC_LTDCCLKDivConfig(RCC_PLLSAIDivR_Div2);
+
+    /* Enable PLLSAI Clock */
+    RCC_PLLSAICmd(ENABLE);
+    /* Wait till PLLSAI is ready */
+    while(RCC_GetFlagStatus(RCC_FLAG_PLLSAIRDY) == RESET)
+    {}
+    PixClockFreq  = 30000000;
 }
 
 /**
@@ -252,97 +251,97 @@ static void DSI_Config(void)
   */
 static void LCD_Config(void)
 {
-  LTDC_InitTypeDef       LTDC_InitStruct;
-  LTDC_Layer_InitTypeDef LTDC_Layer_InitStruct;
+    LTDC_InitTypeDef       LTDC_InitStruct;
+    LTDC_Layer_InitTypeDef LTDC_Layer_InitStruct;
 
-/* Reset the LTDC peripheral -------------------------------------------------*/
-  LTDC_DeInit();
-  
-/* LTDC Initialization -------------------------------------------------------*/
+    /* Reset the LTDC peripheral -------------------------------------------------*/
+    LTDC_DeInit();
 
-  /* Polarity configuration */
-  /* Initialize the horizontal synchronization polarity as active low */
-  LTDC_InitStruct.LTDC_HSPolarity = LTDC_HSPolarity_AL;     
-  /* Initialize the vertical synchronization polarity as active low */  
-  LTDC_InitStruct.LTDC_VSPolarity = LTDC_VSPolarity_AL;     
-  /* Initialize the data enable polarity as active low */ 
-  LTDC_InitStruct.LTDC_DEPolarity = LTDC_DEPolarity_AL;     
-  /* Initialize the pixel clock polarity as input pixel clock */ 
-  LTDC_InitStruct.LTDC_PCPolarity = LTDC_PCPolarity_IPC;
-  
-  /* Timing configuration */
-  /* Horizontal synchronization width = HSYNCH - 1 */     
-  LTDC_InitStruct.LTDC_HorizontalSync = HSYNCH - 1;
-  /* Vertical synchronization height = VSYNCH - 1 */
-  LTDC_InitStruct.LTDC_VerticalSync = VSYNCH - 1;
-  /* Accumulated horizontal back porch = HSYNCH + HBP - 1 */
-  LTDC_InitStruct.LTDC_AccumulatedHBP = HSYNCH + HBP - 1; 
-  /* Accumulated vertical back porch = VSYNCH + VBP - 1 */
-  LTDC_InitStruct.LTDC_AccumulatedVBP = VSYNCH + VBP - 1;  
-  /* Accumulated active width = HSYNCH + HBP + Active Width - 1 */  
-  LTDC_InitStruct.LTDC_AccumulatedActiveW = HSYNCH + HBP + HACT - 1;
-  /* Accumulated active height = VSYNCH + VBP + Active Heigh - 1 */
-  LTDC_InitStruct.LTDC_AccumulatedActiveH = VSYNCH + VBP + VACT - 1;
-  /* Total width = HSYNCH + HBP + Active Width + HFP - 1 */
-  LTDC_InitStruct.LTDC_TotalWidth = HSYNCH + HBP + HACT + HFP - 1; 
-  /* Total height = VSYNCH + VBP + Active Heigh + VFP - 1 */
-  LTDC_InitStruct.LTDC_TotalHeigh = VSYNCH + VBP + VACT + VFP - 1;
- 
-  /* Configure R,G,B component values for LCD background color */
-  LTDC_InitStruct.LTDC_BackgroundRedValue = 0;
-  LTDC_InitStruct.LTDC_BackgroundGreenValue = 0;
-  LTDC_InitStruct.LTDC_BackgroundBlueValue = 0; 
-  
-  /* Initialize LTDC */          
-  LTDC_Init(&LTDC_InitStruct);
+    /* LTDC Initialization -------------------------------------------------------*/
 
-/* Layer1 Configuration ------------------------------------------------------*/  
-  /* Windowing configuration */ 
-  /* In this case all the active display area is used to display a picture then :
-     Horizontal start = horizontal synchronization + Horizontal back porch = 0 
-     Vertical start   = vertical synchronization + vertical back porch     = 0
-     Horizontal stop = Horizontal start + window width -1 = 480 
-     Vertical stop   = Vertical start + window height -1  = 800      */ 
-  LTDC_Layer_InitStruct.LTDC_HorizontalStart = HSYNCH + HBP + 0;
-  LTDC_Layer_InitStruct.LTDC_HorizontalStop = HSYNCH + HBP - 1 + 480; 
-  LTDC_Layer_InitStruct.LTDC_VerticalStart = VSYNCH + VBP + 0;
-  LTDC_Layer_InitStruct.LTDC_VerticalStop = VSYNCH + VBP - 1 + 800;
-  
-  /* Pixel Format configuration*/           
-  LTDC_Layer_InitStruct.LTDC_PixelFormat = LTDC_Pixelformat_RGB888;
-  
-  /* Alpha constant (255 totally opaque) */
-  LTDC_Layer_InitStruct.LTDC_ConstantAlpha = 255; 
-  
-  /* Default Color configuration (configure A,R,G,B component values) */          
-  LTDC_Layer_InitStruct.LTDC_DefaultColorBlue = 0;        
-  LTDC_Layer_InitStruct.LTDC_DefaultColorGreen = 0;       
-  LTDC_Layer_InitStruct.LTDC_DefaultColorRed = 0;         
-  LTDC_Layer_InitStruct.LTDC_ConstantAlpha = 255;   
-  LTDC_Layer_InitStruct.LTDC_DefaultColorAlpha = 0; 
-  /* Configure blending factors */       
-  LTDC_Layer_InitStruct.LTDC_BlendingFactor_1 = LTDC_BlendingFactor1_CA;    
-  LTDC_Layer_InitStruct.LTDC_BlendingFactor_2 = LTDC_BlendingFactor2_CA;
-   
-  /* Start Address configuration : frame buffer is located at FLASH memory */    
-  LTDC_Layer_InitStruct.LTDC_CFBStartAdress = (uint32_t)&Displayed_Picture_Table;
-  
-  /* the length of one line of pixels in bytes + 3 then :
-     Line Lenth = Active high width x number of bytes per pixel + 3 
-     Active high width         = 480 
-     number of bytes per pixel = 2    (pixel_format : RGB565) */
-  LTDC_Layer_InitStruct.LTDC_CFBLineLength = ((480 * 3) + 3);
-  
-  /*  the pitch is the increment from the start of one line of pixels to the 
-      start of the next line in bytes, then :
-      Pitch = Active high width x number of bytes per pixel     */
-  LTDC_Layer_InitStruct.LTDC_CFBPitch = (480 * 3);  
-  
-  /* Configure the number of lines */
-  LTDC_Layer_InitStruct.LTDC_CFBLineNumber = 800;
-  
-  /* Initializes the Layer */ 
-  LTDC_LayerInit(LTDC_Layer1, &LTDC_Layer_InitStruct);
+    /* Polarity configuration */
+    /* Initialize the horizontal synchronization polarity as active low */
+    LTDC_InitStruct.LTDC_HSPolarity = LTDC_HSPolarity_AL;
+    /* Initialize the vertical synchronization polarity as active low */
+    LTDC_InitStruct.LTDC_VSPolarity = LTDC_VSPolarity_AL;
+    /* Initialize the data enable polarity as active low */
+    LTDC_InitStruct.LTDC_DEPolarity = LTDC_DEPolarity_AL;
+    /* Initialize the pixel clock polarity as input pixel clock */
+    LTDC_InitStruct.LTDC_PCPolarity = LTDC_PCPolarity_IPC;
+
+    /* Timing configuration */
+    /* Horizontal synchronization width = HSYNCH - 1 */
+    LTDC_InitStruct.LTDC_HorizontalSync = HSYNCH - 1;
+    /* Vertical synchronization height = VSYNCH - 1 */
+    LTDC_InitStruct.LTDC_VerticalSync = VSYNCH - 1;
+    /* Accumulated horizontal back porch = HSYNCH + HBP - 1 */
+    LTDC_InitStruct.LTDC_AccumulatedHBP = HSYNCH + HBP - 1;
+    /* Accumulated vertical back porch = VSYNCH + VBP - 1 */
+    LTDC_InitStruct.LTDC_AccumulatedVBP = VSYNCH + VBP - 1;
+    /* Accumulated active width = HSYNCH + HBP + Active Width - 1 */
+    LTDC_InitStruct.LTDC_AccumulatedActiveW = HSYNCH + HBP + HACT - 1;
+    /* Accumulated active height = VSYNCH + VBP + Active Heigh - 1 */
+    LTDC_InitStruct.LTDC_AccumulatedActiveH = VSYNCH + VBP + VACT - 1;
+    /* Total width = HSYNCH + HBP + Active Width + HFP - 1 */
+    LTDC_InitStruct.LTDC_TotalWidth = HSYNCH + HBP + HACT + HFP - 1;
+    /* Total height = VSYNCH + VBP + Active Heigh + VFP - 1 */
+    LTDC_InitStruct.LTDC_TotalHeigh = VSYNCH + VBP + VACT + VFP - 1;
+
+    /* Configure R,G,B component values for LCD background color */
+    LTDC_InitStruct.LTDC_BackgroundRedValue = 0;
+    LTDC_InitStruct.LTDC_BackgroundGreenValue = 0;
+    LTDC_InitStruct.LTDC_BackgroundBlueValue = 0;
+
+    /* Initialize LTDC */
+    LTDC_Init(&LTDC_InitStruct);
+
+    /* Layer1 Configuration ------------------------------------------------------*/
+    /* Windowing configuration */
+    /* In this case all the active display area is used to display a picture then :
+       Horizontal start = horizontal synchronization + Horizontal back porch = 0
+       Vertical start   = vertical synchronization + vertical back porch     = 0
+       Horizontal stop = Horizontal start + window width -1 = 480
+       Vertical stop   = Vertical start + window height -1  = 800      */
+    LTDC_Layer_InitStruct.LTDC_HorizontalStart = HSYNCH + HBP + 0;
+    LTDC_Layer_InitStruct.LTDC_HorizontalStop = HSYNCH + HBP - 1 + 480;
+    LTDC_Layer_InitStruct.LTDC_VerticalStart = VSYNCH + VBP + 0;
+    LTDC_Layer_InitStruct.LTDC_VerticalStop = VSYNCH + VBP - 1 + 800;
+
+    /* Pixel Format configuration*/
+    LTDC_Layer_InitStruct.LTDC_PixelFormat = LTDC_Pixelformat_RGB888;
+
+    /* Alpha constant (255 totally opaque) */
+    LTDC_Layer_InitStruct.LTDC_ConstantAlpha = 255;
+
+    /* Default Color configuration (configure A,R,G,B component values) */
+    LTDC_Layer_InitStruct.LTDC_DefaultColorBlue = 0;
+    LTDC_Layer_InitStruct.LTDC_DefaultColorGreen = 0;
+    LTDC_Layer_InitStruct.LTDC_DefaultColorRed = 0;
+    LTDC_Layer_InitStruct.LTDC_ConstantAlpha = 255;
+    LTDC_Layer_InitStruct.LTDC_DefaultColorAlpha = 0;
+    /* Configure blending factors */
+    LTDC_Layer_InitStruct.LTDC_BlendingFactor_1 = LTDC_BlendingFactor1_CA;
+    LTDC_Layer_InitStruct.LTDC_BlendingFactor_2 = LTDC_BlendingFactor2_CA;
+
+    /* Start Address configuration : frame buffer is located at FLASH memory */
+    LTDC_Layer_InitStruct.LTDC_CFBStartAdress = (uint32_t)&Displayed_Picture_Table;
+
+    /* the length of one line of pixels in bytes + 3 then :
+       Line Lenth = Active high width x number of bytes per pixel + 3
+       Active high width         = 480
+       number of bytes per pixel = 2    (pixel_format : RGB565) */
+    LTDC_Layer_InitStruct.LTDC_CFBLineLength = ((480 * 3) + 3);
+
+    /*  the pitch is the increment from the start of one line of pixels to the
+        start of the next line in bytes, then :
+        Pitch = Active high width x number of bytes per pixel     */
+    LTDC_Layer_InitStruct.LTDC_CFBPitch = (480 * 3);
+
+    /* Configure the number of lines */
+    LTDC_Layer_InitStruct.LTDC_CFBLineNumber = 800;
+
+    /* Initializes the Layer */
+    LTDC_LayerInit(LTDC_Layer1, &LTDC_Layer_InitStruct);
 }
 
 /**
@@ -351,206 +350,203 @@ static void LCD_Config(void)
   */
 void OTM8009Setup(DSI_TypeDef* DSIx, uint8_t format)
 {
-  uint8_t regData1[]  = {0x80,0x09,0x01};
-  uint8_t regData2[]  = {0x80,0x09};
-  uint8_t regData3[]  = {0x00,0x09,0x0F,0x0E,0x07,0x10,0x0B,0x0A,0x04,0x07,0x0B,0x08,0x0F,0x10,0x0A,0x01};
-  uint8_t regData4[]  = {0x00,0x09,0x0F,0x0E,0x07,0x10,0x0B,0x0A,0x04,0x07,0x0B,0x08,0x0F,0x10,0x0A,0x01};
-  uint8_t regData5[]  = {0x79,0x79};
-  uint8_t regData6[]  = {0x00,0x01};
-  uint8_t regData7[]  = {0x85,0x01,0x00,0x84,0x01,0x00};
-  uint8_t regData8[]  = {0x18,0x04,0x03,0x39,0x00,0x00,0x00,0x18,0x03,0x03,0x3A,0x00,0x00,0x00};
-  uint8_t regData9[]  = {0x18,0x02,0x03,0x3B,0x00,0x00,0x00,0x18,0x01,0x03,0x3C,0x00,0x00,0x00};
-  uint8_t regData10[] = {0x01,0x01,0x20,0x20,0x00,0x00,0x01,0x02,0x00,0x00};
-  uint8_t regData11[] = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
-  uint8_t regData12[] = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
-  uint8_t regData13[] = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
-  uint8_t regData14[] = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
-  uint8_t regData15[] = {0x00,0x04,0x04,0x04,0x04,0x04,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
-  uint8_t regData16[] = {0x00,0x00,0x00,0x00,0x00,0x00,0x04,0x04,0x04,0x04,0x04,0x00,0x00,0x00,0x00};
-  uint8_t regData17[] = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
-  uint8_t regData18[] = {0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF};
-  uint8_t regData19[] = {0x00,0x26,0x09,0x0B,0x01,0x25,0x00,0x00,0x00,0x00};
-  uint8_t regData20[] = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x26,0x0A,0x0C,0x02};
-  uint8_t regData21[] = {0x25,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
-  uint8_t regData22[] = {0x00,0x25,0x0C,0x0A,0x02,0x26,0x00,0x00,0x00,0x00};
-  uint8_t regData23[] = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x25,0x0B,0x09,0x01};
-  uint8_t regData24[] = {0x26,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
-  uint8_t regData25[] = {0xFF,0xFF,0xFF};
-  uint8_t regData26[] = {0x01,0x22};
-  
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0x00);
-  DSI_LongWrite(DSIx, 0, DSI_DCS_LONG_PKT_WRITE, 3, 0xFF, regData1);
-  
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0x80);
-  DSI_LongWrite(DSIx, 0, DSI_DCS_LONG_PKT_WRITE, 2, 0xFF, regData2);
-  
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0x80);
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0xC4, 0x30);
-  Delay(10);
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0x8A);
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0xC4, 0x40);
-  Delay(10);
-  
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0xB1);
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0xC5, 0xA9);
-  
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0x91);
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0xC5, 0x34);
-  
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0xB4);
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0xC0, 0x50);
-  
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0x00);
-  DSI_LongWrite(DSIx, 0, DSI_DCS_LONG_PKT_WRITE, 16, 0xE1, regData3);
-  
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0x00);
-  DSI_LongWrite(DSIx, 0, DSI_DCS_LONG_PKT_WRITE, 16, 0xE2, regData4);
-  
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0x00);
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0xD9, 0x4E);
-  
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0x81);
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0xC1, 0x66);
-  
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0xA1);
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0xC1, 0x08);
-  
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0x92);
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0xC5, 0x01);
-  
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0x95);
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0xC5, 0x34);
-  
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0x00);
-  DSI_LongWrite(DSIx, 0, DSI_DCS_LONG_PKT_WRITE, 2, 0xD8, regData5);
-  
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0x94);
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0xC5, 0x33);
-  
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0xA3);
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0xC0, 0x1B);
-  
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0x82);
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0xC5, 0x83);
-  
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0x81);
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0xC4, 0x83);
-  
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0xA1);
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0xC1, 0x0E);
-  
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0xA6);
-  DSI_LongWrite(DSIx, 0, DSI_DCS_LONG_PKT_WRITE, 2, 0xB3, regData6);
-  
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0x80);
-  DSI_LongWrite(DSIx, 0, DSI_DCS_LONG_PKT_WRITE, 6, 0xCE, regData7);
-  
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0xA0);
-  DSI_LongWrite(DSIx, 0, DSI_DCS_LONG_PKT_WRITE, 14, 0xCE, regData8);
-  
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0xB0);
-  DSI_LongWrite(DSIx, 0, DSI_DCS_LONG_PKT_WRITE, 14, 0xCE, regData9);
-  
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0xC0);
-  DSI_LongWrite(DSIx, 0, DSI_DCS_LONG_PKT_WRITE, 10, 0xCF, regData10);
-  
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0xD0);
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0xCF, 0x00);
-  
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0x80);
-  DSI_LongWrite(DSIx, 0, DSI_DCS_LONG_PKT_WRITE, 10, 0xCB, regData11);
-  
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0x90);
-  DSI_LongWrite(DSIx, 0, DSI_DCS_LONG_PKT_WRITE, 15, 0xCB, regData12);
-  
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0xA0);
-  DSI_LongWrite(DSIx, 0, DSI_DCS_LONG_PKT_WRITE, 15, 0xCB, regData13);
-  
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0xB0);
-  DSI_LongWrite(DSIx, 0, DSI_DCS_LONG_PKT_WRITE, 10, 0xCB, regData14);
-  
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0xC0);
-  DSI_LongWrite(DSIx, 0, DSI_DCS_LONG_PKT_WRITE, 15, 0xCB, regData15);
-  
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0xD0);
-  DSI_LongWrite(DSIx, 0, DSI_DCS_LONG_PKT_WRITE, 15, 0xCB, regData16);
-  
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0xE0);
-  DSI_LongWrite(DSIx, 0, DSI_DCS_LONG_PKT_WRITE, 10, 0xCB, regData17);
-  
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0xF0);
-  DSI_LongWrite(DSIx, 0, DSI_DCS_LONG_PKT_WRITE, 10, 0xCB, regData18);
-  
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0x80);
-  DSI_LongWrite(DSIx, 0, DSI_DCS_LONG_PKT_WRITE, 10, 0xCC, regData19);
-  
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0x90);
-  DSI_LongWrite(DSIx, 0, DSI_DCS_LONG_PKT_WRITE, 15, 0xCC, regData20);
-  
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0xA0);
-  DSI_LongWrite(DSIx, 0, DSI_DCS_LONG_PKT_WRITE, 15, 0xCC, regData21);
-  
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0xB0);
-  DSI_LongWrite(DSIx, 0, DSI_DCS_LONG_PKT_WRITE, 10, 0xCC, regData22);
-  
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0xC0);
-  DSI_LongWrite(DSIx, 0, DSI_DCS_LONG_PKT_WRITE, 15, 0xCC, regData23);
-  
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0xD0);
-  DSI_LongWrite(DSIx, 0, DSI_DCS_LONG_PKT_WRITE, 15, 0xCC, regData24);
-  
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0x81);
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0xC5, 0x66);
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0xB6);
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0xF5, 0x06);
-  
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0x00);
-  DSI_LongWrite(DSIx, 0, DSI_DCS_LONG_PKT_WRITE, 3, 0xFF, regData25);
-  
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0x00);
-  /* Tear ON */
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x35, 0x00);
-  
-  DSI_LongWrite(DSIx, 0, DSI_DCS_LONG_PKT_WRITE, 2, 0x44, regData26);
-  /* Sleep out */
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x11, 0x00);
-  
-  Delay(100);
-  
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0x00);
-  if(format)
-  {
-    /* Pixel format RGB888 */
-    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x3A, 0x77);
-  }
-  else
-  { 
-    /* Pixel format RGB565 */
-    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x3A, 0x55);
-  }
-  
+    uint8_t regData1[]  = {0x80,0x09,0x01};
+    uint8_t regData2[]  = {0x80,0x09};
+    uint8_t regData3[]  = {0x00,0x09,0x0F,0x0E,0x07,0x10,0x0B,0x0A,0x04,0x07,0x0B,0x08,0x0F,0x10,0x0A,0x01};
+    uint8_t regData4[]  = {0x00,0x09,0x0F,0x0E,0x07,0x10,0x0B,0x0A,0x04,0x07,0x0B,0x08,0x0F,0x10,0x0A,0x01};
+    uint8_t regData5[]  = {0x79,0x79};
+    uint8_t regData6[]  = {0x00,0x01};
+    uint8_t regData7[]  = {0x85,0x01,0x00,0x84,0x01,0x00};
+    uint8_t regData8[]  = {0x18,0x04,0x03,0x39,0x00,0x00,0x00,0x18,0x03,0x03,0x3A,0x00,0x00,0x00};
+    uint8_t regData9[]  = {0x18,0x02,0x03,0x3B,0x00,0x00,0x00,0x18,0x01,0x03,0x3C,0x00,0x00,0x00};
+    uint8_t regData10[] = {0x01,0x01,0x20,0x20,0x00,0x00,0x01,0x02,0x00,0x00};
+    uint8_t regData11[] = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+    uint8_t regData12[] = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+    uint8_t regData13[] = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+    uint8_t regData14[] = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+    uint8_t regData15[] = {0x00,0x04,0x04,0x04,0x04,0x04,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+    uint8_t regData16[] = {0x00,0x00,0x00,0x00,0x00,0x00,0x04,0x04,0x04,0x04,0x04,0x00,0x00,0x00,0x00};
+    uint8_t regData17[] = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+    uint8_t regData18[] = {0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF};
+    uint8_t regData19[] = {0x00,0x26,0x09,0x0B,0x01,0x25,0x00,0x00,0x00,0x00};
+    uint8_t regData20[] = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x26,0x0A,0x0C,0x02};
+    uint8_t regData21[] = {0x25,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+    uint8_t regData22[] = {0x00,0x25,0x0C,0x0A,0x02,0x26,0x00,0x00,0x00,0x00};
+    uint8_t regData23[] = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x25,0x0B,0x09,0x01};
+    uint8_t regData24[] = {0x26,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+    uint8_t regData25[] = {0xFF,0xFF,0xFF};
+    uint8_t regData26[] = {0x01,0x22};
+
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0x00);
+    DSI_LongWrite(DSIx, 0, DSI_DCS_LONG_PKT_WRITE, 3, 0xFF, regData1);
+
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0x80);
+    DSI_LongWrite(DSIx, 0, DSI_DCS_LONG_PKT_WRITE, 2, 0xFF, regData2);
+
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0x80);
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0xC4, 0x30);
+    Delay(10);
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0x8A);
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0xC4, 0x40);
+    Delay(10);
+
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0xB1);
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0xC5, 0xA9);
+
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0x91);
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0xC5, 0x34);
+
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0xB4);
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0xC0, 0x50);
+
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0x00);
+    DSI_LongWrite(DSIx, 0, DSI_DCS_LONG_PKT_WRITE, 16, 0xE1, regData3);
+
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0x00);
+    DSI_LongWrite(DSIx, 0, DSI_DCS_LONG_PKT_WRITE, 16, 0xE2, regData4);
+
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0x00);
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0xD9, 0x4E);
+
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0x81);
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0xC1, 0x66);
+
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0xA1);
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0xC1, 0x08);
+
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0x92);
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0xC5, 0x01);
+
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0x95);
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0xC5, 0x34);
+
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0x00);
+    DSI_LongWrite(DSIx, 0, DSI_DCS_LONG_PKT_WRITE, 2, 0xD8, regData5);
+
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0x94);
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0xC5, 0x33);
+
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0xA3);
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0xC0, 0x1B);
+
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0x82);
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0xC5, 0x83);
+
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0x81);
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0xC4, 0x83);
+
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0xA1);
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0xC1, 0x0E);
+
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0xA6);
+    DSI_LongWrite(DSIx, 0, DSI_DCS_LONG_PKT_WRITE, 2, 0xB3, regData6);
+
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0x80);
+    DSI_LongWrite(DSIx, 0, DSI_DCS_LONG_PKT_WRITE, 6, 0xCE, regData7);
+
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0xA0);
+    DSI_LongWrite(DSIx, 0, DSI_DCS_LONG_PKT_WRITE, 14, 0xCE, regData8);
+
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0xB0);
+    DSI_LongWrite(DSIx, 0, DSI_DCS_LONG_PKT_WRITE, 14, 0xCE, regData9);
+
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0xC0);
+    DSI_LongWrite(DSIx, 0, DSI_DCS_LONG_PKT_WRITE, 10, 0xCF, regData10);
+
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0xD0);
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0xCF, 0x00);
+
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0x80);
+    DSI_LongWrite(DSIx, 0, DSI_DCS_LONG_PKT_WRITE, 10, 0xCB, regData11);
+
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0x90);
+    DSI_LongWrite(DSIx, 0, DSI_DCS_LONG_PKT_WRITE, 15, 0xCB, regData12);
+
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0xA0);
+    DSI_LongWrite(DSIx, 0, DSI_DCS_LONG_PKT_WRITE, 15, 0xCB, regData13);
+
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0xB0);
+    DSI_LongWrite(DSIx, 0, DSI_DCS_LONG_PKT_WRITE, 10, 0xCB, regData14);
+
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0xC0);
+    DSI_LongWrite(DSIx, 0, DSI_DCS_LONG_PKT_WRITE, 15, 0xCB, regData15);
+
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0xD0);
+    DSI_LongWrite(DSIx, 0, DSI_DCS_LONG_PKT_WRITE, 15, 0xCB, regData16);
+
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0xE0);
+    DSI_LongWrite(DSIx, 0, DSI_DCS_LONG_PKT_WRITE, 10, 0xCB, regData17);
+
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0xF0);
+    DSI_LongWrite(DSIx, 0, DSI_DCS_LONG_PKT_WRITE, 10, 0xCB, regData18);
+
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0x80);
+    DSI_LongWrite(DSIx, 0, DSI_DCS_LONG_PKT_WRITE, 10, 0xCC, regData19);
+
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0x90);
+    DSI_LongWrite(DSIx, 0, DSI_DCS_LONG_PKT_WRITE, 15, 0xCC, regData20);
+
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0xA0);
+    DSI_LongWrite(DSIx, 0, DSI_DCS_LONG_PKT_WRITE, 15, 0xCC, regData21);
+
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0xB0);
+    DSI_LongWrite(DSIx, 0, DSI_DCS_LONG_PKT_WRITE, 10, 0xCC, regData22);
+
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0xC0);
+    DSI_LongWrite(DSIx, 0, DSI_DCS_LONG_PKT_WRITE, 15, 0xCC, regData23);
+
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0xD0);
+    DSI_LongWrite(DSIx, 0, DSI_DCS_LONG_PKT_WRITE, 15, 0xCC, regData24);
+
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0x81);
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0xC5, 0x66);
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0xB6);
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0xF5, 0x06);
+
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0x00);
+    DSI_LongWrite(DSIx, 0, DSI_DCS_LONG_PKT_WRITE, 3, 0xFF, regData25);
+
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0x00);
+    /* Tear ON */
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x35, 0x00);
+
+    DSI_LongWrite(DSIx, 0, DSI_DCS_LONG_PKT_WRITE, 2, 0x44, regData26);
+    /* Sleep out */
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x11, 0x00);
+
+    Delay(100);
+
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0x00);
+    if(format) {
+        /* Pixel format RGB888 */
+        DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x3A, 0x77);
+    } else {
+        /* Pixel format RGB565 */
+        DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x3A, 0x55);
+    }
+
 #if defined(OTM8008A_BACKLIGHT_SOFTWARE)
-  /* Note : defaut is 0 (lowest Brightness), 0xFF is highest Brightness, try 0x7F : intermediate value */
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, OTM8009A_CMD_WRDISBV, 0x7F); 
-  
-  /* defaut is 0, try 0x2C - Brightness Control Block, Display Dimming & BackLight on */
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, OTM8009A_CMD_WRCTRLD, 0x2C);
-  
-  /* defaut is 0, try 0x02 - image Content based Adaptive Brightness [Still Picture] */
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, OTM8009A_CMD_WRCABC, 0x02);
-  
-  /* defaut is 0 (lowest Brightness), 0xFF is highest Brightness */
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, OTM8009A_CMD_WRCABCMB, 0xFF);
+    /* Note : defaut is 0 (lowest Brightness), 0xFF is highest Brightness, try 0x7F : intermediate value */
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, OTM8009A_CMD_WRDISBV, 0x7F);
+
+    /* defaut is 0, try 0x2C - Brightness Control Block, Display Dimming & BackLight on */
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, OTM8009A_CMD_WRCTRLD, 0x2C);
+
+    /* defaut is 0, try 0x02 - image Content based Adaptive Brightness [Still Picture] */
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, OTM8009A_CMD_WRCABC, 0x02);
+
+    /* defaut is 0 (lowest Brightness), 0xFF is highest Brightness */
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, OTM8009A_CMD_WRCABCMB, 0xFF);
 #endif /* OTM8008A_BACKLIGHT_SOFTWARE */
-  
-  /* Display ON */
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0x00);
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x29, 0x00);
-  
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0x00);
-  DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x2C, 0x00);
-  
-  Delay(200);
+
+    /* Display ON */
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0x00);
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x29, 0x00);
+
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x00, 0x00);
+    DSI_ShortWrite(DSIx, 0, DSI_DCS_SHORT_PKT_WRITE_P1, 0x2C, 0x00);
+
+    Delay(200);
 }
 
 /**
@@ -561,22 +557,22 @@ void OTM8009Setup(DSI_TypeDef* DSIx, uint8_t format)
   */
 void LCD_Reset(void)
 {
-  GPIO_InitTypeDef  GPIO_InitStructure;
-  
-  /* GPIOK Peripheral clock enable */
-  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOK, ENABLE);
-  
-  /* Configure PG6 and PG8 in output pushpull mode */
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_7;
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
-  GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
-  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
-  GPIO_Init(GPIOK, &GPIO_InitStructure);
-  
-  GPIO_ResetBits(GPIOK, GPIO_Pin_7);
-  Delay(20);
-  GPIO_SetBits(GPIOK, GPIO_Pin_7);
+    GPIO_InitTypeDef  GPIO_InitStructure;
+
+    /* GPIOK Peripheral clock enable */
+    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOK, ENABLE);
+
+    /* Configure PG6 and PG8 in output pushpull mode */
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_7;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+    GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
+    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
+    GPIO_Init(GPIOK, &GPIO_InitStructure);
+
+    GPIO_ResetBits(GPIOK, GPIO_Pin_7);
+    Delay(20);
+    GPIO_SetBits(GPIOK, GPIO_Pin_7);
 }
 
 /**
@@ -585,10 +581,10 @@ void LCD_Reset(void)
   * @retval None
   */
 void Delay(__IO uint32_t nTime)
-{ 
-  uwTimingDelay = nTime;
+{
+    uwTimingDelay = nTime;
 
-  while(uwTimingDelay != 0);
+    while(uwTimingDelay != 0);
 }
 
 /**
@@ -598,10 +594,9 @@ void Delay(__IO uint32_t nTime)
   */
 void TimingDelay_Decrement(void)
 {
-  if (uwTimingDelay != 0x00)
-  { 
-    uwTimingDelay--;
-  }
+    if (uwTimingDelay != 0x00) {
+        uwTimingDelay--;
+    }
 }
 
 #ifdef  USE_FULL_ASSERT
@@ -614,14 +609,13 @@ void TimingDelay_Decrement(void)
   * @retval None
   */
 void assert_failed(uint8_t* file, uint32_t line)
-{ 
-  /* User can add his own implementation to report the file name and line number,
-     ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+{
+    /* User can add his own implementation to report the file name and line number,
+       ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
 
-  /* Infinite loop */
-  while (1)
-  {
-  }
+    /* Infinite loop */
+    while (1) {
+    }
 }
 #endif
 

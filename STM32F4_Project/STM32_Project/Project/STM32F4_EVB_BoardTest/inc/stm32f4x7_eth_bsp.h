@@ -3,7 +3,7 @@
   * @file    stm32f4x7_eth_bsp.h
   * @author  MCD Application Team
   * @version V1.0.0
-  * @date    31-October-2011 
+  * @date    31-October-2011
   * @brief   Header for stm32f4x7_eth_bsp.c file.
   ******************************************************************************
   * @attention
@@ -24,22 +24,22 @@
 #define __STM32F4x7_ETH_BSP_H
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
 #if defined (USE_STM324xG_EVAL)
-	#include "stm324xg_eval.h"
-	#include "stm324xg_eval_lcd.h"
-#elif defined (USE_STM324x7I_EVAL) 
-	#include "stm324x7i_eval.h"
-	#include "stm324x7i_eval_lcd.h"
+#include "stm324xg_eval.h"
+#include "stm324xg_eval_lcd.h"
+#elif defined (USE_STM324x7I_EVAL)
+#include "stm324x7i_eval.h"
+#include "stm324x7i_eval_lcd.h"
 #elif defined (USE_STM32F4_EVB)
-	#include "stm32f4_evb.h"
+#include "stm32f4_evb.h"
 //	#include "stm32f4_evb_lcd.h"
-	 #include "stm324xg_eval_lcd.h"
+#include "stm324xg_eval_lcd.h"
 #else
-	#error "Please select first the Evaluation board used in your application (in Project Options)"
+#error "Please select first the Evaluation board used in your application (in Project Options)"
 #endif
 
 /* Exported types ------------------------------------------------------------*/
@@ -50,7 +50,7 @@
 #define ETH_LINK_EXTI_LINE             EXTI_Line14
 #define ETH_LINK_EXTI_PORT_SOURCE      EXTI_PortSourceGPIOB
 #define ETH_LINK_EXTI_PIN_SOURCE       EXTI_PinSource14
-#define ETH_LINK_EXTI_IRQn             EXTI15_10_IRQn 
+#define ETH_LINK_EXTI_IRQn             EXTI15_10_IRQn
 /* PB14 */
 #define ETH_LINK_PIN                   GPIO_Pin_14
 #define ETH_LINK_GPIO_PORT             GPIOB

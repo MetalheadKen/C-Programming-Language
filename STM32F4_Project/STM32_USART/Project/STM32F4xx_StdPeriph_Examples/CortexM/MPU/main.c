@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    CortexM/MPU/main.c 
+  * @file    CortexM/MPU/main.c
   * @author  MCD Application Team
   * @version V1.1.0
   * @date    18-January-2013
@@ -16,8 +16,8 @@
   *
   *        http://www.st.com/software_license_agreement_liberty_v2
   *
-  * Unless required by applicable law or agreed to in writing, software 
-  * distributed under the License is distributed on an "AS IS" BASIS, 
+  * Unless required by applicable law or agreed to in writing, software
+  * distributed under the License is distributed on an "AS IS" BASIS,
   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   * See the License for the specific language governing permissions and
   * limitations under the License.
@@ -36,7 +36,7 @@
 /** @addtogroup CortexM_MPU
   * @{
   */
-  
+
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 #define ACCESS_PERMISSION
@@ -55,35 +55,34 @@ void Delay (uint32_t nCount);
   */
 int main(void)
 {
-  
-  /*!< At this stage the microcontroller clock setting is already configured, 
-       this is done through SystemInit() function which is called from startup
-       file (startup_stm32f40xx.s/startup_stm32f427x.s) before to branch to 
-       application main.
-       To reconfigure the default setting of SystemInit() function, refer to
-        system_stm32f4xx.c file
-     */  
- 
-  /* Configure LED1 and LED2 */
-  STM_EVAL_LEDInit(LED1);
-  STM_EVAL_LEDInit(LED2);
-  
-  /* Set MPU regions */
-  MPU_Config();
+
+    /*!< At this stage the microcontroller clock setting is already configured,
+         this is done through SystemInit() function which is called from startup
+         file (startup_stm32f40xx.s/startup_stm32f427x.s) before to branch to
+         application main.
+         To reconfigure the default setting of SystemInit() function, refer to
+          system_stm32f4xx.c file
+       */
+
+    /* Configure LED1 and LED2 */
+    STM_EVAL_LEDInit(LED1);
+    STM_EVAL_LEDInit(LED2);
+
+    /* Set MPU regions */
+    MPU_Config();
 
 #ifdef ACCESS_PERMISSION
-  MPU_AccessPermConfig();
-#endif  
+    MPU_AccessPermConfig();
+#endif
 
-  /* Infinite loop */
-  while (1)
-  {
-    /* Toggle LED1 */
-    STM_EVAL_LEDToggle(LED1); 
+    /* Infinite loop */
+    while (1) {
+        /* Toggle LED1 */
+        STM_EVAL_LEDToggle(LED1);
 
-    /* Insert a delay */
-    Delay(0x7FFFF);
-  }
+        /* Insert a delay */
+        Delay(0x7FFFF);
+    }
 }
 
 /**
@@ -93,11 +92,10 @@ int main(void)
   */
 void Delay(__IO uint32_t nCount)
 {
-  /* Decrement nCount value */
-  while (nCount != 0)
-  {
-    nCount--;
-  }
+    /* Decrement nCount value */
+    while (nCount != 0) {
+        nCount--;
+    }
 }
 
 #ifdef  USE_FULL_ASSERT
@@ -109,14 +107,13 @@ void Delay(__IO uint32_t nCount)
   * @retval None
   */
 void assert_failed(uint8_t* file, uint32_t line)
-{ 
-  /* User can add his own implementation to report the file name and line number,
-     ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+{
+    /* User can add his own implementation to report the file name and line number,
+       ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
 
-  /* Infinite loop */
-  while (1)
-  {
-  }
+    /* Infinite loop */
+    while (1) {
+    }
 }
 #endif
 
