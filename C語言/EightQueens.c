@@ -1,7 +1,7 @@
 /*
  ============================================================================
  Name        : EightQueens.c
- Author      : 
+ Author      :
  Version     :
  Copyright   : Your copyright notice
  Description : Hello World in C, Ansi-style
@@ -11,7 +11,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define N 8 //8 * 8çš„æ£‹ç›¤
+#define N 8 //8 * 8ªº´Ñ½L
 
 void Queen(int );
 
@@ -21,74 +21,69 @@ int *left;
 char **board;
 char *board_y;
 
-//æ¯æ”¾ç½®ä¸€å€‹çš‡åå°±æ¨™è¨˜å…¶ç›¸å°æ‡‰çš„ä¸‰å€‹è®Šæ•¸å€¼(è¡Œã€å³æ–œèˆ‡å·¦æ–œ)
-void Queen(int x) {
-	int i, j, k;
+//¨C©ñ¸m¤@­Ó¬Ó¦Z´N¼Ğ°O¨ä¬Û¹ïÀ³ªº¤T­ÓÅÜ¼Æ­È(¦æ¡B¥k±×»P¥ª±×)
+void Queen(int x)
+{
+    int i, j, k;
 
-	if(x < N) //åˆ¤æ–·åˆ—æœ‰æ²’æœ‰è¶…å‡ºæ£‹ç›¤ç¯„åœ
-	{
-		for(i = 0; i < N; i++) //åˆ—ä¸è®Šï¼Œè¡Œæ¯æ¬¡ + 1
-		{
-			j = i - x + N - 1; //åŒä¸€å³æ–œçš„æ–¹æ ¼ï¼Œå…¶è¡Œè™Ÿèˆ‡åˆ—è™Ÿä¹‹å·®ç›¸ç­‰
-			k = i + x; //åŒä¸€å·¦æ–œçš„æ–¹æ ¼ï¼Œå…¶è¡Œè™Ÿèˆ‡åˆ—è™Ÿä¹‹å’Œç›¸ç­‰
-			if(column[i] && right[j] && left[k])
-			{
-				//æ¨™è¨˜çš‡åä½ç½®ï¼Œä¸¦éè¿´æ”¾ç½®ä¸‹ä¸€å€‹
-				column[i] = right[j] = left[k] = 0; //æœ‰çš‡åï¼Œ= 0ï¼Œä½¿ä¸‹æ¬¡å‡½å¼è·³å‡º
-				board[x][i] = 'Q'; //æ¨™è¨˜
+    if(x < N) { //§PÂ_¦C¦³¨S¦³¶W¥X´Ñ½L½d³ò
+        for(i = 0; i < N; i++) { //¦C¤£ÅÜ¡A¦æ¨C¦¸ + 1
+            j = i - x + N - 1; //¦P¤@¥k±×ªº¤è®æ¡A¨ä¦æ¸¹»P¦C¸¹¤§®t¬Ûµ¥
+            k = i + x; //¦P¤@¥ª±×ªº¤è®æ¡A¨ä¦æ¸¹»P¦C¸¹¤§©M¬Ûµ¥
+            if(column[i] && right[j] && left[k]) {
+                //¼Ğ°O¬Ó¦Z¦ì¸m¡A¨Ã»¼°j©ñ¸m¤U¤@­Ó
+                column[i] = right[j] = left[k] = 0; //¦³¬Ó¦Z¡A= 0¡A¨Ï¤U¦¸¨ç¦¡¸õ¥X
+                board[x][i] = 'Q'; //¼Ğ°O
 
-				Queen(x + 1); //å°‹æ‰¾ä¸‹ä¸€å€‹ï¼Œ+ 1è·³ä¸‹ä¸€åˆ—
+                Queen(x + 1); //´M§ä¤U¤@­Ó¡A+ 1¸õ¤U¤@¦C
 
-				column[i] = right[j] = left[k] = 1; //ç„¡çš‡åï¼Œç‚ºç©º
-				board[x][i] = '.';
-			}
-		}
-	}
-	else
-	{
-		//è¼¸å‡ºæ£‹ç›¤
-		for(i = 0; i < N; i++)
-		{
-			for(j = 0; j < N; j++)
-				printf("%c", board[i][j]);
+                column[i] = right[j] = left[k] = 1; //µL¬Ó¦Z¡A¬°ªÅ
+                board[x][i] = '.';
+            }
+        }
+    } else {
+        //¿é¥X´Ñ½L
+        for(i = 0; i < N; i++) {
+            for(j = 0; j < N; j++)
+                printf("%c", board[i][j]);
 
-			putchar('\n');
-		}
-	}
+            putchar('\n');
+        }
+    }
 }
 
-int main(void) {
-	int i, j;
+int main(void)
+{
+    int i, j;
 
-	//å‹•æ…‹é…ç½®è¡Œã€å³æ–œã€å·¦æ–œçš„é™£åˆ—
-	column = (int *)malloc(N * sizeof(*column)); //åŒè¡Œæ˜¯å¦æœ‰çš‡å
-	right = (int *)malloc((2 * N - 1) * sizeof(*right)); //å³ä¸Šè‡³å·¦ä¸‹æ˜¯å¦æœ‰çš‡å
-	left = (int *)malloc((2 * N - 1) * sizeof(*left)); //å·¦ä¸Šè‡³å³ä¸‹æ˜¯å¦æœ‰çš‡å
-	//å‹•æ…‹é…ç½®8 * 8çš„æ£‹ç›¤ï¼Œè£¡é¢æ˜¯æ”¾å…¥Qå’Œ.çš„
-	board = (char **)malloc(N * sizeof(*board) + N * N * sizeof(**board)); //ç¸½é‡
-	board_y = (char *)(board + N); //åŠ ä¸Šåˆ—ï¼Œç¬¬ä¸€ç¶­å…ˆå»º
+    //°ÊºA°t¸m¦æ¡B¥k±×¡B¥ª±×ªº°}¦C
+    column = (int *)malloc(N * sizeof(*column)); //¦P¦æ¬O§_¦³¬Ó¦Z
+    right = (int *)malloc((2 * N - 1) * sizeof(*right)); //¥k¤W¦Ü¥ª¤U¬O§_¦³¬Ó¦Z
+    left = (int *)malloc((2 * N - 1) * sizeof(*left)); //¥ª¤W¦Ü¥k¤U¬O§_¦³¬Ó¦Z
+    //°ÊºA°t¸m8 * 8ªº´Ñ½L¡A¸Ì­±¬O©ñ¤JQ©M.ªº
+    board = (char **)malloc(N * sizeof(*board) + N * N * sizeof(**board)); //Á`¶q
+    board_y = (char *)(board + N); //¥[¤W¦C¡A²Ä¤@ºû¥ı«Ø
 
-	for(i = 0; i < N; i++, board_y += N) //åŠ ä¸Šè¡Œï¼Œå®£å‘Šä¸€åˆ—æœ‰å¹¾è¡Œ
-		board[i] = board_y;
+    for(i = 0; i < N; i++, board_y += N) //¥[¤W¦æ¡A«Å§i¤@¦C¦³´X¦æ
+        board[i] = board_y;
 
-	//åˆå§‹åŒ–
-	for(i = 0; i < N; i++)
-	{
-		column[i] = 1;
-		for(j = 0; j < N; j++)
-			board[i][j] = '.';
-	}
-	
-	for(i = 0; i < 2 * N + 1; i++)
-		right[i] = left[i] = 1;
+    //ªì©l¤Æ
+    for(i = 0; i < N; i++) {
+        column[i] = 1;
+        for(j = 0; j < N; j++)
+            board[i][j] = '.';
+    }
 
-	Queen(0); //å¾ç¬¬0åˆ—ç¬¬ä¸€å€‹æ•¸é–‹å§‹æ”¾èˆ‡å°‹æ‰¾
+    for(i = 0; i < 2 * N + 1; i++)
+        right[i] = left[i] = 1;
 
-	//é‡‹æ”¾è¨˜æ†¶é«”ç©ºé–“
-	free(column);
-	free(right);
-	free(left);
-	free(board);
+    Queen(0); //±q²Ä0¦C²Ä¤@­Ó¼Æ¶}©l©ñ»P´M§ä
 
-	return EXIT_SUCCESS;
+    //ÄÀ©ñ°O¾ĞÅéªÅ¶¡
+    free(column);
+    free(right);
+    free(left);
+    free(board);
+
+    return EXIT_SUCCESS;
 }
