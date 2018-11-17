@@ -1,3 +1,0 @@
-verilog work "rom.v"
-verilog work "pc_reg.v"
-verilog work "inst_fetch.v"
